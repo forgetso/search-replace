@@ -1,0 +1,32 @@
+{
+   "background": {
+      "scripts": [ "background.js" ]
+   },
+   "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html",
+      "default_title": "Search and Replace"
+   },
+   "commands": {
+      "toggle-feature-foo": {
+         "description": "Toggle Search and Replace popup",
+         "global": true,
+         "suggested_key": {
+            "default": "Ctrl+Shift+2"
+         }
+      }
+   },
+   "content_scripts": [ {
+      "all_frames": true,
+      "js": [ "jquery-2.1.4.min.js", "searchreplace.js", "popup.js" ],
+      "matches": [ "http://*/*", "https://*/*", "file:///*" ]
+   } ],
+   "description": "Search for text in input fields and replace it with different text.",
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCr3R0tWRUKUERxg/cghorcvKPDxba+0Ko/3Metk/0XsUTPZcU1xBQZCY441i3lK2ZkH/Td3rs/l8HvbVnkN37NiFm0QQOIJGJi7vp1GdQsrr5uZA/611TsQAWpxxHzR9N4km5wu8e/Xmw2ZG5WKfWVPtUhozEDHTk5CVgeTUOMAQIDAQAB",
+   "manifest_version": 2,
+   "name": "Search and Replace",
+   "permissions": [ "tabs", "http://*/*", "https://*/*", "management" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.4.0",
+   "web_accessible_resources": [ "ajax-loader.gif" ]
+}

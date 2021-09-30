@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="bootstrap.min.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="col-md-3" role="complementary">
+            <h1>Help</h1>
+            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix-top">
+                <ul class="nav bs-docs-sidenav">
+                    <li><a href="#basic">Basic Usage</a>
+                    </li>
+                    <li><a href="#editors">Replacing text in editors</a>
+                    </li>
+                    <li><a href="#case">Matching the case of text</a>
+                    </li>
+                    <li><a href="#wildcards">Wild Cards and Regular Expressions</a>
+                    </li>
+                    <li><a href="#issues">Issues</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-9" role="main">
+            <h2 id="basic">Basic Usage</h2>
+            <div>To replace text that is not contained within an input box you can leave all boxes unchecked</div>
+            <h3>Before</h3>
+            <img src="start-basic.png" class="img-responsive img-thumbnail" alt="Wikipedia home page">
+            <h3>Setup</h3>
+            <div>Enter the exact text to be replaced without checking any of the boxes.</div>
+            <span><img src="setup-basic.png" class="img-responsive img-thumbnail" alt="Basic setup for replacing wikipedia home page title"></span>
+            <h3>After</h3>
+            <img src="result-basic.png" class="img-responsive img-thumbnail">
+            <div>Notice that an image link has broken on the page. This is because the tool replaces text throughout the entire HTML.</div>
+            <br />
+            <img src="brokenimage.png" clas="img-responsive img-thumbnail">
+            <h2 id="editors">Replacing text in editors</h2>
+            <div>To replace text in the Wordpress article box or in other input boxes you should check the "Input boxes?" check box. Otherwise the search text will be replaced throughout the entire HTML, possibly breaking the page.</div>
+            <h3>Before</h3>
+            <img src="start-wordpress.png" class="img-responsive img-thumbnail">
+            <h3>Setup</h3>
+            <img src="setup-wordpress.png" class="img-responsive img-thumbnail">
+            <h3>After</h3>
+            <img src="result-wordpress.png" class="img-responsive img-thumbnail">
+            <h2 id="case">Matching the case of text</h2>
+            <div>If you need to replace <strong>THIS</strong> but not <strong>This</strong> then you should use the match case option.</div>
+            <h3>Before</h3>
+            <img src="start-wordpress.png" class="img-responsive img-thumbnail">
+            <h3>Setup</h3>
+            <img src="start-case.png" class="img-responsive img-thumbnail">
+            <h3>After</h3>
+            <img src="result-case.png" class="img-responsive img-thumbnail">
+            <h2 id="wildcards">Wild Cards and Regular Expressions</h2>
+            <div>If you need to match a partial search term then you should check the Regular Expressions check box and specify a wild card. You will need to have a very basic knowledge of <a href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular expressions</a> to use this feature. I recommend <a href="regexpal.com" target="_blank">regexpal</a> for testing</div>
+            <h3>Before</h3>
+            <img src="start-wildcard.png" class="img-responsive img-thumbnail">
+            <h3>Setup</h3>
+            <img src="setup-wildcard.png" class="img-responsive img-thumbnail">
+            <h3>After</h3>
+            <img src="result-wildcard.png" class="img-responsive img-thumbnail">
+            <h3 id="issues">Issues</h3>
+            <div>
+                <ul>
+                    <li>Remember to REFRESH the page on which you wish to replace text after the initial installation.</li>
+                    <li>Pressing Enter will Replace All. There is no shortcut keyboard for Replace Next.</li>
+                    <li>If you find a bug, please provide a detailed report <a href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support" target="_blank">here</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
