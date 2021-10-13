@@ -1,5 +1,6 @@
 //Storing and retrieving popup values
-chrome.extension.onConnect.addListener(function(port) {
+
+chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
     if(!msg['recover']) {
         localStorage['searchTerm'] = msg['searchTerm'];

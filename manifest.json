@@ -3,8 +3,8 @@
       "scripts": [ "background.js" ]
    },
    "browser_action": {
-      "default_icon": "icon.png",
-      "default_popup": "popup.html",
+      "default_icon": "assets/icon.png",
+      "default_popup": "assets/popup.html",
       "default_title": "Search and Replace"
    },
    "commands": {
@@ -18,7 +18,7 @@
    },
    "content_scripts": [ {
       "all_frames": true,
-      "js": [ "jquery-2.1.4.min.js", "searchreplace.js", "popup.js" ],
+      "js": [ "searchreplace.js", "popup.js" ],
       "matches": [ "http://*/*", "https://*/*", "file:///*" ]
    } ],
    "description": "Search for text in input fields and replace it with different text.",

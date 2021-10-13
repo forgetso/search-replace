@@ -1,0 +1,16 @@
+{
+  "name": "search_and_replace",
+  "version": "1.4.0",
+  "resolutions": {
+
+  },
+  "dependencies": {
+    "@types/chrome": "*",
+    "typescript": "^4.3.2"
+  },
+  "module": "true",
+  "scripts": {
+    "build": "tsc --project ./ && cp -r ./assets ./build && cp manifest.json ./build"
+  }
+}
+
