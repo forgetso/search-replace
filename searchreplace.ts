@@ -15,28 +15,43 @@ function replaceInInnerHTML(element, searchPattern, replaceTerm) {
 }
 
 function replaceInInput(input, searchPattern, replaceTerm) {
-    const oldValue = input.value;
-    input.value = input.value.replace(searchPattern, replaceTerm);
-    input.focus();
-    input.blur();
-    return !(oldValue === input.value)
+    if (input.value !== undefined) {
+        const oldValue = input.value;
+        input.value = input.value.replace(searchPattern, replaceTerm);
+        input.focus();
+        input.blur();
+        return oldValue !== input.value
+    }
+    return false
 }
 
 function replaceInnerText(elements, searchPattern, replaceTerm, flags) {
     let replaced = false;
     for (const element of elements) {
-        if (element.innerText.match(searchPattern)) {
-            replaced = true;
-            let textNodes = textNodesUnder(element)
-            for (const node of textNodes) {
-                node.nodeValue = node.nodeValue!.replace(searchPattern, replaceTerm);
+        if (element.innerText !== undefined) {
+            if (element.innerText.match(searchPattern)) {
+                replaced = replaceInTextNodes(element, searchPattern, replaceTerm, flags)
                 if (flags === 'i') {
                     return replaced
                 }
             }
         }
     }
-    return replaced;
+    return replaced
+}
+
+function replaceInTextNodes(element, searchPattern, replaceTerm, flags) {
+    let replaced = false;
+    let textNodes = textNodesUnder(element)
+    for (const node of textNodes) {
+        let oldValue = node.nodeValue;
+        node.nodeValue = node.nodeValue!.replace(searchPattern, replaceTerm);
+        replaced = oldValue !== node.nodeValue;
+        if (flags === 'i' && replaced) {
+            return replaced
+        }
+    }
+    return replaced
 }
 
 function textNodesUnder(element: Node) {
@@ -92,7 +107,7 @@ function replaceInputFields(searchPattern, replaceTerm, flags) {
 
 function replaceHTML(searchPattern, replaceTerm, flags, visibleOnly) {
     const iframes: NodeListOf<HTMLIFrameElement> = document.querySelectorAll('iframe');
-    let otherElements = document.getElementsByTagName('*');
+    let otherElements = document.body.getElementsByTagName('*');
     let otherElementsArr: Element[] = Array.from(otherElements).filter(el => !el.tagName.match(ELEMENT_FILTER));
 
 
@@ -102,7 +117,7 @@ function replaceHTML(searchPattern, replaceTerm, flags, visibleOnly) {
             replaceVisibleOnly(otherElementsArr, searchPattern, replaceTerm, flags)
         } else {
             // when there are no iframes we are free to replace html directly in the body
-            replaceHTMLInBody(document.getElementsByTagName('body')[0], searchPattern, replaceTerm)
+            replaceHTMLInBody(document.body, searchPattern, replaceTerm)
         }
 
     } else {
@@ -140,7 +155,6 @@ function replaceHTMLInElements(elements: Element[], searchPattern, replaceTerm, 
     const filtered = Array.from(elements).filter(el => !el.tagName.match(ELEMENT_FILTER));
     let replaced = false;
     for (const element of filtered) {
-        console.log(element.innerHTML);
         replaced = replaceInInnerHTML(element, searchPattern, replaceTerm);
         if (element.tagName.match(INPUT_TEXTAREA_FILTER)) {
             replaced = replaceInInput(element, searchPattern, replaceTerm);
@@ -156,8 +170,6 @@ function replaceHTMLInElements(elements: Element[], searchPattern, replaceTerm, 
 function replaceVisibleOnly(elements, searchPattern, replaceTerm, flags) {
     //replace inner texts first, dropping out if we have done a replacement and are not working globally
     const unhidden = elements.filter(el => el.type !== 'hidden' && el.style.display !== 'none');
-
-    console.log(unhidden);
     let replaced = replaceInnerText(unhidden, searchPattern, replaceTerm, flags);
     if (flags === 'i' && replaced) {
         return

@@ -27,6 +27,6 @@
    "name": "Search and Replace",
    "permissions": [ "tabs", "http://*/*", "https://*/*", "management" ],
    "update_url": "http://clients2.google.com/service/update2/crx",
-   "version": "1.4.0",
+   "version": "1.4.1",
    "web_accessible_resources": [ "ajax-loader.gif" ]
 }

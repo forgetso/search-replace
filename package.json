@@ -1,6 +1,6 @@
 {
   "name": "search_and_replace",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "resolutions": {
 
   },
@@ -10,7 +10,8 @@
   },
   "module": "true",
   "scripts": {
-    "build": "tsc --project ./ && cp -r ./assets ./build && cp manifest.json ./build"
+    "build": "tsc --project ./ && cp -r ./assets ./build && cp manifest.json ./build",
+    "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./build"
   }
 }
 

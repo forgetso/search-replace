@@ -133,6 +133,6 @@ function getInputValues() {
 
 function openHelp() {
     chrome.tabs.create({
-        url: "help.html"
+        url: "assets/help.html"
     });
 }

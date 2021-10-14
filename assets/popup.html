@@ -2,98 +2,108 @@
 
 <head>
     <script src="../popup.js"></script>
-    
     <style>
         body,
         body div table {
-            font-family: 'Open Sans', arial, sans-serif;
+            font-family: "Open Sans", sans-serif;
             background-color: #E5E5E5;
             font-size: 13px;
             text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-            width: 180px;
+            width: 220px;
             height: 120px;
         }
-        
+
         #loader {
             display: none;
         }
-        
-        input[type="checkbox"],#help {
+
+        input[type="checkbox"], #help {
             text-align: right;
         }
-        
-        button {
+
+        button, input[type="text"] {
             width: 98%;
+            height: 30px;
         }
-        
+
         input[type="checkbox"] {
             float: right;
-            margin: 0 6px 0 0;
+            margin: 3px 6px 0 0;
         }
-        
+
+        #help {
+            padding: 1px 6px
+        }
+
+
     </style>
     <title>Search and Replace</title>
 </head>
 
 <body>
-    <div id="loader">
-        <img src="ajax-loader.gif" width="16" height="16" name="loading" alt="searching and replacing...">
-    </div>
-    <div id="content">
-        <table>
-            <tr>
-                <td>
+<div id="loader">
+    <img src="ajax-loader.gif" width="16" height="16" name="loading" alt="searching and replacing...">
+</div>
+<div id="content">
+    <table>
+        <tr class="first-row">
+            <td>
                     <span class="clearable">
 			<label for="searchTerm">Search for</label>
-			<input class="data_field" name="searchTerm" id="searchTerm"/>
+			<input class="data_field" name="searchTerm" id="searchTerm" type="text"/>
             </span>
-                </td>
-            </tr>
-            <tr>
-                <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
                     <span class="clearable">
 			<label for="replaceTerm">Replace with</label>
-			<input class="data_field" name="replaceTerm" id="replaceTerm"/>
+			<input class="data_field" name="replaceTerm" id="replaceTerm" type="text"/>
             </span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="case">Match Case?</label>
-                    <input name="case" id="case" type="checkbox"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="inputFieldsOnly">Input fields only?</label>
-                    <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="visibleOnly">Only change visible content?</label>
-                    <input name="visibleOnly" id="visibleOnly" type="checkbox"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="regex">Regular Expression?</label>
-                    <input name="regex" id="regex" type="checkbox"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="next">Replace Next</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="all">Replace All</button>
-                </td>
-            </tr>
-        </table>
-    </div>
-<div id="help"><a href="#">Help</a></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="case">Match Case?</label>
+                <input name="case" id="case" type="checkbox"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="inputFieldsOnly">Input fields only?</label>
+                <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="visibleOnly">Only change visible content?</label>
+                <input name="visibleOnly" id="visibleOnly" type="checkbox"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="regex">Regular Expression?</label>
+                <input name="regex" id="regex" type="checkbox"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button id="next">Replace Next</button>
+            </td>
+        </tr>
+        <tr class="last-row">
+            <td>
+                <button id="all">Replace All</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="help"><a href="#">Help</a></div>
+            </td>
+        </tr>
+    </table>
+</div>
+
 
 </body>
 
