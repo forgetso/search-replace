@@ -1,4 +1,3 @@
-
 const INPUT_ELEMENTS_AND_EVENTS = {
     'searchTerm': ['change', 'keyup', 'blur'],
     'replaceTerm': ['change', 'keyup', 'blur'],
@@ -29,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add event listeners
     port.onMessage.addListener(function (msg) {
+        console.log(msg);
         if (typeof (msg['searchTerm']) !== 'undefined') {
             (<HTMLInputElement>document.getElementById('searchTerm'))
                 .value = msg['searchTerm'];
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         for (const checkbox of CHECKBOXES) {
-            if (msg[checkbox] === "1") {
+            if (msg[checkbox] === 1) {
                 (<HTMLInputElement>document.getElementById(checkbox)).checked = true;
             }
         }
@@ -74,9 +74,11 @@ function clickHandler(replaceAll) {
     const {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, isRegex} = getInputValues();
     const globalFlag = replaceAll ? 'g' : '';
     const flags = caseFlag ? globalFlag : globalFlag + 'i';
-    chrome.tabs.getSelected(null!, function (tab) {
+    const query = {active: true, currentWindow: true};
+    chrome.tabs.query(query, function (tabs) {
+        const tab = tabs[0];
         if (tab.id != null) {
-            chrome.tabs.sendRequest(tab.id, {
+            chrome.tabs.sendMessage(tab.id, {
                 searchTerm: searchTerm,
                 replaceTerm: replaceTerm,
                 flags: flags,
@@ -110,7 +112,7 @@ function storeTerms(e) {
             regex: isRegex ? 1 : 0
         });
         port.onMessage.addListener(function (msg) {
-            console.log("message received" + msg);
+            console.log("Message received: " + msg);
         });
     }
 }

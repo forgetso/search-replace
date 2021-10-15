@@ -224,7 +224,7 @@ function searchReplace(searchTerm, replaceTerm, flags, inputFieldsOnly, isRegex,
 
 }
 
-chrome.extension.onRequest.addListener(
+chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         let searchTerm;
         let replaceTerm;
