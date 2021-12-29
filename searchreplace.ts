@@ -14,13 +14,26 @@ function replaceInInnerHTML(element, searchPattern, replaceTerm) {
 
 }
 
-function replaceInInput(input, searchPattern, replaceTerm) {
+
+function replaceInInput(input, searchPattern, replaceTerm, ko): boolean {
     if (input.value !== undefined) {
         const oldValue = input.value;
-        input.value = input.value.replace(searchPattern, replaceTerm);
-        input.focus();
-        input.blur();
-        return oldValue !== input.value
+        const newValue = input.value.replace(searchPattern, replaceTerm);
+
+        if (oldValue !== newValue) {
+            //console.log(oldValue, newValue);
+            input.focus();
+            input.value = newValue
+            input.dispatchEvent(new KeyboardEvent('keyup', {'keyCode': 13}));
+            input.blur();
+
+            if (ko) {
+                ko.dataFor(input).value(newValue);
+                ko.dataFor(input).valueUpdate = true;
+                ko.dataFor(input).valueChangedByUser = true;
+            }
+            return true
+        }
     }
     return false
 }
@@ -73,8 +86,9 @@ function replaceHTMLInBody(body, searchPattern, replaceTerm) {
 
 function replaceInInputs(inputs, searchPattern, replaceTerm, flags) {
     let replaced = false;
+    let ko = getKnockout();
     for (const input of inputs) {
-        replaced = replaceInInput(input, searchPattern, replaceTerm);
+        replaced = replaceInInput(input, searchPattern, replaceTerm, ko);
         if (flags === 'i' && replaced) {
             return replaced
         }
@@ -82,11 +96,24 @@ function replaceInInputs(inputs, searchPattern, replaceTerm, flags) {
     return replaced
 }
 
+function getKnockout() {
+    const requirejsProp = 'requirejs'
+    let ko;
+    if (requirejsProp in window) {
+        try {
+            ko = window[requirejsProp]("ko");
+        } catch (err) {
+            console.log("ko not found")
+        }
+    }
+    return ko
+}
+
 
 function replaceInputFields(searchPattern, replaceTerm, flags) {
     const iframes = document.querySelectorAll('iframe');
     let allInputs: NodeListOf<HTMLInputElement | HTMLTextAreaElement> = document.querySelectorAll('input, textarea');
-    let allInputsArr: Element[] = Array.from(allInputs).filter(({type}) => type !== 'hidden');
+    let allInputsArr: Element[] = Array.from(allInputs).filter(({type}) => type !== 'hidden' && type !== 'checkbox');
     let replaced = replaceInInputs(allInputsArr, searchPattern, replaceTerm, flags)
     if (flags === 'i' && replaced) {
         return replaced
@@ -96,7 +123,7 @@ function replaceInputFields(searchPattern, replaceTerm, flags) {
         let iframe = iframes[0];
         if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
             let iframeInputs: NodeListOf<HTMLInputElement | HTMLTextAreaElement> = document.querySelectorAll('input, textarea');
-            let iframeInputsArr: Element[] = Array.from(iframeInputs).filter(({type}) => type !== 'hidden');
+            let iframeInputsArr: Element[] = Array.from(iframeInputs).filter(({type}) => type !== 'hidden' && type !== 'checkbox');
             let replaced = replaceInInputs(iframeInputsArr, searchPattern, replaceTerm, flags)
             if (flags === 'i' && replaced) {
                 return replaced
@@ -157,7 +184,8 @@ function replaceHTMLInElements(elements: Element[], searchPattern, replaceTerm, 
     for (const element of filtered) {
         replaced = replaceInInnerHTML(element, searchPattern, replaceTerm);
         if (element.tagName.match(INPUT_TEXTAREA_FILTER)) {
-            replaced = replaceInInput(element, searchPattern, replaceTerm);
+            const ko = getKnockout();
+            replaced = replaceInInput(element, searchPattern, replaceTerm, ko);
         }
         //Replace Next should only match once
         if (flags === 'i' && replaced) {
