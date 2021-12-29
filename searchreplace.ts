@@ -110,10 +110,14 @@ function getKnockout() {
 }
 
 
-function replaceInputFields(searchPattern, replaceTerm, flags) {
+function replaceInputFields(searchPattern, replaceTerm, flags, visibleOnly) {
     const iframes = document.querySelectorAll('iframe');
     let allInputs: NodeListOf<HTMLInputElement | HTMLTextAreaElement> = document.querySelectorAll('input, textarea');
-    let allInputsArr: Element[] = Array.from(allInputs).filter(({type}) => type !== 'hidden' && type !== 'checkbox');
+    const inputTypeFilter: string[] = [];
+    if (visibleOnly) {
+        inputTypeFilter.push("hidden")
+    }
+    let allInputsArr: Element[] = Array.from(allInputs).filter(({type}) => inputTypeFilter.indexOf(type) === -1);
     let replaced = replaceInInputs(allInputsArr, searchPattern, replaceTerm, flags)
     if (flags === 'i' && replaced) {
         return replaced
@@ -123,7 +127,7 @@ function replaceInputFields(searchPattern, replaceTerm, flags) {
         let iframe = iframes[0];
         if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
             let iframeInputs: NodeListOf<HTMLInputElement | HTMLTextAreaElement> = document.querySelectorAll('input, textarea');
-            let iframeInputsArr: Element[] = Array.from(iframeInputs).filter(({type}) => type !== 'hidden' && type !== 'checkbox');
+            let iframeInputsArr: Element[] = Array.from(iframeInputs).filter(({type}) => inputTypeFilter.indexOf(type) === -1);
             let replaced = replaceInInputs(iframeInputsArr, searchPattern, replaceTerm, flags)
             if (flags === 'i' && replaced) {
                 return replaced
@@ -245,7 +249,7 @@ function searchReplace(searchTerm, replaceTerm, flags, inputFieldsOnly, isRegex,
             replaceGmail(searchPattern, replaceTerm, flags)
         }
     } else if (inputFieldsOnly) {
-        replaceInputFields(searchPattern, replaceTerm, flags)
+        replaceInputFields(searchPattern, replaceTerm, flags, visibleOnly)
     } else {
         replaceHTML(searchPattern, replaceTerm, flags, visibleOnly)
     }
