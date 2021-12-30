@@ -3,6 +3,7 @@
 const ELEMENT_FILTER = new RegExp('(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)');
 const INPUT_TEXTAREA_FILTER = new RegExp('(INPUT|TEXTAREA)')
 
+
 function regExEscape(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
@@ -15,27 +16,31 @@ function replaceInInnerHTML(element, searchPattern, replaceTerm) {
 }
 
 
-function replaceInInput(input, searchPattern, replaceTerm, ko): boolean {
-    if (input.value !== undefined) {
-        const oldValue = input.value;
-        const newValue = input.value.replace(searchPattern, replaceTerm);
-
-        if (oldValue !== newValue) {
-            //console.log(oldValue, newValue);
-            input.focus();
-            input.value = newValue
-            input.dispatchEvent(new KeyboardEvent('keyup', {'keyCode': 13}));
-            input.blur();
-
-            if (ko) {
-                ko.dataFor(input).value(newValue);
-                ko.dataFor(input).valueUpdate = true;
-                ko.dataFor(input).valueChangedByUser = true;
-            }
-            return true
-        }
+function replaceInInput(input, searchPattern, replaceTerm, usesKnockout): boolean {
+    if (input.value === undefined) {
+        return false
     }
-    return false
+
+    const oldValue = input.value;
+    const newValue = input.value.replace(searchPattern, replaceTerm);
+
+    if (oldValue === newValue) {
+        return false
+    }
+
+    input.focus();
+    input.value = newValue
+
+    if (usesKnockout) {
+        const knockoutValueChanger = getKnockoutValueChanger(input.id, newValue);
+        document.documentElement.setAttribute('onreset', knockoutValueChanger);
+        document.documentElement.dispatchEvent(new CustomEvent('reset'));
+        document.documentElement.removeAttribute('onreset');
+    }
+
+    input.blur();
+
+    return true
 }
 
 function replaceInnerText(elements, searchPattern, replaceTerm, flags) {
@@ -86,7 +91,7 @@ function replaceHTMLInBody(body, searchPattern, replaceTerm) {
 
 function replaceInInputs(inputs, searchPattern, replaceTerm, flags) {
     let replaced = false;
-    let ko = getKnockout();
+    let ko = usesKnockout();
     for (const input of inputs) {
         replaced = replaceInInput(input, searchPattern, replaceTerm, ko);
         if (flags === 'i' && replaced) {
@@ -96,17 +101,20 @@ function replaceInInputs(inputs, searchPattern, replaceTerm, flags) {
     return replaced
 }
 
-function getKnockout() {
-    const requirejsProp = 'requirejs'
-    let ko;
-    if (requirejsProp in window) {
-        try {
-            ko = window[requirejsProp]("ko");
-        } catch (err) {
-            console.log("ko not found")
-        }
-    }
-    return ko
+function usesKnockout() {
+    const script = Array.from(document.getElementsByTagName('script')).filter(s => s.src.indexOf('knockout.js') > -1)
+    return script.length > 0
+}
+
+function getKnockoutValueChanger(id, newValue) {
+    // NOTE - even though `id` is a string in the content script, it evaluates to the element on the page. Passing in an
+    // element causes this to fail.
+    return `(function () {
+                var ko = requirejs('ko');
+                ko.dataFor(${id}).value('${newValue}');
+                ko.dataFor(${id}).valueUpdate = true;
+                ko.dataFor(${id}).valueChangedByUser = true;
+            })()`;
 }
 
 
@@ -188,7 +196,7 @@ function replaceHTMLInElements(elements: Element[], searchPattern, replaceTerm, 
     for (const element of filtered) {
         replaced = replaceInInnerHTML(element, searchPattern, replaceTerm);
         if (element.tagName.match(INPUT_TEXTAREA_FILTER)) {
-            const ko = getKnockout();
+            const ko = usesKnockout();
             replaced = replaceInInput(element, searchPattern, replaceTerm, ko);
         }
         //Replace Next should only match once
