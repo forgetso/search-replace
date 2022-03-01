@@ -256,6 +256,7 @@ function tinyMCEPostEdit(searchPattern: RegExp, replaceTerm: string, flags: stri
             replaceInnerText(inputs, searchPattern, replaceTerm, flags);
             mceIframeBody.focus();
         }
+
     } catch (err) {
         console.log(err);
     }
@@ -270,6 +271,7 @@ function searchReplace(searchTerm, replaceTerm: string, flags, inputFieldsOnly, 
     if (document.querySelectorAll('.mce-tinymce').length) {
         console.log("found tinymce")
         tinyMCEPostEdit(searchPattern, replaceTerm, flags);
+        replaceInputFields(searchPattern, replaceTerm, flags, visibleOnly)
     } else if (window.location.href.indexOf('mail.google.com') > -1) {
         if (window.location.hash.indexOf('compose') > -1 || window.location.hash.indexOf('#drafts') > -1 || window.location.hash.indexOf('#inbox') > -1) {
             replaceGmail(searchPattern, replaceTerm, flags)
