@@ -2,7 +2,8 @@
 
 const ELEMENT_FILTER = new RegExp('(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)');
 const INPUT_TEXTAREA_FILTER = new RegExp('(INPUT|TEXTAREA)')
-
+const GOOGLE_MAIL_DOMAIN = 'mail.google.com';
+const TINY_MCE_ELEMENT_ID = 'tinymce';
 
 function regExEscape(text: string): string {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -247,7 +248,7 @@ function replaceGmail(searchPattern: RegExp, replaceTerm: string, flags: string)
 function tinyMCEPostEdit(searchPattern: RegExp, replaceTerm: string, flags: string) {
     try {
         const mceIframe: HTMLIFrameElement = <HTMLIFrameElement>document.querySelectorAll('.mce-edit-area')[0].childNodes[0];
-        const mceIframeBody = mceIframe.contentDocument!.getElementById('tinymce');
+        const mceIframeBody = mceIframe.contentDocument!.getElementById(TINY_MCE_ELEMENT_ID);
         let inputs: HTMLElement[] = [];
         if (mceIframeBody) {
             console.log("Found mce iframe body")
@@ -263,16 +264,38 @@ function tinyMCEPostEdit(searchPattern: RegExp, replaceTerm: string, flags: stri
 
 }
 
+function getSearchPattern(searchTerm: string, isRegex: boolean, flags) {
+    const searchTermEscaped = !isRegex ? regExEscape(searchTerm) : searchTerm;
+    return new RegExp(searchTermEscaped, flags);
+}
+
+function getFlags(matchCase: boolean, replaceAll: boolean) {
+    return (replaceAll ? 'g' : '') + (matchCase ? 'i' : '');
+}
+
+function getSearchOccurrences(searchPattern: RegExp, visibleOnly: boolean) {
+    let matches;
+    if (visibleOnly) {
+        matches = document.body.innerText.match(searchPattern);
+    } else {
+        matches = document.body.innerHTML.match(searchPattern);
+    }
+    if (matches) {
+        return matches.length;
+    } else {
+        return 0;
+    }
+}
+
 function searchReplace(searchTerm, replaceTerm: string, flags, inputFieldsOnly, isRegex, visibleOnly) {
 
-    const searchTermEscaped = !isRegex ? regExEscape(searchTerm) : searchTerm;
-    const searchPattern = new RegExp(searchTermEscaped, flags);
+    const searchPattern = getSearchPattern(searchTerm, isRegex, flags);
 
     if (document.querySelectorAll('.mce-tinymce').length) {
         console.log("found tinymce")
         tinyMCEPostEdit(searchPattern, replaceTerm, flags);
         replaceInputFields(searchPattern, replaceTerm, flags, visibleOnly)
-    } else if (window.location.href.indexOf('mail.google.com') > -1) {
+    } else if (window.location.href.indexOf(GOOGLE_MAIL_DOMAIN) > -1) {
         if (window.location.hash.indexOf('compose') > -1 || window.location.hash.indexOf('#drafts') > -1 || window.location.hash.indexOf('#inbox') > -1) {
             replaceGmail(searchPattern, replaceTerm, flags)
         }
@@ -288,22 +311,24 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         let searchTerm;
         let replaceTerm;
-        if (request.recover) {
+        const globalFlags = getFlags(request.matchCase, true)
+        const globalSearchPattern = getSearchPattern(request.searchTerm, request.isRegex, globalFlags)
+        if (request.action === 'recover' || request.action === 'store') {
             searchTerm = sessionStorage.getItem('searchTerm');
             replaceTerm = sessionStorage.getItem('replaceTerm');
             sendResponse({
                 searchTerm: searchTerm,
-                replaceTerm: replaceTerm
+                replaceTerm: replaceTerm,
+                searchTermCount: getSearchOccurrences(globalSearchPattern, request.visibleOnly)
             });
-        } else if (request.store) {
+        } else if (request.action === 'searchReplace') {
             sessionStorage.setItem('searchTerm', request.searchTerm);
             sessionStorage.setItem('replaceTerm', request.replaceTerm);
-        } else if (request.searchTerm) {
-            sessionStorage.setItem('searchTerm', request.searchTerm);
-            sessionStorage.setItem('replaceTerm', request.replaceTerm);
-            searchReplace(request.searchTerm, request.replaceTerm, request.flags, request.inputFieldsOnly, request.regex, request.visibleOnly);
+            const flags = getFlags(request.matchCase, request.replaceAll);
+            searchReplace(request.searchTerm, request.replaceTerm, flags, request.inputFieldsOnly, request.regex, request.visibleOnly);
             sendResponse({
-                response: 'done'
+                response: 'done',
+                searchTermCount: getSearchOccurrences(globalSearchPattern, request.visibleOnly)
             });
         }
     });

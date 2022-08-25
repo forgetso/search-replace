@@ -2,7 +2,8 @@
 
 chrome.runtime.onConnect.addListener(function (port) {
     port.onMessage.addListener(function (msg) {
-        if (!msg['recover']) {
+        console.log(msg);
+        if (msg['recover'] === 0) {
             chrome.storage.local.set({
                 'options': {
                     'searchTerm': msg['searchTerm'],
