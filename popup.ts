@@ -9,6 +9,7 @@ const INPUT_ELEMENTS_AND_EVENTS = {
 };
 
 const CHECKBOXES = ['case', 'inputFieldsOnly', 'visibleOnly', 'regex'];
+const MIN_SEARCH_TERM_LENGTH = 3;
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -48,10 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //Click events for Replace Next, Replace All buttons and Help link
     (<HTMLButtonElement>document.querySelector('#next')).addEventListener('click', function () {
-        clickHandler(0);
+        clickHandler('searchReplace', 0, tabQueryCallback);
     });
     (<HTMLButtonElement>document.querySelector('#all')).addEventListener('click', function () {
-        clickHandler(1);
+        clickHandler('searchReplace', 1, tabQueryCallback);
     });
     (<HTMLAnchorElement>document.getElementById('help'))
         .addEventListener('click', openHelp);
@@ -66,39 +67,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-function clickHandler(replaceAll) {
+
+function clickHandler(action, replaceAll, callbackHandler) {
     const loader = document.getElementById("loader");
     loader!.style.display = 'block';
     const content = document.getElementById('content');
     content!.style.display = "none";
     const {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, isRegex} = getInputValues();
-    const globalFlag = replaceAll ? 'g' : '';
-    const flags = caseFlag ? globalFlag : globalFlag + 'i';
+    tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFieldsOnly, visibleOnly, isRegex, callbackHandler);
+}
+
+function tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFieldsOnly, visibleOnly, isRegex, callbackHandler) {
     const query = {active: true, currentWindow: true};
     chrome.tabs.query(query, function (tabs) {
         const tab = tabs[0];
         if (tab.id != null) {
             chrome.tabs.sendMessage(tab.id, {
+                action: action,
                 searchTerm: searchTerm,
                 replaceTerm: replaceTerm,
-                flags: flags,
+                replaceAll: replaceAll,
+                matchCase: caseFlag,
                 inputFieldsOnly: inputFieldsOnly,
                 visibleOnly: visibleOnly,
                 regex: isRegex,
                 url: tab.url,
             }, function (response) {
-                loader!.style.display = "none";
-                content!.style.display = "block";
+                callbackHandler(response);
             });
         }
     });
-};
+}
+
+function tabQueryCallback(msg) {
+    removeLoader();
+    if (typeof (msg['searchTermCount']) !== 'undefined') {
+        (<HTMLInputElement>document.getElementById('searchTermCount'))
+            .innerText = msg['searchTermCount'] + ' matches';
+    }
+}
+
+function removeLoader() {
+    const loader = document.getElementById("loader");
+    loader!.style.display = 'none';
+    const content = document.getElementById('content');
+    content!.style.display = "block";
+}
 
 function storeTerms(e) {
     e = e || window.event;
     if (e.keyCode === 13) {
         //if the user presses enter we want to trigger the search replace
-        clickHandler(false);
+        clickHandler('searchReplace', false, tabQueryCallback);
     } else {
         const {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, isRegex} = getInputValues();
         const port = tabConnect();
@@ -114,6 +134,11 @@ function storeTerms(e) {
         port.onMessage.addListener(function (msg) {
             console.log("Message received: " + msg);
         });
+        if (searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
+            tabQuery('store', searchTerm, replaceTerm, 1, caseFlag, inputFieldsOnly, visibleOnly, isRegex, tabQueryCallback)
+        } else {
+            tabQueryCallback({});
+        }
     }
 }
 
