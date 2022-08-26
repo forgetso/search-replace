@@ -9,7 +9,7 @@ const INPUT_ELEMENTS_AND_EVENTS = {
 };
 
 const CHECKBOXES = ['case', 'inputFieldsOnly', 'visibleOnly', 'regex'];
-const MIN_SEARCH_TERM_LENGTH = 3;
+const MIN_SEARCH_TERM_LENGTH = 2;
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -101,7 +101,7 @@ function tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFi
 
 function tabQueryCallback(msg) {
     removeLoader();
-    if (typeof (msg['searchTermCount']) !== 'undefined') {
+    if ('searchTermCount' in msg && 'inIframe' in msg && msg['inIframe'] === false) {
         (<HTMLInputElement>document.getElementById('searchTermCount'))
             .innerText = msg['searchTermCount'] + ' matches';
     }
