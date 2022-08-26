@@ -139,7 +139,7 @@ function replaceInputFields(searchPattern: RegExp, replaceTerm: string, flags: s
             let iframeInputs: NodeListOf<HTMLInputElement | HTMLTextAreaElement> = document.querySelectorAll('input, textarea');
             let iframeInputsArr: HTMLInputElement[] = Array.from(iframeInputs).filter(({type}) => inputTypeFilter.indexOf(type) === -1) as HTMLInputElement[];
             let replaced = replaceInInputs(iframeInputsArr, searchPattern, replaceTerm, flags)
-            if (flags === 'i' && replaced) {
+            if (replaceNextOnly(flags) && replaced) {
                 return replaced
             }
         }
@@ -203,11 +203,15 @@ function replaceHTMLInElements(elements: HTMLElement[], searchPattern, replaceTe
             replaced = replaceInInput(element as HTMLInputElement, searchPattern, replaceTerm, ko);
         }
         //Replace Next should only match once
-        if (flags === 'i' && replaced) {
+        if (replaceNextOnly(flags) && replaced) {
             return
         }
 
     }
+}
+
+function replaceNextOnly(flags: string): boolean {
+    return flags.indexOf('g') === -1;
 }
 
 function replaceVisibleOnly(elements: HTMLElement[], searchPattern: RegExp, replaceTerm: string, flags: string) {
@@ -215,7 +219,7 @@ function replaceVisibleOnly(elements: HTMLElement[], searchPattern: RegExp, repl
     //replace inner texts first, dropping out if we have done a replacement and are not working globally
     const unhidden: HTMLElement[] = Array.from(elements).filter(elementIsVisible);
     let replaced = replaceInnerText(unhidden, searchPattern, replaceTerm, flags);
-    if (flags === 'i' && replaced) {
+    if (replaceNextOnly(flags) && replaced) {
         return
     }
     // then replace inputs
@@ -261,13 +265,23 @@ function tinyMCEPostEdit(searchPattern: RegExp, replaceTerm: string, flags: stri
 
 }
 
-function getSearchPattern(searchTerm: string, isRegex: boolean, flags): RegExp {
-    const searchTermEscaped = !isRegex ? regExEscape(searchTerm) : searchTerm;
-    return new RegExp(searchTermEscaped, flags);
+function getSearchPattern(searchTerm: string, isRegex: boolean, flags: string, wholeWord: boolean): RegExp {
+    const escaped = regExEscape(searchTerm)
+    try {
+        const searchTermEscaped = isRegex ? searchTerm : escaped;
+        if (wholeWord && !isRegex) {
+            return new RegExp(`\\b${searchTermEscaped}\\b`, flags);
+        } else {
+            return new RegExp(searchTermEscaped, flags);
+        }
+    } catch (e) {
+        console.warn(`error building regex: ${searchTerm}`)
+        return new RegExp(escaped, flags);
+    }
 }
 
 function getFlags(matchCase: boolean, replaceAll: boolean): string {
-    return (replaceAll ? 'g' : '') + (matchCase ? 'i' : '');
+    return (replaceAll ? 'g' : '') + (matchCase ? '' : 'i');
 }
 
 function getSearchOccurrences(searchPattern: RegExp, visibleOnly: boolean): number {
@@ -284,9 +298,9 @@ function getSearchOccurrences(searchPattern: RegExp, visibleOnly: boolean): numb
     }
 }
 
-function searchReplace(searchTerm: string, replaceTerm: string, flags: string, inputFieldsOnly: boolean, isRegex: boolean, visibleOnly: boolean): void {
+function searchReplace(searchTerm: string, replaceTerm: string, flags: string, inputFieldsOnly: boolean, isRegex: boolean, visibleOnly: boolean, wholeWord: boolean): void {
 
-    const searchPattern = getSearchPattern(searchTerm, isRegex, flags);
+    const searchPattern = getSearchPattern(searchTerm, isRegex, flags, wholeWord);
 
     if (document.querySelectorAll('.mce-tinymce').length) {
         console.log("found tinymce")
@@ -311,7 +325,7 @@ function inIframe() {
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         const globalFlags = getFlags(request.matchCase, true)
-        const globalSearchPattern = getSearchPattern(request.searchTerm, request.isRegex, globalFlags)
+        const globalSearchPattern = getSearchPattern(request.searchTerm, request.regex, globalFlags, request.wholeWord)
         let searchTermCount = getSearchOccurrences(globalSearchPattern, request.visibleOnly)
         const response = {
             searchTermCount: searchTermCount,
@@ -321,7 +335,7 @@ chrome.runtime.onMessage.addListener(
             sessionStorage.setItem('searchTerm', request.searchTerm);
             sessionStorage.setItem('replaceTerm', request.replaceTerm);
             const flags = getFlags(request.matchCase, request.replaceAll);
-            searchReplace(request.searchTerm, request.replaceTerm, flags, request.inputFieldsOnly, request.regex, request.visibleOnly);
+            searchReplace(request.searchTerm, request.replaceTerm, flags, request.inputFieldsOnly, request.regex, request.visibleOnly, request.wholeWord);
             sendResponse({
                 searchTermCount: getSearchOccurrences(globalSearchPattern, request.visibleOnly),
                 inIframe: inIframe()

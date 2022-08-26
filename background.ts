@@ -11,6 +11,7 @@ chrome.runtime.onConnect.addListener(function (port) {
                     'case': msg['case'],
                     'inputFieldsOnly': msg['inputFieldsOnly'],
                     'visibleOnly': msg['visibleOnly'],
+                    'wholeWord': msg['wholeWord'],
                     'regex': msg['regex']
                 }
             }, function () {
@@ -25,6 +26,7 @@ chrome.runtime.onConnect.addListener(function (port) {
                         'case': result.options['case'],
                         inputFieldsOnly: result.options['inputFieldsOnly'],
                         visibleOnly: result.options['visibleOnly'],
+                        wholeWord: result.options['wholeWord'],
                         regex: result.options['regex']
                     })
                 }

@@ -4,11 +4,12 @@ const INPUT_ELEMENTS_AND_EVENTS = {
     'case': ['change', 'click'],
     'inputFieldsOnly': ['change', 'click'],
     'visibleOnly': ['change', 'click'],
+    'wholeWord': ['change', 'click'],
     'regex': ['change'],
     'help': ['click']
 };
 
-const CHECKBOXES = ['case', 'inputFieldsOnly', 'visibleOnly', 'regex'];
+const CHECKBOXES = ['case', 'inputFieldsOnly', 'visibleOnly', 'regex', 'wholeWord'];
 const MIN_SEARCH_TERM_LENGTH = 2;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -29,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add event listeners
     port.onMessage.addListener(function (msg) {
-        console.log(msg);
         if (typeof (msg['searchTerm']) !== 'undefined') {
             (<HTMLInputElement>document.getElementById('searchTerm'))
                 .value = msg['searchTerm'];
@@ -73,11 +73,11 @@ function clickHandler(action, replaceAll, callbackHandler) {
     loader!.style.display = 'block';
     const content = document.getElementById('content');
     content!.style.display = "none";
-    const {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, isRegex} = getInputValues();
-    tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFieldsOnly, visibleOnly, isRegex, callbackHandler);
+    const {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, wholeWord, isRegex} = getInputValues();
+    tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFieldsOnly, visibleOnly, wholeWord, isRegex, callbackHandler);
 }
 
-function tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFieldsOnly, visibleOnly, isRegex, callbackHandler) {
+function tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFieldsOnly, visibleOnly, wholeWord, isRegex, callbackHandler) {
     const query = {active: true, currentWindow: true};
     chrome.tabs.query(query, function (tabs) {
         const tab = tabs[0];
@@ -90,6 +90,7 @@ function tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFi
                 matchCase: caseFlag,
                 inputFieldsOnly: inputFieldsOnly,
                 visibleOnly: visibleOnly,
+                wholeWord: wholeWord,
                 regex: isRegex,
                 url: tab.url,
             }, function (response) {
@@ -101,9 +102,11 @@ function tabQuery(action, searchTerm, replaceTerm, replaceAll, caseFlag, inputFi
 
 function tabQueryCallback(msg) {
     removeLoader();
-    if ('searchTermCount' in msg && 'inIframe' in msg && msg['inIframe'] === false) {
-        (<HTMLInputElement>document.getElementById('searchTermCount'))
-            .innerText = msg['searchTermCount'] + ' matches';
+    if (msg) {
+        if ('searchTermCount' in msg && 'inIframe' in msg && msg['inIframe'] === false) {
+            (<HTMLInputElement>document.getElementById('searchTermCount'))
+                .innerText = msg['searchTermCount'] + ' matches';
+        }
     }
 }
 
@@ -120,7 +123,7 @@ function storeTerms(e) {
         //if the user presses enter we want to trigger the search replace
         clickHandler('searchReplace', false, tabQueryCallback);
     } else {
-        const {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, isRegex} = getInputValues();
+        const {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, wholeWord, isRegex} = getInputValues();
         const port = tabConnect();
         port.postMessage({
             recover: 0,
@@ -129,13 +132,14 @@ function storeTerms(e) {
             case: caseFlag ? 1 : 0,
             inputFieldsOnly: inputFieldsOnly ? 1 : 0,
             visibleOnly: visibleOnly ? 1 : 0,
+            wholeWord: wholeWord ? 1 : 0,
             regex: isRegex ? 1 : 0
         });
         port.onMessage.addListener(function (msg) {
             console.log("Message received: " + msg);
         });
         if (searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
-            tabQuery('store', searchTerm, replaceTerm, 1, caseFlag, inputFieldsOnly, visibleOnly, isRegex, tabQueryCallback)
+            tabQuery('store', searchTerm, replaceTerm, 1, caseFlag, inputFieldsOnly, visibleOnly, wholeWord, isRegex, tabQueryCallback)
         } else {
             tabQueryCallback({});
         }
@@ -154,8 +158,9 @@ function getInputValues() {
     const caseFlag = (<HTMLInputElement>document.getElementById('case')).checked;
     const inputFieldsOnly = (<HTMLInputElement>document.getElementById('inputFieldsOnly')).checked;
     const visibleOnly = (<HTMLInputElement>document.getElementById('visibleOnly')).checked;
+    const wholeWord = (<HTMLInputElement>document.getElementById('wholeWord')).checked;
     const isRegex = (<HTMLInputElement>document.getElementById('regex')).checked;
-    return {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, isRegex}
+    return {searchTerm, replaceTerm, caseFlag, inputFieldsOnly, visibleOnly, wholeWord, isRegex}
 }
 
 function openHelp() {
