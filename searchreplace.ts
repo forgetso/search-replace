@@ -50,7 +50,6 @@ function replaceInnerText(elements: HTMLElement[], searchPattern: RegExp, replac
         if (element.innerText !== undefined) {
 
             if (element.innerText.match(searchPattern)) {
-                console.log("Match in inner Text")
                 replaced = replaceInTextNodes(element, searchPattern, replaceTerm, flags)
                 if (flags === 'i') {
                     return replaced
@@ -216,13 +215,11 @@ function replaceVisibleOnly(elements: HTMLElement[], searchPattern: RegExp, repl
     //replace inner texts first, dropping out if we have done a replacement and are not working globally
     const unhidden: HTMLElement[] = Array.from(elements).filter(elementIsVisible);
     let replaced = replaceInnerText(unhidden, searchPattern, replaceTerm, flags);
-    console.log("Replaced in inner text in `replaceVisibleOnly`: ", replaced)
     if (flags === 'i' && replaced) {
         return
     }
     // then replace inputs
     const inputs: HTMLInputElement[] = unhidden.filter(el => el.tagName.match(INPUT_TEXTAREA_FILTER)) as HTMLInputElement[];
-    console.log("trying to replace in iframe inputs: ", inputs)
     let _ = replaceInInputs(inputs, searchPattern, replaceTerm, flags);
 
 }
@@ -264,16 +261,16 @@ function tinyMCEPostEdit(searchPattern: RegExp, replaceTerm: string, flags: stri
 
 }
 
-function getSearchPattern(searchTerm: string, isRegex: boolean, flags) {
+function getSearchPattern(searchTerm: string, isRegex: boolean, flags): RegExp {
     const searchTermEscaped = !isRegex ? regExEscape(searchTerm) : searchTerm;
     return new RegExp(searchTermEscaped, flags);
 }
 
-function getFlags(matchCase: boolean, replaceAll: boolean) {
+function getFlags(matchCase: boolean, replaceAll: boolean): string {
     return (replaceAll ? 'g' : '') + (matchCase ? 'i' : '');
 }
 
-function getSearchOccurrences(searchPattern: RegExp, visibleOnly: boolean) {
+function getSearchOccurrences(searchPattern: RegExp, visibleOnly: boolean): number {
     let matches;
     if (visibleOnly) {
         matches = document.body.innerText.match(searchPattern);
@@ -287,7 +284,7 @@ function getSearchOccurrences(searchPattern: RegExp, visibleOnly: boolean) {
     }
 }
 
-function searchReplace(searchTerm, replaceTerm: string, flags, inputFieldsOnly, isRegex, visibleOnly) {
+function searchReplace(searchTerm: string, replaceTerm: string, flags: string, inputFieldsOnly: boolean, isRegex: boolean, visibleOnly: boolean): void {
 
     const searchPattern = getSearchPattern(searchTerm, isRegex, flags);
 
@@ -307,28 +304,29 @@ function searchReplace(searchTerm, replaceTerm: string, flags, inputFieldsOnly, 
 
 }
 
+function inIframe() {
+    return window !== window.top
+}
+
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        let searchTerm;
-        let replaceTerm;
         const globalFlags = getFlags(request.matchCase, true)
         const globalSearchPattern = getSearchPattern(request.searchTerm, request.isRegex, globalFlags)
-        if (request.action === 'recover' || request.action === 'store') {
-            searchTerm = sessionStorage.getItem('searchTerm');
-            replaceTerm = sessionStorage.getItem('replaceTerm');
-            sendResponse({
-                searchTerm: searchTerm,
-                replaceTerm: replaceTerm,
-                searchTermCount: getSearchOccurrences(globalSearchPattern, request.visibleOnly)
-            });
-        } else if (request.action === 'searchReplace') {
+        let searchTermCount = getSearchOccurrences(globalSearchPattern, request.visibleOnly)
+        const response = {
+            searchTermCount: searchTermCount,
+            inIframe: inIframe()
+        }
+        if (request.action === 'searchReplace') {
             sessionStorage.setItem('searchTerm', request.searchTerm);
             sessionStorage.setItem('replaceTerm', request.replaceTerm);
             const flags = getFlags(request.matchCase, request.replaceAll);
             searchReplace(request.searchTerm, request.replaceTerm, flags, request.inputFieldsOnly, request.regex, request.visibleOnly);
             sendResponse({
-                response: 'done',
-                searchTermCount: getSearchOccurrences(globalSearchPattern, request.visibleOnly)
+                searchTermCount: getSearchOccurrences(globalSearchPattern, request.visibleOnly),
+                inIframe: inIframe()
             });
+        } else {
+            sendResponse(response);
         }
     });
