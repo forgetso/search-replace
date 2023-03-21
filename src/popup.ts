@@ -82,6 +82,7 @@ function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstan
 
 function historyItemClickHandler(e) {
     const target = <HTMLElement>e.target
+
     if (target.tagName === 'LI') {
         const options: SearchReplaceOptions = CHECKBOXES.reduce((result, checkboxName) => {
             result[checkboxName] = target.getAttribute(`data-${checkboxName}`) === 'true'
@@ -196,7 +197,7 @@ function createHistoryListItemElements(history: SearchReplaceInstance[]) {
     if (historyContent) {
         historyContent.innerHTML = ''
 
-        for (const item of history) {
+        for (const [index, item] of history.entries()) {
             const li = document.createElement('li')
             li.setAttribute(`data-searchTerm`, item['searchTerm'])
             li.setAttribute(`data-replaceTerm`, item['replaceTerm'])
@@ -204,6 +205,7 @@ function createHistoryListItemElements(history: SearchReplaceInstance[]) {
                 const checked = checkbox in item.options ? item.options[checkbox] : false
                 li.setAttribute(`data-${checkbox}`, String(checked))
             }
+            li.setAttribute('class', `historyRow-${index % 2}`)
 
             li.innerText = item.searchTerm + ' -> ' + item.replaceTerm
             historyContent.appendChild(li)

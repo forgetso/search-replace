@@ -6,11 +6,12 @@
         body,
         body div table {
             font-family: "Open Sans", sans-serif;
-            background-color: #E5E5E5;
+            background-color: #eee;
             font-size: 13px;
             text-shadow: 0 1px rgba(255, 255, 255, 0.5);
             width: 220px;
             height: 120px;
+            color: #444;
         }
 
         #loader {
@@ -35,6 +36,10 @@
             padding: 1px 6px
         }
 
+        #historyList {
+            padding-inline-start: 0;
+        }
+
         #historyList li {
             list-style-type: none;
             padding: 0;
@@ -43,9 +48,18 @@
 
         #historyList li:hover {
             color: dodgerblue;
+            cursor: pointer;
+            background-color: #ccc;
         }
 
+        .historyRow-1 {
+            background-color: #F5F5F5;
+        }
 
+        .historyRow-2 {
+            background-color: #eee;
+        }
+        
     </style>
     <title>Search and Replace</title>
 </head>
@@ -121,7 +135,7 @@
     This is an expandable list of previusly searched and replaced terms. Users can click on a term to populate the
     search and replace fields.
     -->
-    <div id="history">
+    <div id="history" class="collapsible">
         <div id="historyHeader">
             <h4>History</h4>
         </div>
