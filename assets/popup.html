@@ -17,7 +17,7 @@
             display: none;
         }
 
-        input[type="checkbox"], #help {
+        input[type="checkbox"] {
             text-align: right;
         }
 
@@ -35,6 +35,16 @@
             padding: 1px 6px
         }
 
+        #historyList li {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #historyList li:hover {
+            color: dodgerblue;
+        }
+
 
     </style>
     <title>Search and Replace</title>
@@ -45,6 +55,7 @@
     <img src="ajax-loader.gif" width="16" height="16" name="loading" alt="searching and replacing...">
 </div>
 <div id="content">
+    <h4>Configuration</h4>
     <table>
         <tr class="first-row">
             <td>
@@ -53,7 +64,7 @@
 			<input class="data_field" name="searchTerm" id="searchTerm" type="text"/>
 
             </span>
-            <span id="searchTermCount"></span>
+                <span id="searchTermCount"></span>
             </td>
         </tr>
         <tr>
@@ -66,8 +77,8 @@
         </tr>
         <tr>
             <td>
-                <label for="case">Match Case?</label>
-                <input name="case" id="case" type="checkbox"/>
+                <label for="matchCase">Match Case?</label>
+                <input name="matchCase" id="matchCase" type="checkbox"/>
             </td>
         </tr>
         <tr>
@@ -90,8 +101,8 @@
         </tr>
         <tr>
             <td>
-                <label for="regex">Regular Expression?</label>
-                <input name="regex" id="regex" type="checkbox"/>
+                <label for="isRegex">Regular Expression?</label>
+                <input name="isRegex" id="isRegex" type="checkbox"/>
             </td>
         </tr>
         <tr>
@@ -104,12 +115,23 @@
                 <button id="all">Replace All</button>
             </td>
         </tr>
-        <tr>
-            <td>
-                <div id="help"><a href="#">Help</a></div>
-            </td>
-        </tr>
     </table>
+    <!--
+    Search and Replace History
+    This is an expandable list of previusly searched and replaced terms. Users can click on a term to populate the
+    search and replace fields.
+    -->
+    <div id="history">
+        <div id="historyHeader">
+            <h4>History</h4>
+        </div>
+        <div id="historyContent">
+            <ul id="historyList">
+            </ul>
+        </div>
+    </div>
+    <!-- Help Link -->
+    <div id="help"><h4><a href="#">Help</a></h4></div>
 </div>
 
 
