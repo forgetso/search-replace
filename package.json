@@ -8,7 +8,7 @@
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
-    "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./build"
+    "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist"
   },
   "devDependencies": {
     "@types/chrome": "*",
