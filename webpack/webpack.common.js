@@ -35,7 +35,7 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin({
-            patterns: [{ from: 'assets/manifest.json', to: '../dist/manifest.json' }],
+            patterns: [{ from: 'manifest.json', to: '../dist/manifest.json' }],
             options: {},
         }),
         new CopyPlugin({
