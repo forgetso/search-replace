@@ -31,3 +31,29 @@ export type SearchReplaceStorage = {
 }
 
 export type SearchReplaceAction = 'searchReplace' | 'store'
+
+export enum SelectorType {
+    id = 'id',
+    class = 'class',
+    tag = 'tag',
+    attribute = 'attribute',
+    text = 'text',
+    href = 'href',
+    src = 'src',
+}
+
+export interface Selector {
+    type: SelectorType
+    value: string
+    iframe: boolean
+}
+
+export interface RichTextEditor {
+    container?: Selector
+    editor: Selector
+}
+
+export enum RegexFlags {
+    CaseInsensitive = 'i',
+    Global = 'g',
+}

@@ -42,13 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Restore the recent search replace instance and history list from storage
     port.onMessage.addListener(function (msg) {
         const history: SearchReplaceInstance[] = msg.history || []
-        console.log('history', history)
         if (history.length > 0) {
             const recentSearch = history[0]
             restoreSearchReplaceInstance(recentSearch)
             createHistoryListItemElements(history)
         }
     })
+    ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
     //Click events for Replace Next, Replace All buttons and Help link
     ;(<HTMLButtonElement>document.querySelector('#next')).addEventListener('click', function () {
@@ -70,8 +70,20 @@ document.addEventListener('DOMContentLoaded', function () {
     ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', historyItemClickHandler)
 })
 
+// function to expand or contract the history section
+function historyHeaderClickHandler(e) {
+    const historyContent = document.getElementById('historyContent')
+    if (historyContent) {
+        console.log(historyContent.style.display)
+        if (historyContent.style.display === 'block') {
+            historyContent.style.display = 'none'
+        } else {
+            historyContent.style.display = 'block'
+        }
+    }
+}
+
 function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstance) {
-    console.log('restoreSearchReplaceInstance', JSON.stringify(searchReplaceInstance, null, 4))
     ;(<HTMLInputElement>document.getElementById('searchTerm')).value = searchReplaceInstance.searchTerm
     ;(<HTMLInputElement>document.getElementById('replaceTerm')).value = searchReplaceInstance.replaceTerm
 
@@ -94,7 +106,6 @@ function historyItemClickHandler(e) {
             replaceTerm: target.getAttribute('data-replaceTerm') || '',
             options,
         }
-        console.log('searchReplaceInstance', JSON.stringify(searchReplaceInstance, null, 4))
         restoreSearchReplaceInstance(searchReplaceInstance)
         storeTerms(e)
     }
@@ -165,13 +176,10 @@ function storeTerms(e) {
     } else {
         const searchReplaceInput = getInputValues()
         const history = constructSearchReplaceHistory()
-        console.log('sending store message')
         sendToStorage(searchReplaceInput, history)
         if (searchReplaceInput.searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
-            console.log('searching for values, not replacing')
             tabQuery('store', searchReplaceInput, true, history, tabQueryCallback)
         } else {
-            console.log('search term too short to store')
             tabQueryCallback({})
         }
     }
@@ -185,7 +193,6 @@ function sendToStorage(searchReplaceInstance: SearchReplaceInstance, history: Se
         history,
         recover: false,
     }
-    console.log('sending storage message: ', storageMessage)
     port.postMessage(storageMessage)
     port.onMessage.addListener(function (msg) {
         console.log('Message received: ' + msg)

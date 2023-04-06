@@ -3,6 +3,7 @@
 <head>
     <script src="../popup.js"></script>
     <style>
+        html { height: fit-content; }
         body,
         body div table {
             font-family: "Open Sans", sans-serif;
@@ -10,8 +11,12 @@
             font-size: 13px;
             text-shadow: 0 1px rgba(255, 255, 255, 0.5);
             width: 220px;
-            height: 120px;
+            height: fit-content;
             color: #444;
+        }
+
+        a {
+            color: dodgerblue;
         }
 
         #loader {
@@ -34,6 +39,23 @@
 
         #isRegex, #replaceTerm {
             margin-bottom: 1.33em
+        }
+
+        /*#help {*/
+        /*    display: inline-block;*/
+        /*}*/
+
+        #historyHeader {
+            color: dodgerblue;
+            text-decoration: underline;
+        }
+
+        #historyHeader:hover {
+            cursor: pointer;
+        }
+
+        #historyContent {
+            display: none;
         }
 
         #historyList {
