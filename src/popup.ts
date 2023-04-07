@@ -42,8 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Restore the recent search replace instance and history list from storage
     port.onMessage.addListener(function (msg) {
         const history: SearchReplaceInstance[] = msg.history || []
+        let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
-            const recentSearch = history[0]
+            recentSearch = recentSearch || history[0]
             restoreSearchReplaceInstance(recentSearch)
             createHistoryListItemElements(history)
         }
