@@ -51,6 +51,9 @@ function replaceInInput(
         document.documentElement.removeAttribute('onreset')
     }
 
+    // https://stackoverflow.com/a/53797269/1178971
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+
     input.blur()
 
     return true
