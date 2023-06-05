@@ -51,13 +51,14 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
-    //Click events for Replace Next, Replace All buttons and Help link
+    //Click events for Replace Next, Replace All, Help link, and Clear History
     ;(<HTMLButtonElement>document.querySelector('#next')).addEventListener('click', function () {
         clickHandler('searchReplace', false, tabQueryCallback)
     })
     ;(<HTMLButtonElement>document.querySelector('#all')).addEventListener('click', function () {
         clickHandler('searchReplace', true, tabQueryCallback)
     })
+    ;(<HTMLButtonElement>document.querySelector('#clearHistory')).addEventListener('click', clearHistoryClickHandler)
     ;(<HTMLAnchorElement>document.getElementById('help')).addEventListener('click', openHelp)
 
     // Handlers for input elements changing value - storeTerms
@@ -81,6 +82,17 @@ function historyHeaderClickHandler(e) {
         } else {
             historyContent.style.display = 'block'
         }
+    }
+}
+
+function clearHistoryClickHandler() {
+    const port = tabConnect()
+    port.postMessage({
+        clearHistory: true,
+    })
+    const historyList = document.getElementById('historyList')
+    if (historyList) {
+        historyList.innerHTML = ''
     }
 }
 
