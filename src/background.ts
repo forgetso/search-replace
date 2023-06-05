@@ -8,6 +8,14 @@ chrome.runtime.onConnect.addListener(function (port) {
                 const storage = result['storage'] as SearchReplaceStorage
                 port.postMessage(storage)
             })
+        } else if (msg['clearHistory'] === true) {
+            chrome.storage.local.get(['storage'], function (result) {
+                const storage = result['storage'] as SearchReplaceStorage
+                storage.storage.history = []
+                chrome.storage.local.set(storage, function () {
+                    port.postMessage('History cleared')
+                })
+            })
         } else {
             const instance: SearchReplaceInstance = msg.instance
             const history: SearchReplaceInstance[] = msg.history || []

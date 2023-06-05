@@ -24,6 +24,27 @@ function replaceInInnerHTML(element: HTMLElement, searchPattern: RegExp, replace
     return !(element.innerHTML === searchStr)
 }
 
+function setNativeValue(element, value) {
+    const valueFn = Object.getOwnPropertyDescriptor(element, 'value')
+    let valueSetter: ((v: any) => void) | undefined
+    let prototypeValueSetter: ((v: any) => void) | undefined
+    if (valueFn) {
+        valueSetter = valueFn.set
+    }
+    const prototype = Object.getPrototypeOf(element)
+    const prototypeValueFn = Object.getOwnPropertyDescriptor(prototype, 'value')
+    if (prototypeValueFn) {
+        prototypeValueSetter = prototypeValueFn.set
+    }
+    if (valueSetter && prototypeValueSetter && valueSetter !== prototypeValueSetter) {
+        prototypeValueSetter.call(element, value)
+    } else if (valueSetter) {
+        valueSetter.call(element, value)
+    } else {
+        element.value = value
+    }
+}
+
 function replaceInInput(
     input: HTMLInputElement,
     searchPattern: RegExp,
@@ -42,7 +63,7 @@ function replaceInInput(
     }
 
     input.focus()
-    input.value = newValue
+    setNativeValue(input, newValue)
 
     if (usesKnockout) {
         const knockoutValueChanger = getKnockoutValueChanger(input.id, newValue)
