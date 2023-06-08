@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const history: SearchReplaceInstance[] = msg.history || []
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
-            recentSearch = recentSearch || history[0]
+            recentSearch = history[0] || []
             restoreSearchReplaceInstance(recentSearch)
             createHistoryListItemElements(history)
         }
@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
 function historyHeaderClickHandler(e) {
     const historyContent = document.getElementById('historyContent')
     if (historyContent) {
-        console.log(historyContent.style.display)
         if (historyContent.style.display === 'block') {
             historyContent.style.display = 'none'
         } else {
@@ -182,6 +181,7 @@ function removeLoader() {
 }
 
 function storeTerms(e) {
+    console.debug('storing terms')
     e = e || window.event
     if (e.keyCode === 13) {
         //if the user presses enter we want to trigger the search replace
@@ -208,27 +208,29 @@ function sendToStorage(searchReplaceInstance: SearchReplaceInstance, history: Se
     }
     port.postMessage(storageMessage)
     port.onMessage.addListener(function (msg) {
-        console.log('Message received: ' + msg)
+        console.debug('Message received: ' + msg)
     })
 }
 
 function createHistoryListItemElements(history: SearchReplaceInstance[]) {
-    const historyContent = document.getElementById('historyList')
-    if (historyContent) {
-        historyContent.innerHTML = ''
+    if (history.length > 0) {
+        const historyContent = document.getElementById('historyList')
+        if (historyContent) {
+            historyContent.innerHTML = ''
 
-        for (const [index, item] of history.entries()) {
-            const li = document.createElement('li')
-            li.setAttribute(`data-searchTerm`, item['searchTerm'])
-            li.setAttribute(`data-replaceTerm`, item['replaceTerm'])
-            for (const checkbox of CHECKBOXES) {
-                const checked = checkbox in item.options ? item.options[checkbox] : false
-                li.setAttribute(`data-${checkbox}`, String(checked))
+            for (const [index, item] of history.entries()) {
+                const li = document.createElement('li')
+                li.setAttribute(`data-searchTerm`, item['searchTerm'])
+                li.setAttribute(`data-replaceTerm`, item['replaceTerm'])
+                for (const checkbox of CHECKBOXES) {
+                    const checked = checkbox in item.options ? item.options[checkbox] : false
+                    li.setAttribute(`data-${checkbox}`, String(checked))
+                }
+                li.setAttribute('class', `historyRow-${index % 2}`)
+
+                li.innerText = item.searchTerm + ' -> ' + item.replaceTerm
+                historyContent.appendChild(li)
             }
-            li.setAttribute('class', `historyRow-${index % 2}`)
-
-            li.innerText = item.searchTerm + ' -> ' + item.replaceTerm
-            historyContent.appendChild(li)
         }
     }
 }
@@ -248,9 +250,8 @@ function constructSearchReplaceHistory(searchReplaceInstance?: SearchReplaceInst
             historyItems = getUniqueHistoryItems(historyItems)
         }
         return historyItems
-    } else if (searchReplaceInstance) {
-        historyItems = [searchReplaceInstance]
     }
+
     return historyItems
 }
 

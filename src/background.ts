@@ -5,14 +5,17 @@ chrome.runtime.onConnect.addListener(function (port) {
     port.onMessage.addListener(function (msg) {
         if (msg['recover'] === true) {
             chrome.storage.local.get(['storage'], function (result) {
-                const storage = result['storage'] as SearchReplaceStorage
+                const storage = result['storage'] as SearchReplaceStorageItems
                 port.postMessage(storage)
             })
         } else if (msg['clearHistory'] === true) {
             chrome.storage.local.get(['storage'], function (result) {
-                const storage = result['storage'] as SearchReplaceStorage
-                storage.storage.history = []
-                chrome.storage.local.set(storage, function () {
+                const storage = result['storage'] as SearchReplaceStorageItems
+                storage.history = []
+                const searchReplaceStorage: SearchReplaceStorage = {
+                    storage,
+                }
+                chrome.storage.local.set(searchReplaceStorage, function () {
                     port.postMessage('History cleared')
                 })
             })
