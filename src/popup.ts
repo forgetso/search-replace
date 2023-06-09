@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', function () {
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
             recentSearch = history[0] || []
-            restoreSearchReplaceInstance(recentSearch)
             createHistoryListItemElements(history)
         }
+        restoreSearchReplaceInstance(recentSearch)
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
