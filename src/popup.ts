@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const history: SearchReplaceInstance[] = msg.history || []
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
-            recentSearch = history[0] || []
+            recentSearch = recentSearch || history[0]
             createHistoryListItemElements(history)
         }
         restoreSearchReplaceInstance(recentSearch)
