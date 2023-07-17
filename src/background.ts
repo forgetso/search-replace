@@ -45,6 +45,26 @@ chrome.runtime.onInstalled.addListener(function (details) {
             priority: 2,
             buttons: [{ title: 'Ok' }],
         })
+        const instance: SearchReplaceInstance = {
+            searchTerm: '',
+            replaceTerm: '',
+            options: {
+                matchCase: false,
+                inputFieldsOnly: true,
+                visibleOnly: true,
+                wholeWord: false,
+                isRegex: false,
+            },
+        }
+        const storage: SearchReplaceStorage = {
+            storage: {
+                instance,
+                history: [],
+            },
+        }
+        chrome.storage.local.set(storage, function () {
+            console.debug('Installed')
+        })
     }
 })
 
