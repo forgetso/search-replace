@@ -1,6 +1,6 @@
 {
   "name": "search_and_replace",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "resolutions": {
     "author": "Chris Taylor <cjtaylor38@gmail.com>"
   },
@@ -8,7 +8,8 @@
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
-    "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist"
+    "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist",
+    "start": "light-server -s ./assets -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\""
   },
   "devDependencies": {
     "@types/chrome": "*",
@@ -22,6 +23,7 @@
     "copy-webpack-plugin": "^9.0.1",
     "glob": "^7.1.6",
     "jest": "^27.2.1",
+    "light-server": "^2.9.1",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2 ",
     "ts-jest": "^27.0.5",
