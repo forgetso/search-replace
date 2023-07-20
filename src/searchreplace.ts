@@ -4,7 +4,9 @@ import { RegexFlags, RichTextEditor, SearchReplaceAction, SearchReplaceInstance,
 
 const ELEMENT_FILTER = new RegExp('(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)')
 const INPUT_TEXTAREA_FILTER = new RegExp('(INPUT|TEXTAREA)')
+const GMAIL_APPLICATION_NAME = 'Gmail'
 const GOOGLE_MAIL_DOMAIN = 'mail.google.com'
+const WORDPRESS_ADMIN_CLASS = 'wp-admin'
 const RICH_TEXT_EDITOR_TINY_MCE: RichTextEditor = {
     editor: { type: SelectorType.id, value: '#tinymce', iframe: false },
     container: { type: SelectorType.class, value: '.mce-edit-area', iframe: true },
@@ -13,6 +15,31 @@ const RICH_TEXT_EDITOR_GENERIC: RichTextEditor = {
     editor: { type: SelectorType.attribute, value: '[role="textbox"]', iframe: false },
 }
 const RICH_TEXT_EDITORS: RichTextEditor[] = [RICH_TEXT_EDITOR_TINY_MCE, RICH_TEXT_EDITOR_GENERIC]
+
+const HINTS = {
+    wordpress6: 'Hint: WordPress 6+ detected. Check "Only change visible content?" when editing posts.',
+    gmail: 'Hint: Gmail detected. Check "Only change visible content?" when editing draft emails.',
+}
+
+function getHints(): string[] {
+    const hints: string[] = []
+    if (document.querySelector(`.${WORDPRESS_ADMIN_CLASS}`)) {
+        if (document.body.className.indexOf('version-6') > -1) {
+            hints.push(HINTS.wordpress6)
+        }
+    }
+    // check if meta tag application-name is Gmail
+    if (!inIframe()) {
+        const meta = document.querySelector(`meta[content=${GMAIL_APPLICATION_NAME}]`)
+        console.log('meta', meta)
+        console.log(window.location.href)
+        if (window.location.href.indexOf(GOOGLE_MAIL_DOMAIN) > -1) {
+            console.log('Gmail detected')
+            hints.push(HINTS.gmail)
+        }
+    }
+    return hints
+}
 
 function regExEscape(text: string): string {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
@@ -297,13 +324,6 @@ function elementIsVisible(element: HTMLElement): boolean {
 
 // Custom Functions
 
-function replaceGmail(searchPattern: RegExp, replaceTerm: string, flags: string): boolean {
-    const inputs = Array.from(
-        document.querySelectorAll('div[aria-label="Message Body"], input[name="subjectbox"]')
-    ) as HTMLInputElement[]
-    return replaceInInputs(inputs, searchPattern, replaceTerm, flags)
-}
-
 function cmsEditor(searchPattern: RegExp, replaceTerm: string, flags: string, richTextEditor: RichTextEditor): boolean {
     let replaced = false
     try {
@@ -445,15 +465,7 @@ function searchReplace(
     }
     // we check other places if text was not replaced in a text editor
     if (!replaced) {
-        if (window.location.href.indexOf(GOOGLE_MAIL_DOMAIN) > -1) {
-            if (
-                window.location.hash.indexOf('compose') > -1 ||
-                window.location.hash.indexOf('#drafts') > -1 ||
-                window.location.hash.indexOf('#inbox') > -1
-            ) {
-                return replaceGmail(searchPattern, replaceTerm, flags)
-            }
-        } else if (inputFieldsOnly) {
+        if (inputFieldsOnly) {
             return replaceInputFields(searchPattern, replaceTerm, flags, visibleOnly)
         } else {
             return replaceHTML(searchPattern, replaceTerm, flags, visibleOnly)
@@ -500,6 +512,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const response = {
             searchTermCount: searchTermCount,
             inIframe: inIframe(),
+            hints: getHints(),
         }
         sendResponse(response)
     }

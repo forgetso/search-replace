@@ -1,18 +1,26 @@
 <html lang="en">
 
 <head>
+    <link href="bootstrap.min.css" rel="stylesheet">
     <script src="../popup.js"></script>
     <style>
-        html { height: fit-content; }
+        html {
+            height: fit-content;
+        }
+
         body,
         body div table {
             font-family: "Open Sans", sans-serif;
             background-color: #eee;
             font-size: 13px;
             text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-            width: 220px;
+            width: 240px;
             height: fit-content;
             color: #444;
+        }
+
+        button {
+            width: 100%;
         }
 
         a {
@@ -22,28 +30,6 @@
         #loader {
             display: none;
         }
-
-        input[type="checkbox"] {
-            text-align: right;
-        }
-
-        button, input[type="text"] {
-            width: 98%;
-            height: 30px;
-        }
-
-        input[type="checkbox"] {
-            float: right;
-            margin: 3px 6px 0 0;
-        }
-
-        #isRegex, #replaceTerm {
-            margin-bottom: 1.33em
-        }
-
-        /*#help {*/
-        /*    display: inline-block;*/
-        /*}*/
 
         #historyHeader {
             color: dodgerblue;
@@ -82,6 +68,11 @@
             background-color: #eee;
         }
 
+        #clearHistory {
+            width: 50%;
+            margin: 0 auto;
+        }
+
     </style>
     <title>Search and Replace</title>
 </head>
@@ -90,85 +81,76 @@
 <div id="loader">
     <img src="ajax-loader.gif" width="16" height="16" name="loading" alt="searching and replacing...">
 </div>
-<div id="content">
-    <h4>Configuration</h4>
-    <table>
-        <tr class="first-row">
-            <td>
-                    <span class="clearable">
-			<label for="searchTerm">Search for</label>
-			<input class="data_field" name="searchTerm" id="searchTerm" type="text"/>
-
-            </span>
-                <span id="searchTermCount"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                    <span class="clearable">
-			<label for="replaceTerm">Replace with</label>
-			<input class="data_field" name="replaceTerm" id="replaceTerm" type="text"/>
-            </span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="matchCase">Match Case?</label>
-                <input name="matchCase" id="matchCase" type="checkbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="inputFieldsOnly">Input fields only?</label>
-                <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="visibleOnly">Only change visible content?</label>
-                <input name="visibleOnly" id="visibleOnly" type="checkbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="wholeWord">Match whole word?</label>
-                <input name="wholeWord" id="wholeWord" type="checkbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="isRegex">Regular Expression?</label>
-                <input name="isRegex" id="isRegex" type="checkbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button id="next">Replace Next</button>
-            </td>
-        </tr>
-        <tr class="last-row">
-            <td>
-                <button id="all">Replace All</button>
-            </td>
-        </tr>
-    </table>
-    <!--
-    Search and Replace History
-    This is an expandable list of previusly searched and replaced terms. Users can click on a term to populate the
-    search and replace fields.
-    -->
-    <div id="history" class="collapsible">
-        <div id="historyHeader">
-            <h4>History</h4>
-        </div>
-        <div id="historyContent">
-            <ul id="historyList">
-            </ul>
-            <button id="clearHistory">Clear History</button>
-        </div>
+<div id="content" class="container-fluid mt-2">
+    <div class="row">
+        <form>
+            <div class="first-row form-group">
+                <label for="searchTerm">Search for</label>
+                <input class="data_field form-control rounded-1" name="searchTerm" id="searchTerm" type="text"/>
+            </div>
+            <div class="form-group" id="searchTermCount">
+                <p></p>
+            </div>
+            <div class="form-group">
+                <label for="replaceTerm">Replace with</label>
+                <input class="data_field form-control rounded-1" name="replaceTerm" id="replaceTerm" type="text"/>
+            </div>
+            <div class="form-group" id="hints">
+                <p></p>
+            </div>
+            <div class="form-check">
+                <label for="matchCase" class="form-check-label">Match Case?</label>
+                <input name="matchCase" id="matchCase" type="checkbox" class="form-check-input"/>
+            </div>
+            <div class="form-check">
+                <label for="inputFieldsOnly" class="form-check-label">Input fields only?</label>
+                <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox" class="form-check-input"/>
+            </div>
+            <div class="form-check">
+                <label for="visibleOnly" class="form-check-label">Only change visible content?</label>
+                <input name="visibleOnly" id="visibleOnly" type="checkbox" class="form-check-input"/>
+            </div>
+            <div class="form-check">
+                <label for="wholeWord" class="form-check-label">Match whole word?</label>
+                <input name="wholeWord" id="wholeWord" type="checkbox" class="form-check-input"/>
+            </div>
+            <div class="form-check mb-3">
+                <label for="isRegex" class="form-check-label">Regular Expression?</label>
+                <input name="isRegex" id="isRegex" type="checkbox" class="form-check-input"/>
+            </div>
+            <div class="form-group">
+                <button id="next" class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle">Replace Next</button>
+            </div>
+            <div class="form-group last-row">
+                <button id="all" class="btn btn-light rounded-1 border-1 border-dark-subtle">Replace All</button>
+            </div>
+        </form>
     </div>
-    <!-- Help Link -->
-    <div id="help"><h4><a href="#">Help</a></h4></div>
+
+    <div class="row text-center">
+        <form>
+            <!--Search and Replace History
+            This is an expandable list of previously searched and replaced terms. Users can click on a term to populate the
+            search and replace fields.
+    -->
+            <div id="history" class="form-group mt-1 mb-2 collapsible border border-1 border-dark-subtle rounded-1">
+                <div id="historyHeader">
+                    <a class="fs-6" href="#">History</a>
+                </div>
+                <div id="historyContent">
+                    <ul id="historyList">
+                    </ul>
+                    <button class="btn btn-light btn-sm rounded-1 border-1 border-dark-subtle mb-2" id="clearHistory">Clear</button>
+                </div>
+            </div>
+            <!-- Help Link -->
+            <div id="help" class="form-group mt-1 mb-1 border border-1 border-dark-subtle rounded-1">
+                <a class="fs-6" href="#">Help</a>
+            </div>
+        </form>
+
+    </div>
+
 </div>
 
 
