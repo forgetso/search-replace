@@ -23,7 +23,7 @@ const INPUT_ELEMENTS_AND_EVENTS = {
 const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceCheckboxNames)
 const MIN_SEARCH_TERM_LENGTH = 2
 
-document.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', function () {
     // Set the onchange and onkeydown functions for the input fields
     const inputs: HTMLCollectionOf<Element> = document.getElementsByClassName('data_field')
     for (const el of inputs) {
@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // function to expand or contract the history section
 function historyHeaderClickHandler(e) {
+    e.preventDefault()
     const historyContent = document.getElementById('historyContent')
     if (historyContent) {
         if (historyContent.style.display === 'block') {
@@ -165,10 +166,24 @@ function tabQuery(
 
 function tabQueryCallback(msg) {
     removeLoader()
-    if (msg) {
-        if ('searchTermCount' in msg && 'inIframe' in msg && msg['inIframe'] === false) {
-            ;(<HTMLInputElement>document.getElementById('searchTermCount')).innerText =
+    if (msg && 'inIframe' in msg && msg['inIframe'] === false) {
+        if ('searchTermCount' in msg) {
+            ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerText =
                 msg['searchTermCount'] + ' matches'
+        }
+        const hintsElement = document.getElementById('hints')
+
+        if (hintsElement) {
+            hintsElement.innerHTML = ''
+            if ('hints' in msg) {
+                console.log('got hints ', msg['hints'])
+                for (const hint of msg['hints']) {
+                    const hintElement = document.createElement('div')
+                    hintElement.innerText = hint
+                    hintElement.className = 'hint alert alert-info'
+                    hintsElement.appendChild(hintElement)
+                }
+            }
         }
     }
 }

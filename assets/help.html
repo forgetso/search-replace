@@ -1,120 +1,165 @@
 <html>
 
 <head>
+    <style>
+        body,
+        body div table {
+            font-family: "Open Sans Light", sans-serif;
+            background-color: #eee;
+            font-size: 13px;
+            color: #444;
+        }
+    </style>
     <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap.min.js" rel="stylesheet">
     <title>Help page for search and replace</title>
 </head>
 
 <body>
-<div class="container-fluid">
-    <div class="col-md-3" role="complementary">
-        <h1>Help</h1>
-        <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix-top">
-            <ul class="nav bs-docs-sidenav">
-                <li><a href="#type">Replace Next vs. Replace All</a></li>
-                <li><a href="#editors">Replacing text in editors and text fields</a>
-                </li>
-                <li><a href="#anywhere">Replacing text anywhere on the page</a>
-                </li>
-                <li><a href="#case">Matching the case of text</a>
-                </li>
-                <li><a href="#whole">Matching whole words</a>
-                </li>
-                <li><a href="#wildcards">Wild Cards and Regular Expressions</a>
-                </li>
-                <li><a href="#issues">Issues</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    <div class="col-md-9" role="main">
-        <div>
-            <h2 id="type">Replace Next vs. Replace All</h2>
-            <p>
-                To replace the first occurrence of the search term, press <code>Replace Next</code>. You can continue to
-                press
-                the button until there are no more occurrences.
-            </p>
-            <p>
-                To replace all occurrences of the search term, press <code>Replace All</code>.
-            </p>
-            <p>
-                There is currently no undo function. If you make a mistake, you can reload the page to restore the
-                original text. However, you will lose any unsaved changes in text editors and in text input fields.
-            </p>
-        </div>
-        <div>
-            <h2 id="editors">Replacing text in editors and text fields</h2>
-            <p>To replace text in the WordPress article box or in other input boxes you should check the <code>Input
-                fields
-                only?</code>
-                check box. Otherwise, the search text will be replaced throughout the entire HTML, possibly breaking the
-                page. To avoid changing hidden input fields, you should also check the <code>Visible elements
-                    only?</code>
-                check box.
-            </p>
-        </div>
-        <div>
-            <h3>Setup</h3>
-            <img src="setup-input-fields.png" class="img-responsive img-thumbnail">
-
-            <h2 id="anywhere">Replacing text anywhere on the page</h2>
-            <p>To replace text that is not contained within a text editor and not contained within a
-                text field, leave the <code>Input Fields only?</code> and <code>Only change visible content?</code>
-                boxes <b>unchecked</b>.</p>
-
-            <div class="alert alert-warning">WARNING: This setup will alter the page HTML and may break the
-                page. You can restore
-                the page by reloading, but you will lose any unsaved changes in text editors and in text input
-                fields.
-            </div>
-            <span><img src="setup-entire-page.png" class="img-responsive img-thumbnail"
-                       alt="Basic setup for replacing wikipedia home page title"></span>
-        </div>
-        <div>
-            <h2 id="case">Matching the case of text</h2>
-            <p>If you need to replace <code>THIS</code> but not <code>This</code> then you should use the
-                match
-                case option.
-            </p>
-            <p>The following setup will match <code>Condo</code> but not <code>condo</code>. It will replace
-                <code>Condo</code> with <code>apartment</code> in text fields that are visible on the page.
-            </p>
-            <img src="setup-match-case.png" class="img-responsive img-thumbnail">
-        </div>
-        <div>
-            <h2 id="whole">Matching whole words</h2>
-            <p>If you need to replace the word <code>partial</code> but not <code>partially</code> then you should use
-                the <code>Match whole word?</code> option.
-            </p>
-            <img src="setup-whole-word.png" class="img-responsive img-thumbnail">
-        </div>
-        <div>
-            <h2 id="wildcards">Wild Cards and Regular Expressions</h2>
-            <p>If you need to match a partial search term then you should check the Regular Expressions check box and
-                specify a wild card. You will need to have a very basic knowledge of <a
-                        href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular
-                    expressions</a>
-                to use this feature. I recommend <a href="https://regexpal.com" target="_blank">regexpal</a> for testing
-            </p>
-            <h3>Before</h3>
-            <img src="start-wildcard.png" class="img-responsive img-thumbnail">
-            <h3>Setup</h3>
-            <img src="setup-wildcard.png" class="img-responsive img-thumbnail">
-            <h3>After</h3>
-            <img src="result-wildcard.png" class="img-responsive img-thumbnail">
-        </div>
-        <div>
-            <h3 id="issues">Issues</h3>
-            <div>
-                <ul>
-                    <li>Remember to REFRESH the page on which you wish to replace text after the initial installation.
+<div class="container" class="bg-light-subtle">
+    <div class="row">
+        <div class="col-md-3" role="complementary">
+            <nav class="navbar border-bottom border-bottom-dark">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#type">Replace Next vs. Replace All</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#editors">Replacing text in editors and text fields</a>
                     </li>
-                    <li>Pressing Enter will Replace All. There is no shortcut keyboard for Replace Next.</li>
-                    <li>If you find a bug, please provide a detailed report <a
-                            href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support"
-                            target="_blank">here</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#anywhere">Replacing text anywhere on the page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#case">Matching the case of text</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#whole">Matching whole words</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wildcards">Wild Cards and Regular Expressions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wordpress">Replacing text in WordPress</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#issues">Reporting Issues</a>
+                    </li>
                 </ul>
+            </nav>
+        </div>
+
+        <div class="col-md-9 container" role="main">
+            <div class="row mb-2">
+                <h2 id="type">Replace Next vs. Replace All</h2>
+                <p>
+                    To replace the first occurrence of the search term, press <code>Replace Next</code>. You can
+                    continue to
+                    press
+                    the button until there are no more occurrences.
+                </p>
+                <p>
+                    To replace all occurrences of the search term, press <code>Replace All</code>.
+                </p>
+                <p>
+                    There is currently no undo function. If you make a mistake, you can reload the page to restore the
+                    original text. However, you will lose any unsaved changes in text editors and in text input fields.
+                </p>
+            </div>
+            <div class="row mb-2">
+                <h2 id="editors">Replacing text in editors and text fields</h2>
+                <p>To replace text in text editors or input boxes you should check the <code>Input
+                    fields
+                    only?</code>
+                    check box. Otherwise, the search text will be replaced throughout the entire HTML, possibly breaking
+                    the
+                    page. To avoid changing hidden input fields, you should also check the <code>Visible elements
+                        only?</code>
+                    check box.
+                </p>
+            </div>
+            <div class="row mb-2">
+                <h3>Setup</h3>
+                <span><img src="setup-input-fields.png" class="img-thumbnail"></span>
+
+                <h2 id="anywhere">Replacing text anywhere on the page</h2>
+                <p>To replace text that is not contained within a text editor and not contained within a
+                    text field, leave the <code>Input Fields only?</code> and <code>Only change visible content?</code>
+                    boxes <b>unchecked</b>.</p>
+
+                <div class="alert alert-warning">WARNING: This setup will alter the page HTML and may break the
+                    page. You can restore
+                    the page by reloading, but you will lose any unsaved changes in text editors and in text input
+                    fields.
+                </div>
+                <p><img class="img-responsive img-thumbnail" src="setup-entire-page.png"
+                        class="img-responsive img-thumbnail"
+                        alt="Basic setup for replacing wikipedia home page title"></p>
+            </div>
+            <div class="row mb-2">
+                <h2 id="case">Matching the case of text</h2>
+                <p>If you need to replace <code>THIS</code> but not <code>This</code> then you should use the
+                    match
+                    case option.
+                </p>
+                <p>The following setup will match <code>Condo</code> but not <code>condo</code>. It will replace
+                    <code>Condo</code> with <code>apartment</code> in text fields that are visible on the page.
+                </p>
+                <p><img src="setup-match-case.png" class="img-responsive img-thumbnail"></p>
+            </div>
+            <div class="row mb-2">
+                <h2 id="whole">Matching whole words</h2>
+                <p>If you need to replace the word <code>partial</code> but not <code>partially</code> then you should
+                    use
+                    the <code>Match whole word?</code> option.
+                </p>
+                <p><img src="setup-whole-word.png" class="img-responsive img-thumbnail"></p>
+            </div>
+            <div class="row mb-2">
+                <h2 id="wildcards">Wild Cards and Regular Expressions</h2>
+                <p>If you need to match a partial search term then you should check the Regular Expressions check box
+                    and
+                    specify a wild card. You will need to have a very basic knowledge of <a
+                            href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular
+                        expressions</a>
+                    to use this feature. I recommend <a href="https://regexpal.com" target="_blank">regexpal</a> for
+                    testing
+                </p>
+                <h3>Before</h3>
+                <p><img src="start-wildcard.png" class="img-responsive img-thumbnail"></p>
+                <h3>Setup</h3>
+                <p><img src="setup-wildcard.png" class="img-responsive img-thumbnail"></p>
+                <h3>After</h3>
+                <p><img src="result-wildcard.png" class="img-responsive img-thumbnail"></p>
+            </div>
+            <div class="row mb-2">
+                <h2 id="wordpress">Replacing text in WordPress</h2>
+                <p>WordPress is currently on version 6.6, as of March 2023. The post editor has changed significantly
+                    since
+                    this extension was created and a new setup is required to replace text in WordPress.</p>
+                </p>
+                <h3>Setup for WordPress 6+</h3>
+                <p><img src="setup-wordpress-6.png" class="img-responsive img-thumbnail"></p>
+                <h3>Setup for WordPress 5 and below</h3>
+                <p><img src="setup-entire-page.png" class="img-responsive img-thumbnail"></p>
+
+            </div>
+            <div class="row mb-2">
+                <h3 id="issues">Reporting Issues</h3>
+                <div>
+                    <div class="alert alert-warning">Remember to REFRESH the page on which you wish to replace text
+                        after
+                        installing.
+                    </div>
+                    <div class="alert alert-info">If the page has broken after using the extension, try refreshing the
+                        page, and then checking </code>Input fields only?</code> and <code>Only change visible content?</code>
+                        before performing a search and replace.
+                    </div>
+                    <p>If you find a bug, please provide a detailed report on the <a
+                            href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support"
+                            target="_blank">Chrome Extension Store</a> or on <a
+                            href="https://github.com/forgetso/search-replace/issues">GitHub</a>.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
