@@ -168,8 +168,9 @@ function tabQueryCallback(msg) {
     removeLoader()
     if (msg && 'inIframe' in msg && msg['inIframe'] === false) {
         if ('searchTermCount' in msg) {
-            ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerText =
-                msg['searchTermCount'] + ' matches'
+            ;(<HTMLDivElement>(
+                document.getElementById('searchTermCount')
+            )).innerHTML = `<p>${msg['searchTermCount']} matches</p>`
         }
         const hintsElement = document.getElementById('hints')
 
