@@ -1,6 +1,13 @@
 'use strict'
 
-import { RegexFlags, RichTextEditor, SearchReplaceAction, SearchReplaceInstance, SelectorType } from './types/index'
+import {
+    RegexFlags,
+    RichTextEditor,
+    SearchReplaceAction,
+    SearchReplaceInstance,
+    SearchReplaceMessage,
+    SelectorType,
+} from './types/index'
 
 const ELEMENT_FILTER = new RegExp('(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)')
 const INPUT_TEXTAREA_FILTER = new RegExp('(INPUT|TEXTAREA)')
@@ -468,6 +475,7 @@ function searchReplace(
         if (inputFieldsOnly) {
             return replaceInputFields(searchPattern, replaceTerm, flags, visibleOnly)
         } else {
+            console.log('replaceHTML(searchPattern, replaceTerm, flags, visibleOnly)')
             return replaceHTML(searchPattern, replaceTerm, flags, visibleOnly)
         }
     }
@@ -478,10 +486,10 @@ function inIframe() {
     return window !== window.top
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    const instance = request.instance as SearchReplaceInstance
-    const replaceAll = request.replaceAll
-    const action = request.action as SearchReplaceAction
+chrome.runtime.onMessage.addListener(function (request: SearchReplaceMessage, sender, sendResponse) {
+    const instance = request.instance
+    const replaceAll = instance.options.replaceAll
+    const action = request.action
     const globalFlags = getFlags(instance.options.matchCase, true)
 
     const globalSearchPattern = getSearchPattern(
@@ -491,6 +499,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         instance.options.wholeWord
     )
     if (action === 'searchReplace') {
+        console.log("action: 'searchReplace'", instance)
         sessionStorage.setItem('searchTerm', instance.searchTerm)
         sessionStorage.setItem('replaceTerm', instance.replaceTerm)
         const flags = getFlags(instance.options.matchCase, replaceAll)

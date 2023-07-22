@@ -83,7 +83,7 @@
 </div>
 <div id="content" class="container-fluid mt-2">
     <div class="row">
-        <form>
+        <form id="searchReplaceForm">
             <div class="first-row form-group">
                 <label for="searchTerm">Search for</label>
                 <input class="data_field form-control rounded-1" name="searchTerm" id="searchTerm" type="text"/>
@@ -114,16 +114,22 @@
                 <label for="wholeWord" class="form-check-label">Match whole word?</label>
                 <input name="wholeWord" id="wholeWord" type="checkbox" class="form-check-input"/>
             </div>
-            <div class="form-check mb-3">
+            <div class="form-check">
                 <label for="isRegex" class="form-check-label">Regular Expression?</label>
                 <input name="isRegex" id="isRegex" type="checkbox" class="form-check-input"/>
             </div>
+            <div class="form-check">
+                <label for="replaceAll" class="form-check-label">Replace All?</label>
+                <input name="replaceAll" id="replaceAll" type="checkbox" class="form-check-input"/>
+            </div>
+            <div class="form-check mb-3">
+                <label for="save" class="form-check-label">Save and apply on page reload?</label>
+                <input name="save" id="save" type="checkbox" class="form-check-input"/>
+            </div>
             <div class="form-group">
-                <button id="next" class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle">Replace Next</button>
+                <button name="replace" id="replace" class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle" type="submit">Replace</button>
             </div>
-            <div class="form-group last-row">
-                <button id="all" class="btn btn-light rounded-1 border-1 border-dark-subtle">Replace All</button>
-            </div>
+
         </form>
     </div>
 

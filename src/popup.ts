@@ -51,13 +51,14 @@ window.addEventListener('DOMContentLoaded', function () {
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
-    //Click events for Replace Next, Replace All, Help link, and Clear History
-    ;(<HTMLButtonElement>document.querySelector('#next')).addEventListener('click', function () {
-        clickHandler('searchReplace', false, tabQueryCallback)
+    // Form submit listener
+    ;(<HTMLFormElement>document.querySelector('#searchReplaceForm')).addEventListener('submit', function (event) {
+        event.preventDefault()
+        console.log(event)
+        clickHandler('searchReplace', tabQueryCallback)
     })
-    ;(<HTMLButtonElement>document.querySelector('#all')).addEventListener('click', function () {
-        clickHandler('searchReplace', true, tabQueryCallback)
-    })
+
+    //Click events for Help link, and Clear History
     ;(<HTMLButtonElement>document.querySelector('#clearHistory')).addEventListener('click', clearHistoryClickHandler)
     ;(<HTMLAnchorElement>document.getElementById('help')).addEventListener('click', openHelp)
 
@@ -121,10 +122,14 @@ function historyItemClickHandler(e) {
         }
         restoreSearchReplaceInstance(searchReplaceInstance)
         storeTerms(e)
+            .then((r) => {
+                console.log(r)
+            })
+            .catch((e) => console.error(e))
     }
 }
 
-function clickHandler(action: SearchReplaceAction, replaceAll: boolean, callbackHandler) {
+function clickHandler(action: SearchReplaceAction, callbackHandler) {
     const loader = document.getElementById('loader')
     loader!.style.display = 'block'
     const content = document.getElementById('content')
@@ -136,32 +141,33 @@ function clickHandler(action: SearchReplaceAction, replaceAll: boolean, callback
     // store the new history list items
     storeTerms({})
     // do the search replace
-    tabQuery(action, searchReplaceInstance, replaceAll, historyItems, callbackHandler)
+    tabQuery(action, searchReplaceInstance, historyItems, callbackHandler)
 }
 
-function tabQuery(
+/** Send the search and replace instance to the content script for processing **/
+export async function tabQuery(
     action: SearchReplaceAction,
     searchReplaceInstance: SearchReplaceInstance,
-    replaceAll: boolean,
     history: SearchReplaceInstance[],
     callbackHandler
-) {
+): Promise<string | undefined> {
     const query = { active: true, currentWindow: true }
-    chrome.tabs.query(query, function (tabs) {
-        const tab = tabs[0]
-        if (tab.id != null) {
-            const message: SearchReplaceMessage = {
-                action,
-                instance: searchReplaceInstance,
-                history,
-                replaceAll,
-                url: tab.url,
-            }
-            chrome.tabs.sendMessage(tab.id, message, function (response) {
-                callbackHandler(response)
-            })
+    let url: string | undefined = undefined
+    const [tab] = await chrome.tabs.query(query)
+    if (tab.id != null) {
+        const message: SearchReplaceMessage = {
+            action,
+            instance: searchReplaceInstance,
+            history,
+            url: tab.url,
         }
-    })
+        console.log('sending message to tab', message)
+        chrome.tabs.sendMessage(tab.id, message, function (response) {
+            callbackHandler(response)
+        })
+        url = tab.url
+    }
+    return url
 }
 
 function tabQueryCallback(msg) {
@@ -196,31 +202,33 @@ function removeLoader() {
     content!.style.display = 'block'
 }
 
-function storeTerms(e) {
+async function storeTerms(e) {
     console.debug('storing terms')
     e = e || window.event
     if (e.keyCode === 13) {
         //if the user presses enter we want to trigger the search replace
-        clickHandler('searchReplace', false, tabQueryCallback)
+        clickHandler('searchReplace', tabQueryCallback)
     } else {
         const searchReplaceInput = getInputValues()
         const history = constructSearchReplaceHistory()
-        sendToStorage(searchReplaceInput, history)
+
         if (searchReplaceInput.searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
-            tabQuery('store', searchReplaceInput, true, history, tabQueryCallback)
+            const url = await tabQuery('store', searchReplaceInput, history, tabQueryCallback)
+            sendToStorage(searchReplaceInput, history, url)
         } else {
             tabQueryCallback({})
         }
     }
 }
 
-function sendToStorage(searchReplaceInstance: SearchReplaceInstance, history: SearchReplaceInstance[]) {
+function sendToStorage(searchReplaceInstance: SearchReplaceInstance, history: SearchReplaceInstance[], url?: string) {
     // Send the search and replace terms to the background page
     const port = tabConnect()
     const storageMessage: SearchReplaceStorageMessage = {
         instance: searchReplaceInstance,
         history,
         recover: false,
+        url,
     }
     port.postMessage(storageMessage)
     port.onMessage.addListener(function (msg) {
@@ -290,7 +298,7 @@ function getUniqueHistoryItems(historyItems: SearchReplaceInstance[]) {
     )
 }
 
-function tabConnect() {
+export function tabConnect() {
     return chrome.runtime.connect(null!, {
         name: 'Search and Replace',
     })
@@ -304,6 +312,8 @@ function getInputValues(): SearchReplaceInstance {
     const visibleOnly = (<HTMLInputElement>document.getElementById('visibleOnly')).checked
     const wholeWord = (<HTMLInputElement>document.getElementById('wholeWord')).checked
     const isRegex = (<HTMLInputElement>document.getElementById('isRegex')).checked
+    const replaceAll = (<HTMLInputElement>document.getElementById('replaceAll')).checked
+    const save = (<HTMLInputElement>document.getElementById('save')).checked
     return {
         searchTerm,
         replaceTerm,
@@ -313,6 +323,8 @@ function getInputValues(): SearchReplaceInstance {
             visibleOnly,
             wholeWord,
             isRegex,
+            replaceAll,
+            save,
         },
     }
 }
