@@ -28,6 +28,7 @@ export interface SavedSearchReplaceInstance extends SearchReplaceInstance {
 export type SearchReplaceStorageItems = {
     history: SearchReplaceInstance[]
     instance: SearchReplaceInstance
+    saved?: SavedSearchReplaceInstance[]
 }
 
 export interface SearchReplaceStorageMessage extends SearchReplaceStorageItems {
@@ -37,10 +38,6 @@ export interface SearchReplaceStorageMessage extends SearchReplaceStorageItems {
 
 export type SearchReplacePopupStorage = {
     storage: SearchReplaceStorageItems
-}
-
-export interface SearchReplaceSavedInstancesStorage {
-    saved: SavedSearchReplaceInstance[]
 }
 
 export type SearchReplaceAction = 'searchReplace' | 'store'

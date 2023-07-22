@@ -58,9 +58,13 @@ window.addEventListener('DOMContentLoaded', function () {
         clickHandler('searchReplace', tabQueryCallback)
     })
 
-    //Click events for Help link, and Clear History
+    //Click events for Options Link, Help link, and Clear History
     ;(<HTMLButtonElement>document.querySelector('#clearHistory')).addEventListener('click', clearHistoryClickHandler)
-    ;(<HTMLAnchorElement>document.getElementById('help')).addEventListener('click', openHelp)
+    for (const link of ['help', 'options']) {
+        ;(<HTMLAnchorElement>document.getElementById(link)).addEventListener('click', function () {
+            openLink(link)
+        })
+    }
 
     // Handlers for input elements changing value - storeTerms
     for (const elementName in INPUT_ELEMENTS_AND_EVENTS) {
@@ -329,8 +333,8 @@ function getInputValues(): SearchReplaceInstance {
     }
 }
 
-function openHelp() {
+function openLink(link: string) {
     chrome.tabs.create({
-        url: 'assets/help.html',
+        url: `assets/${link}.html`,
     })
 }
