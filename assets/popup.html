@@ -83,7 +83,7 @@
 </div>
 <div id="content" class="container-fluid mt-2">
     <div class="row">
-        <form>
+        <form id="searchReplaceForm">
             <div class="first-row form-group">
                 <label for="searchTerm">Search for</label>
                 <input class="data_field form-control rounded-1" name="searchTerm" id="searchTerm" type="text"/>
@@ -99,7 +99,7 @@
                 <p></p>
             </div>
             <div class="form-check">
-                <label for="matchCase" class="form-check-label">Match Case?</label>
+                <label for="matchCase" class="form-check-label">Match case?</label>
                 <input name="matchCase" id="matchCase" type="checkbox" class="form-check-input"/>
             </div>
             <div class="form-check">
@@ -107,23 +107,29 @@
                 <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox" class="form-check-input"/>
             </div>
             <div class="form-check">
-                <label for="visibleOnly" class="form-check-label">Only change visible content?</label>
+                <label for="visibleOnly" class="form-check-label">Visible content only?</label>
                 <input name="visibleOnly" id="visibleOnly" type="checkbox" class="form-check-input"/>
             </div>
             <div class="form-check">
                 <label for="wholeWord" class="form-check-label">Match whole word?</label>
                 <input name="wholeWord" id="wholeWord" type="checkbox" class="form-check-input"/>
             </div>
-            <div class="form-check mb-3">
-                <label for="isRegex" class="form-check-label">Regular Expression?</label>
+            <div class="form-check">
+                <label for="isRegex" class="form-check-label">Regular expression?</label>
                 <input name="isRegex" id="isRegex" type="checkbox" class="form-check-input"/>
             </div>
+            <div class="form-check">
+                <label for="replaceAll" class="form-check-label">Replace all?</label>
+                <input name="replaceAll" id="replaceAll" type="checkbox" class="form-check-input"/>
+            </div>
+            <div class="form-check mb-3">
+                <label for="save" class="form-check-label">Save and apply on page reload?</label>
+                <input name="save" id="save" type="checkbox" class="form-check-input"/>
+            </div>
             <div class="form-group">
-                <button id="next" class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle">Replace Next</button>
+                <button name="replace" id="replace" class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle" type="submit">Replace</button>
             </div>
-            <div class="form-group last-row">
-                <button id="all" class="btn btn-light rounded-1 border-1 border-dark-subtle">Replace All</button>
-            </div>
+
         </form>
     </div>
 
@@ -142,6 +148,10 @@
                     </ul>
                     <button class="btn btn-light btn-sm rounded-1 border-1 border-dark-subtle mb-2" id="clearHistory">Clear</button>
                 </div>
+            </div>
+            <!-- Options Link -->
+            <div id="options" class="form-group mt-1 mb-2 border border-1 border-dark-subtle rounded-1">
+                <a class="fs-6" href="#">Edit Rules</a>
             </div>
             <!-- Help Link -->
             <div id="help" class="form-group mt-1 mb-1 border border-1 border-dark-subtle rounded-1">
