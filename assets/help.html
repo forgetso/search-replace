@@ -12,6 +12,7 @@
     </style>
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="bootstrap.min.js" rel="stylesheet">
+    <link href="bootstrap.bundle.min.js" rel="stylesheet">
     <title>Help page for search and replace</title>
 </head>
 
@@ -40,6 +41,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#wordpress">Replacing text in WordPress</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#save">Save and apply on page reload</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#issues">Reporting Issues</a>
@@ -144,6 +148,56 @@
 
             </div>
             <div class="row mb-2">
+                <h2 id="save">Save and apply on page reload</h2>
+                <p>You can check the <code>Save and apply on page reload</code> check box to save your search and apply
+                    it on subsequent page reloads. These will take effect even after you have closed and re-opened your
+                    browser.</p>
+                <h3>Multiple Matching Rules</h3>
+                <p>If multiple rules apply to the same page, the rules will be applied in order of <b>most</b> specific
+                    to
+                    <b>least</b> specific. For example:</p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Search</th>
+                        <th>Replace</th>
+                        <th>Priority</th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>http://www.example.com/a/deeper/nested/page</td>
+                        <td>Example</td>
+                        <td>A</td>
+                        <td>1 - applied first</td>
+                    </tr>
+                    <tr>
+                        <td>http://www.example.com/some/subpage</td>
+                        <td>Example</td>
+                        <td>B</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>http://www.example.com</td>
+                        <td>Example</td>
+                        <td>C</td>
+                        <td>3 - applied last</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p>This means that any changes applied by the first rule will be fed into the subsequent rules. In the
+                    above example, the text <code>Example</code> will have been replaced by the rule matching
+                    <code>http://www.example.com/a/deeper/nested/page</code>. Subsequent rules will therefore have no
+                    effect.</p>
+                <p>You can edit the saved rules by clicking on the <a href="options.html">Edit Rules</a> link in the
+                    extension popup. The <code>URL Pattern</code> field is a <a
+                            href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular
+                        expression</a>, which allows you to
+                    apply the same rule to many different websites.</p>
+            </div>
+            <div class="row mb-2">
                 <h3 id="issues">Reporting Issues</h3>
                 <div>
                     <div class="alert alert-warning">Remember to REFRESH the page on which you wish to replace text
@@ -151,7 +205,8 @@
                         installing.
                     </div>
                     <div class="alert alert-info">If the page has broken after using the extension, try refreshing the
-                        page, and then checking </code>Input fields only?</code> and <code>Only change visible content?</code>
+                        page, and then checking </code>Input fields only?</code> and <code>Only change visible
+                            content?</code>
                         before performing a search and replace.
                     </div>
                     <p>If you find a bug, please provide a detailed report on the <a

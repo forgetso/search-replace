@@ -2,12 +2,14 @@ const webpack = require('webpack')
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const srcDir = path.join(__dirname, '..', 'src')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
     entry: {
         popup: path.join(srcDir, 'popup.ts'),
         background: path.join(srcDir, 'background.ts'),
         searchreplace: path.join(srcDir, 'searchreplace.ts'),
+        options: path.join(srcDir, 'options.ts'),
     },
     output: {
         path: path.join(__dirname, '../dist'),

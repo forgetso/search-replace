@@ -507,8 +507,8 @@ chrome.runtime.onMessage.addListener(function (request: SearchReplaceMessage, se
             instance.searchTerm,
             instance.replaceTerm,
             flags,
-            instance.options.inputFieldsOnly,
-            instance.options.isRegex,
+            instance.options['Input fields only?'],
+            instance.options['Regular Expression?'],
             instance.options.visibleOnly,
             instance.options.wholeWord
         )

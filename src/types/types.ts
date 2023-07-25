@@ -8,6 +8,16 @@ export enum SearchReplaceCheckboxNames {
     save = 'save',
 }
 
+export enum SearchReplaceCheckboxLabels {
+    matchCase = 'Match case',
+    inputFieldsOnly = 'Input fields only',
+    visibleOnly = 'Visible content only',
+    wholeWord = 'Match whole word',
+    isRegex = 'Regular expression',
+    replaceAll = 'Replace all',
+    save = 'Save and apply on page reload',
+}
+
 export type SearchReplaceOptions = {
     [key in SearchReplaceCheckboxNames]: boolean
 }
@@ -25,15 +35,20 @@ export interface SavedSearchReplaceInstance extends SearchReplaceInstance {
     url: string
 }
 
+export type SavedInstanceId = number
+
+export type SavedInstances = { [key: SavedInstanceId]: SavedSearchReplaceInstance }
+
 export type SearchReplaceStorageItems = {
     history: SearchReplaceInstance[]
     instance: SearchReplaceInstance
-    saved?: SavedSearchReplaceInstance[]
+    saved?: SavedInstances
 }
 
 export interface SearchReplaceStorageMessage extends SearchReplaceStorageItems {
     recover: boolean
     url?: string
+    save?: boolean
 }
 
 export type SearchReplacePopupStorage = {

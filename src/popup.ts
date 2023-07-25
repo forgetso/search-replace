@@ -6,8 +6,9 @@ import {
     SearchReplaceOptions,
     SearchReplaceStorageMessage,
 } from './types'
+import { tabConnect } from './util'
 
-const { matchCase, inputFieldsOnly, visibleOnly, wholeWord, isRegex } = SearchReplaceCheckboxNames
+const { matchCase, inputFieldsOnly, visibleOnly, wholeWord, isRegex, save, replaceAll } = SearchReplaceCheckboxNames
 
 const INPUT_ELEMENTS_AND_EVENTS = {
     searchTerm: ['change', 'keyup', 'blur'],
@@ -55,7 +56,7 @@ window.addEventListener('DOMContentLoaded', function () {
     ;(<HTMLFormElement>document.querySelector('#searchReplaceForm')).addEventListener('submit', function (event) {
         event.preventDefault()
         console.log(event)
-        clickHandler('searchReplace', tabQueryCallback)
+        formSubmitHandler('searchReplace', tabQueryCallback)
     })
 
     //Click events for Options Link, Help link, and Clear History
@@ -69,7 +70,9 @@ window.addEventListener('DOMContentLoaded', function () {
     // Handlers for input elements changing value - storeTerms
     for (const elementName in INPUT_ELEMENTS_AND_EVENTS) {
         for (const eventType of INPUT_ELEMENTS_AND_EVENTS[elementName]) {
-            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, storeTerms)
+            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, async function (e) {
+                await storeTerms(e, false)
+            })
         }
     }
 
@@ -125,7 +128,7 @@ function historyItemClickHandler(e) {
             options,
         }
         restoreSearchReplaceInstance(searchReplaceInstance)
-        storeTerms(e)
+        storeTerms(e, false)
             .then((r) => {
                 console.log(r)
             })
@@ -133,7 +136,11 @@ function historyItemClickHandler(e) {
     }
 }
 
-function clickHandler(action: SearchReplaceAction, callbackHandler) {
+/** The handler for searching and replacing in the tab
+ * @param action {SearchReplaceAction}
+ * @param callbackHandler {function}
+ **/
+function formSubmitHandler(action: SearchReplaceAction, callbackHandler) {
     const loader = document.getElementById('loader')
     loader!.style.display = 'block'
     const content = document.getElementById('content')
@@ -143,7 +150,7 @@ function clickHandler(action: SearchReplaceAction, callbackHandler) {
     // create the new history list items
     createHistoryListItemElements(historyItems)
     // store the new history list items
-    storeTerms({})
+    storeTerms({}, true)
     // do the search replace
     tabQuery(action, searchReplaceInstance, historyItems, callbackHandler)
 }
@@ -206,26 +213,31 @@ function removeLoader() {
     content!.style.display = 'block'
 }
 
-async function storeTerms(e) {
+async function storeTerms(e, save?: boolean) {
     console.debug('storing terms')
     e = e || window.event
     if (e.keyCode === 13) {
         //if the user presses enter we want to trigger the search replace
-        clickHandler('searchReplace', tabQueryCallback)
+        formSubmitHandler('searchReplace', tabQueryCallback)
     } else {
         const searchReplaceInput = getInputValues()
         const history = constructSearchReplaceHistory()
 
         if (searchReplaceInput.searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
             const url = await tabQuery('store', searchReplaceInput, history, tabQueryCallback)
-            sendToStorage(searchReplaceInput, history, url)
+            sendToStorage(searchReplaceInput, history, url, save)
         } else {
             tabQueryCallback({})
         }
     }
 }
 
-function sendToStorage(searchReplaceInstance: SearchReplaceInstance, history: SearchReplaceInstance[], url?: string) {
+function sendToStorage(
+    searchReplaceInstance: SearchReplaceInstance,
+    history: SearchReplaceInstance[],
+    url?: string,
+    save?: boolean
+) {
     // Send the search and replace terms to the background page
     const port = tabConnect()
     const storageMessage: SearchReplaceStorageMessage = {
@@ -233,6 +245,7 @@ function sendToStorage(searchReplaceInstance: SearchReplaceInstance, history: Se
         history,
         recover: false,
         url,
+        save,
     }
     port.postMessage(storageMessage)
     port.onMessage.addListener(function (msg) {
@@ -300,12 +313,6 @@ function getUniqueHistoryItems(historyItems: SearchReplaceInstance[]) {
             index ===
             self.findIndex((item2) => item2.searchTerm === item1.searchTerm && item2.replaceTerm === item1.replaceTerm)
     )
-}
-
-export function tabConnect() {
-    return chrome.runtime.connect(null!, {
-        name: 'Search and Replace',
-    })
 }
 
 function getInputValues(): SearchReplaceInstance {
