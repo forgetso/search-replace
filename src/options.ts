@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', function () {
     // Restore the SavedInstances from storage
     port.onMessage.addListener(function (storageItems: SearchReplaceStorageItems) {
         console.log('storage msg received: ', storageItems)
-        const saved: SavedInstances = storageItems.saved || []
+        const saved: SavedInstances = storageItems.saved || ({} as SavedInstances)
         if (Object.keys(saved).length > 0) {
             // create a list of the saved search replace instances
 
