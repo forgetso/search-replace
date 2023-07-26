@@ -10,6 +10,7 @@ module.exports = {
         background: path.join(srcDir, 'background.ts'),
         searchreplace: path.join(srcDir, 'searchreplace.ts'),
         options: path.join(srcDir, 'options.ts'),
+        util: path.join(srcDir, 'util.ts'),
     },
     output: {
         path: path.join(__dirname, '../dist'),

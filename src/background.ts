@@ -1,97 +1,114 @@
 // Storing and retrieving popup values
 import {
     SavedInstances,
-    SavedSearchReplaceInstance,
     SearchReplaceInstance,
     SearchReplaceMessage,
     SearchReplacePopupStorage,
+    SearchReplaceStorageItems,
+    SearchReplaceStorageMessage,
 } from './types'
 import { getSavedInstanceId } from './util'
 
-function getUniqueSavedInstances(
-    saved: SavedSearchReplaceInstance[],
-    instance: SearchReplaceInstance,
-    url: string
-): SavedSearchReplaceInstance[] {
-    const savedInstance: SavedSearchReplaceInstance = {
-        ...instance,
-        url,
+function clearHistory(storage: SearchReplaceStorageItems, port: chrome.runtime.Port) {
+    storage.history = []
+    const searchReplaceStorage: SearchReplacePopupStorage = {
+        storage,
     }
-    saved.push(savedInstance)
-    console.log('saved', saved)
-    // remove any duplicate objects from the saved array
-    // return the array to be stored
-    const uniqueSaved = saved.filter(
-        (savedInstance, index, self) =>
-            index ===
-            self.findIndex(
-                (t) =>
-                    t.url === savedInstance.url &&
-                    t.searchTerm === savedInstance.searchTerm &&
-                    t.replaceTerm === savedInstance.replaceTerm &&
-                    t.options.matchCase === savedInstance.options.matchCase &&
-                    t.options.inputFieldsOnly === savedInstance.options.inputFieldsOnly &&
-                    t.options.visibleOnly === savedInstance.options.visibleOnly &&
-                    t.options.wholeWord === savedInstance.options.wholeWord &&
-                    t.options.isRegex === savedInstance.options.isRegex
-            )
-    )
-    console.log('uniqueSaved: ', uniqueSaved)
-    return uniqueSaved
+    chrome.storage.local.set(searchReplaceStorage, function () {
+        port.postMessage('History cleared')
+    })
+}
+
+function saveStorage(instance, history, savedInstances, port) {
+    // always store the instance and history
+    const newStorage: SearchReplacePopupStorage = {
+        storage: {
+            instance,
+            history,
+            saved: savedInstances,
+        },
+    }
+    chrome.storage.local.set(newStorage, function () {
+        port.postMessage('Terms stored')
+    })
+}
+
+function getNewSavedInstances(
+    msg: SearchReplaceStorageMessage,
+    instance: SearchReplaceInstance,
+    savedInstances: SavedInstances,
+    url: string
+) {
+    if (msg.actions.save && instance.options.save) {
+        const instanceId = msg['instanceId']
+        const newInstance = { ...instance, url }
+        const newInstanceId = getSavedInstanceId(newInstance)
+        savedInstances[newInstanceId] = newInstance
+        if (instanceId && instanceId !== newInstanceId) {
+            delete savedInstances[instanceId]
+        }
+    } else if (msg.actions.delete) {
+        const instanceId = msg['instanceId']
+        delete savedInstances[instanceId]
+    }
+    return savedInstances
 }
 
 chrome.runtime.onConnect.addListener(function (port) {
-    port.onMessage.addListener(async function (msg) {
-        const { storage } = await chrome.storage.local.get(['storage'])
-        console.log('Backgroung script, msg receievd: ', msg)
-        console.log('Backgroung script, storage.saved: ', storage.saved)
-        if (msg['recover'] === true) {
-            port.postMessage(storage)
-        } else if (msg['clearHistory'] === true) {
-            storage.history = []
-            const searchReplaceStorage: SearchReplacePopupStorage = {
-                storage,
-            }
-            chrome.storage.local.set(searchReplaceStorage, function () {
-                port.postMessage('History cleared')
-            })
+    port.onMessage.addListener(async function (msg: SearchReplaceStorageMessage) {
+        // Get the various stored values
+        const { storage } =
+            ((await chrome.storage.local.get(['storage'])) as SearchReplacePopupStorage) || getDefaultStorage()
+        const instance: SearchReplaceInstance = msg.storage ? msg.storage.instance : storage.instance
+        // Allows the edit rules page to not have to send back history
+        const history: SearchReplaceInstance[] = msg.storage
+            ? msg.storage.history && msg.storage.history.length
+                ? msg.storage.history
+                : storage.history
+            : storage.history
+        console.log('Background script, history is: ', history)
+        const url = msg.url
+        let savedInstances: SavedInstances = storage.saved || {}
+        console.log('Backgroung script, msg receieved: ', msg)
+        if (msg.actions.recover) {
+            port.postMessage(storage as SearchReplaceStorageItems)
+            // We do not want to save anything when recovering storage
+            return
+        } else if (msg.actions.clearHistory) {
+            clearHistory(storage, port)
         } else {
-            const instance: SearchReplaceInstance = msg.instance
-            const history: SearchReplaceInstance[] = msg.history || []
-
-            const url = msg.url
-            const savedInstances: { string: SavedSearchReplaceInstance } = storage.saved || {}
-            if (msg['save'] && instance.options.save) {
-                console.log('Saving instance')
-                const instanceId = msg['instanceId']
-                const newInstance = { ...instance, url }
-                const newInstanceId = getSavedInstanceId(newInstance)
-                savedInstances[newInstanceId] = newInstance
-                console.log('new instance', JSON.stringify(newInstance, null, 4))
-                // remove old instanceId
-                if (instanceId && instanceId !== newInstanceId) {
-                    delete savedInstances[instanceId]
-                }
-                console.log('savedInstances', JSON.stringify(savedInstances, null, 4))
-            } else if (msg['delete']) {
-                const instanceId = msg['instanceId']
-                console.log('Deleting instance', instanceId)
-                delete savedInstances[instanceId]
+            if (url) {
+                savedInstances = getNewSavedInstances(msg, instance, savedInstances, url)
             }
-            console.log(`${Object.keys(savedInstances).length} uniqueSavedInstances: ${savedInstances}`)
-            const newStorage: SearchReplacePopupStorage = {
-                storage: {
-                    instance,
-                    history,
-                    saved: savedInstances,
-                },
-            }
-            chrome.storage.local.set(newStorage, function () {
-                port.postMessage('Terms stored')
-            })
+            saveStorage(instance, history, savedInstances, port)
         }
     })
 })
+
+function getDefaultStorage(): SearchReplacePopupStorage {
+    const instance: SearchReplaceInstance = {
+        searchTerm: '',
+        replaceTerm: '',
+        options: {
+            matchCase: false,
+            inputFieldsOnly: false,
+            visibleOnly: true,
+            wholeWord: false,
+            isRegex: false,
+            replaceAll: true,
+            save: false,
+        },
+    }
+    const saved: SavedInstances = {}
+    const history: SearchReplaceInstance[] = []
+    return {
+        storage: {
+            instance,
+            history,
+            saved,
+        },
+    }
+}
 
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details.reason === 'install') {
@@ -103,26 +120,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
             priority: 2,
             buttons: [{ title: 'Ok' }],
         })
-        const instance: SearchReplaceInstance = {
-            searchTerm: '',
-            replaceTerm: '',
-            options: {
-                matchCase: false,
-                inputFieldsOnly: true,
-                visibleOnly: true,
-                wholeWord: false,
-                isRegex: false,
-                replaceAll: false,
-                save: false,
-            },
-        }
-        const storage: SearchReplacePopupStorage = {
-            storage: {
-                instance,
-                history: [],
-                saved: [],
-            },
-        }
+        const storage = getDefaultStorage()
         chrome.storage.local.set(storage, function () {
             console.debug('Installed')
         })

@@ -45,17 +45,18 @@ export type SearchReplaceStorageItems = {
     saved?: SavedInstances
 }
 
-export interface SearchReplaceStorageMessage extends SearchReplaceStorageItems {
-    recover: boolean
+export interface SearchReplaceStorageMessage {
+    actions: { [key in SearchReplaceAction]?: boolean }
     url?: string
     save?: boolean
+    storage?: SearchReplaceStorageItems
 }
 
 export type SearchReplacePopupStorage = {
     storage: SearchReplaceStorageItems
 }
 
-export type SearchReplaceAction = 'searchReplace' | 'store'
+export type SearchReplaceAction = 'searchReplace' | 'store' | 'recover' | 'delete' | 'clearHistory' | 'save'
 
 export enum SelectorType {
     id = 'id',
