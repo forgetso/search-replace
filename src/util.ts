@@ -1,4 +1,4 @@
-import { SavedSearchReplaceInstance } from './types'
+import { SavedSearchReplaceInstance, SearchReplaceStorageMessage } from './types'
 
 export const cyrb53 = (str, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -24,4 +24,12 @@ export function tabConnect() {
     return chrome.runtime.connect(null!, {
         name: 'Search and Replace',
     })
+}
+
+export const recoverMessage: SearchReplaceStorageMessage = {
+    actions: { recover: true },
+}
+
+export const clearHistoryMessage: SearchReplaceStorageMessage = {
+    actions: { clearHistory: true },
 }

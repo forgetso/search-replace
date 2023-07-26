@@ -1,11 +1,14 @@
-import { tabConnect } from './util'
+import { recoverMessage, tabConnect } from './util'
 import {
     SavedInstances,
     SavedSearchReplaceInstance,
+    SearchReplaceAction,
     SearchReplaceCheckboxLabels,
     SearchReplaceCheckboxNames,
     SearchReplaceInstance,
     SearchReplaceOptions,
+    SearchReplaceStorageItems,
+    SearchReplaceStorageMessage,
 } from './types'
 
 window.addEventListener('DOMContentLoaded', function () {
@@ -14,23 +17,20 @@ window.addEventListener('DOMContentLoaded', function () {
         console.log('changes', changes)
         console.log('namespace', namespace)
         if (namespace === 'local') {
-            port.postMessage({
-                recover: true,
-            })
+            port.postMessage(recoverMessage)
         }
     })
 
     // Get the stored values from the background page
     const port = tabConnect()
-    port.postMessage({
-        recover: true,
-    })
+    port.postMessage(recoverMessage)
 
     const savedInstancesContainer = document.getElementById('savedInstances')
 
     // Restore the SavedInstances from storage
-    port.onMessage.addListener(function (msg) {
-        const saved: SavedInstances = msg.saved || []
+    port.onMessage.addListener(function (storageItems: SearchReplaceStorageItems) {
+        console.log('storage msg received: ', storageItems)
+        const saved: SavedInstances = storageItems.saved || []
         if (Object.keys(saved).length > 0) {
             // create a list of the saved search replace instances
 
@@ -68,7 +68,7 @@ function getParentForm(el: HTMLElement) {
 
 function savedInstanceSubmitHandler(event) {
     event.preventDefault()
-    const action = event.target.name
+    const action = event.target.name as SearchReplaceAction
     const form = getParentForm(event.target)
     if (form) {
         const url = form.elements['url'].value as string
@@ -86,11 +86,12 @@ function savedInstanceSubmitHandler(event) {
         }
         const port = tabConnect()
         port.postMessage({
-            [action]: true,
-            instance,
+            actions: { [action]: true } as { [key in SearchReplaceAction]: boolean },
+            // TODO make history optional?
+            storage: { instance, history: [] },
             instanceId,
             url,
-        })
+        } as SearchReplaceStorageMessage)
     }
 }
 

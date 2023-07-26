@@ -4,9 +4,10 @@ import {
     SearchReplaceInstance,
     SearchReplaceMessage,
     SearchReplaceOptions,
+    SearchReplaceStorageItems,
     SearchReplaceStorageMessage,
 } from './types'
-import { tabConnect } from './util'
+import { clearHistoryMessage, recoverMessage, tabConnect } from './util'
 
 const { matchCase, inputFieldsOnly, visibleOnly, wholeWord, isRegex, save, replaceAll } = SearchReplaceCheckboxNames
 
@@ -36,19 +37,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // Get the stored values from the background page
     const port = tabConnect()
-    port.postMessage({
-        recover: true,
-    })
+    port.postMessage(recoverMessage)
 
     // Restore the recent search replace instance and history list from storage
-    port.onMessage.addListener(function (msg) {
+    port.onMessage.addListener(function (msg: SearchReplaceStorageItems) {
         const history: SearchReplaceInstance[] = msg.history || []
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
             recentSearch = recentSearch || history[0]
             createHistoryListItemElements(history)
         }
-        restoreSearchReplaceInstance(recentSearch)
+        if (recentSearch) {
+            restoreSearchReplaceInstance(recentSearch)
+        }
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
@@ -95,9 +96,7 @@ function historyHeaderClickHandler(e) {
 
 function clearHistoryClickHandler() {
     const port = tabConnect()
-    port.postMessage({
-        clearHistory: true,
-    })
+    port.postMessage(clearHistoryMessage)
     const historyList = document.getElementById('historyList')
     if (historyList) {
         historyList.innerHTML = ''
@@ -224,7 +223,9 @@ async function storeTerms(e, save?: boolean) {
         const history = constructSearchReplaceHistory()
 
         if (searchReplaceInput.searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
+            // This does the actual search replace
             const url = await tabQuery('store', searchReplaceInput, history, tabQueryCallback)
+            // This sends the search replace terms to the background page and stores them
             sendToStorage(searchReplaceInput, history, url, save)
         } else {
             tabQueryCallback({})
@@ -241,11 +242,12 @@ function sendToStorage(
     // Send the search and replace terms to the background page
     const port = tabConnect()
     const storageMessage: SearchReplaceStorageMessage = {
-        instance: searchReplaceInstance,
-        history,
-        recover: false,
+        storage: {
+            instance: searchReplaceInstance,
+            history,
+        },
+        actions: { store: true, save },
         url,
-        save,
     }
     port.postMessage(storageMessage)
     port.onMessage.addListener(function (msg) {
