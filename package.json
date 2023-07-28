@@ -1,6 +1,6 @@
 {
   "name": "search_and_replace",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "resolutions": {
     "author": "Chris Taylor <cjtaylor38@gmail.com>"
   },
@@ -9,7 +9,7 @@
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
     "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist",
-    "start": "light-server -s ./assets -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\""
+    "start": "light-server -s . -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\""
   },
   "devDependencies": {
     "@types/chrome": "*",
@@ -18,6 +18,7 @@
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "copy-webpack-plugin": "^9.0.1",
+    "cypress": "^12.17.2",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -33,5 +34,8 @@
     "webpack": "^5.76.0",
     "webpack-cli": "^4.0.0",
     "webpack-merge": "^5.0.0"
+  },
+  "dependencies": {
+    "mark.js": "^8.11.1"
   }
 }
