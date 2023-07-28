@@ -1,13 +1,6 @@
 'use strict'
-
-import {
-    RegexFlags,
-    RichTextEditor,
-    SearchReplaceAction,
-    SearchReplaceInstance,
-    SearchReplaceMessage,
-    SelectorType,
-} from './types/index'
+import Mark from 'mark.js'
+import { RegexFlags, RichTextEditor, SearchReplaceMessage, SelectorType } from './types/index'
 
 const ELEMENT_FILTER = new RegExp('(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)')
 const INPUT_TEXTAREA_FILTER = new RegExp('(INPUT|TEXTAREA)')
@@ -427,24 +420,6 @@ function getFlags(matchCase: boolean, replaceAll: boolean): string {
     return (replaceAll ? RegexFlags.Global : '') + (matchCase ? '' : RegexFlags.CaseInsensitive)
 }
 
-function getSearchOccurrences(searchPattern: RegExp, visibleOnly: boolean): number {
-    let matches
-    if (visibleOnly) {
-        matches = document.body.innerText.match(searchPattern)
-        const iframeMatches = Array.from(document.querySelectorAll('iframe'))
-            .map((iframe) => (iframe.contentDocument?.documentElement.innerText.match(searchPattern) || []).length)
-            .reduce((a, b) => a + b, 0)
-        matches += iframeMatches
-    } else {
-        matches = document.body.innerHTML.match(searchPattern)
-    }
-    if (matches) {
-        return matches.length
-    } else {
-        return 0
-    }
-}
-
 function searchReplace(
     searchTerm: string,
     replaceTerm: string,
@@ -486,7 +461,32 @@ function inIframe() {
     return window !== window.top
 }
 
-chrome.runtime.onMessage.addListener(function (request: SearchReplaceMessage, sender, sendResponse) {
+// use mark.js to highlight matches
+async function highlightMatches(searchPattern: RegExp, visibleOnly: boolean): Promise<number> {
+    return new Promise((resolve) => {
+        const options = {
+            element: 'mark',
+            className: 'search-replace-highlight',
+            separateWordSearch: false,
+            acrossElements: true,
+            iframes: visibleOnly ? true : inIframe(),
+            done: function (total) {
+                resolve(total)
+            },
+        }
+        const instance = new Mark(document.querySelectorAll('body'))
+        instance.unmark()
+        instance.markRegExp(searchPattern, options)
+    })
+}
+
+function removeHighlights() {
+    console.log('Removing highlights...')
+    const instance = new Mark(document.querySelectorAll('body'))
+    instance.unmark()
+}
+
+chrome.runtime.onMessage.addListener(async function (request: SearchReplaceMessage, sender, sendResponse) {
     const instance = request.instance
     const replaceAll = instance.options.replaceAll
     const action = request.action
@@ -499,6 +499,7 @@ chrome.runtime.onMessage.addListener(function (request: SearchReplaceMessage, se
         instance.options.wholeWord
     )
     if (action === 'searchReplace') {
+        removeHighlights()
         console.log("action: 'searchReplace'", instance)
         sessionStorage.setItem('searchTerm', instance.searchTerm)
         sessionStorage.setItem('replaceTerm', instance.replaceTerm)
@@ -512,12 +513,14 @@ chrome.runtime.onMessage.addListener(function (request: SearchReplaceMessage, se
             instance.options.visibleOnly,
             instance.options.wholeWord
         )
+        const searchTermCount = await highlightMatches(globalSearchPattern, instance.options.visibleOnly)
         sendResponse({
-            searchTermCount: getSearchOccurrences(globalSearchPattern, instance.options.visibleOnly),
+            searchTermCount: searchTermCount,
             inIframe: inIframe(),
         })
     } else {
-        const searchTermCount = getSearchOccurrences(globalSearchPattern, instance.options.visibleOnly)
+        removeHighlights()
+        const searchTermCount = await highlightMatches(globalSearchPattern, instance.options.visibleOnly)
         const response = {
             searchTermCount: searchTermCount,
             inIframe: inIframe(),

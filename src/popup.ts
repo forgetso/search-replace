@@ -24,8 +24,10 @@ const INPUT_ELEMENTS_AND_EVENTS = {
 
 const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceCheckboxNames)
 const MIN_SEARCH_TERM_LENGTH = 2
-
+let lastTimeTermsStored = 0
 window.addEventListener('DOMContentLoaded', function () {
+    // Create a variable for storing the time since last time terms were stored
+
     // Set the onchange and onkeydown functions for the input fields
     const inputs: HTMLCollectionOf<Element> = document.getElementsByClassName('data_field')
     for (const el of inputs) {
@@ -53,11 +55,17 @@ window.addEventListener('DOMContentLoaded', function () {
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
-    // Form submit listener
+    // Replace Next anb ReplaceAll click handlers
+    for (const elementId of ['#replaceNext', '#replaceAll']) {
+        ;(<HTMLFormElement>document.querySelector(elementId)).addEventListener('click', function (event) {
+            event.preventDefault()
+            formSubmitHandler('searchReplace', tabQueryCallback, elementId.slice(1) === 'replaceAll')
+        })
+    }
+
+    // Form submit handler
     ;(<HTMLFormElement>document.querySelector('#searchReplaceForm')).addEventListener('submit', function (event) {
         event.preventDefault()
-        console.log(event)
-        formSubmitHandler('searchReplace', tabQueryCallback)
     })
 
     //Click events for Options Link, Help link, and Clear History
@@ -71,15 +79,29 @@ window.addEventListener('DOMContentLoaded', function () {
     // Handlers for input elements changing value - storeTerms
     for (const elementName in INPUT_ELEMENTS_AND_EVENTS) {
         for (const eventType of INPUT_ELEMENTS_AND_EVENTS[elementName]) {
-            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, async function (e) {
-                await storeTerms(e, false)
-            })
+            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, storeTermsHandler)
         }
     }
 
     // Click handler for historyContent element. Will take the search term and replace term from the history item and populate the input fields
     ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', historyItemClickHandler)
 })
+
+async function storeTermsHandler(e) {
+    // make sure that at least 500ms has passed since the last time the terms were stored
+    if (Date.now() - lastTimeTermsStored < 500) {
+        console.log('Storing terms')
+        lastTimeTermsStored = Date.now()
+        await storeTerms(e, false)
+    } else {
+        setTimeout(async () => {
+            console.log('Storing terms')
+            lastTimeTermsStored = Date.now()
+            await storeTerms(e, false)
+        }, 750)
+        console.log('Not storing terms because not enough time has passed')
+    }
+}
 
 // function to expand or contract the history section
 function historyHeaderClickHandler(e) {
@@ -139,12 +161,12 @@ function historyItemClickHandler(e) {
  * @param action {SearchReplaceAction}
  * @param callbackHandler {function}
  **/
-function formSubmitHandler(action: SearchReplaceAction, callbackHandler) {
+function formSubmitHandler(action: SearchReplaceAction, callbackHandler, replaceAll: boolean) {
     const loader = document.getElementById('loader')
     loader!.style.display = 'block'
     const content = document.getElementById('content')
     content!.style.display = 'none'
-    const searchReplaceInstance = getInputValues()
+    const searchReplaceInstance = getInputValues(replaceAll)
     const historyItems = constructSearchReplaceHistory(searchReplaceInstance)
     // create the new history list items
     createHistoryListItemElements(historyItems)
@@ -217,9 +239,9 @@ async function storeTerms(e, save?: boolean) {
     e = e || window.event
     if (e.keyCode === 13) {
         //if the user presses enter we want to trigger the search replace
-        formSubmitHandler('searchReplace', tabQueryCallback)
+        formSubmitHandler('searchReplace', tabQueryCallback, false)
     } else {
-        const searchReplaceInput = getInputValues()
+        const searchReplaceInput = getInputValues(false)
         const history = constructSearchReplaceHistory()
 
         if (searchReplaceInput.searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
@@ -317,7 +339,7 @@ function getUniqueHistoryItems(historyItems: SearchReplaceInstance[]) {
     )
 }
 
-function getInputValues(): SearchReplaceInstance {
+function getInputValues(replaceAll: boolean): SearchReplaceInstance {
     const searchTerm = (<HTMLInputElement>document.getElementById('searchTerm')).value || ''
     const replaceTerm = (<HTMLInputElement>document.getElementById('replaceTerm')).value || ''
     const matchCase = (<HTMLInputElement>document.getElementById('matchCase')).checked
@@ -325,7 +347,6 @@ function getInputValues(): SearchReplaceInstance {
     const visibleOnly = (<HTMLInputElement>document.getElementById('visibleOnly')).checked
     const wholeWord = (<HTMLInputElement>document.getElementById('wholeWord')).checked
     const isRegex = (<HTMLInputElement>document.getElementById('isRegex')).checked
-    const replaceAll = (<HTMLInputElement>document.getElementById('replaceAll')).checked
     const save = (<HTMLInputElement>document.getElementById('save')).checked
     return {
         searchTerm,
