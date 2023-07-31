@@ -23,8 +23,7 @@
         "searchreplace.js",
         "options.js",
         "popup.js",
-        "util.js",
-        "vendor.js"
+        "util.js"
       ],
       "matches": [
         "http://*/*",
@@ -47,6 +46,6 @@
     "https://*/*"
   ],
   "update_url": "http://clients2.google.com/service/update2/crx",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "options_page": "assets/options.html"
 }
