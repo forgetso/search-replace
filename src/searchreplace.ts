@@ -461,6 +461,7 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             globalFlags,
             instance.options.wholeWord
         )
+        console.log(`instance ${JSON.stringify(instance, null, 4)}`)
         if (action === 'searchReplace') {
             sessionStorage.setItem('searchTerm', instance.searchTerm)
             sessionStorage.setItem('replaceTerm', instance.replaceTerm)
@@ -470,19 +471,29 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
                 instance.searchTerm,
                 instance.replaceTerm,
                 flags,
-                instance.options['Input fields only?'],
-                instance.options['Regular Expression?'],
+                instance.options.inputFieldsOnly,
+                instance.options.isRegex,
                 instance.options.visibleOnly,
                 instance.options.wholeWord
             ).then((replaced) => {
                 sendResponse({
-                    searchTermCount: getSearchOccurrences(document, globalSearchPattern, instance.options.visibleOnly),
+                    searchTermCount: getSearchOccurrences(
+                        document,
+                        globalSearchPattern,
+                        instance.options.visibleOnly,
+                        instance.options.inputFieldsOnly
+                    ),
                     inIframe: inIframe(),
                     replaced: replaced,
                 })
             })
         } else {
-            const searchTermCount = getSearchOccurrences(document, globalSearchPattern, instance.options.visibleOnly)
+            const searchTermCount = getSearchOccurrences(
+                document,
+                globalSearchPattern,
+                instance.options.visibleOnly,
+                instance.options.inputFieldsOnly
+            )
             const response = {
                 searchTermCount: searchTermCount,
                 inIframe: inIframe(),

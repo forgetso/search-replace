@@ -1,4 +1,6 @@
 import { RegexFlags, SavedSearchReplaceInstance, SearchReplaceStorageMessage } from './types'
+import { Simulate } from 'react-dom/test-utils'
+import input = Simulate.input
 
 export const cyrb53 = (str, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -35,20 +37,22 @@ export const clearHistoryMessage: SearchReplaceStorageMessage = {
 }
 
 function getInputElements(document: Document, visibleOnly?: boolean): (HTMLInputElement | HTMLTextAreaElement)[] {
-    return Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea')).filter((input) =>
-        elementIsVisible(input)
-    )
+    const inputs = Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea'))
+    return visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
 }
 
+//TODO fix this spaghetti
 export function getSearchOccurrences(
     document: Document,
     searchPattern: RegExp,
     visibleOnly: boolean,
+    inputFieldsOnly?: boolean,
     iframe?: boolean
 ): number {
     let matches
     let iframeMatches = 0
-    if (visibleOnly) {
+    console.log('inputFieldsOnly', inputFieldsOnly, 'visibleOnly', visibleOnly)
+    if (visibleOnly && !inputFieldsOnly) {
         matches = document.body.innerText.match(searchPattern) || []
         const inputs = getInputElements(document, visibleOnly)
         const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
@@ -66,7 +70,15 @@ export function getSearchOccurrences(
                 .reduce((a, b) => a + b, 0)
         }
         // combine the matches from the body and the inputs and remove empty matches
-        matches = [...matches, ...inputMatches].filter((match) => match.length > 0).flat()
+        if (inputFieldsOnly) {
+            matches = inputMatches.filter((match) => match.length > 0).flat()
+        } else {
+            matches = [...matches, ...inputMatches].filter((match) => match.length > 0).flat()
+        }
+    } else if (inputFieldsOnly) {
+        const inputs = getInputElements(document, visibleOnly)
+        const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
+        matches = inputMatches.filter((match) => match.length > 0).flat()
     } else {
         matches = Array.from(document.body.innerHTML.match(searchPattern) || [])
     }

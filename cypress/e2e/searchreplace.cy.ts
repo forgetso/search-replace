@@ -27,14 +27,14 @@ describe('Search Replace ', () => {
     it('counts the correct number of occurrences', () => {
         cy.document().then((document) => {
             const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, false)
-            expect(occurences).to.equal(5)
+            expect(occurences).to.equal(6)
         })
     })
 
     it('counts the correct number of visible occurrences', () => {
         cy.document().then((document) => {
             const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, true)
-            expect(occurences).to.equal(4)
+            expect(occurences).to.equal(5)
         })
     })
 
@@ -45,12 +45,26 @@ describe('Search Replace ', () => {
         })
     })
 
+    it('counts the correct number of occurrences for inputs only', () => {
+        cy.document().then((document) => {
+            const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, false, true)
+            expect(occurences).to.equal(4)
+        })
+    })
+
+    it('counts the correct number of occurrences for visible inputs only', () => {
+        cy.document().then((document) => {
+            const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, true, true)
+            expect(occurences).to.equal(3)
+        })
+    })
+
     it('replaces the search term with the replace term', () => {
         cy.window().then((window) => {
             cy.wrap(
                 searchReplace(window, SEARCHTERM, REPLACETERM, FLAGSGLOBAL, false, false, false, false).then(() => {
                     const occurences = getSearchOccurrences(window.document, REPLACETERMGLOBAL, false)
-                    expect(occurences).to.equal(5)
+                    expect(occurences).to.equal(6)
                 })
             ).then(() => {
                 console.log(`after wrap`)
