@@ -386,12 +386,16 @@ async function replaceInContentEditableElement(
 
             // clear DataTransfer Data
             dataTransfer.clearData()
+
+            if (element.textContent !== replacementText) {
+                console.log('set textContent')
+                element.textContent = replacementText
+            } else {
+                console.log("didn't need to set textContent ")
+                element.dispatchEvent(new Event('input', { bubbles: true }))
+            }
             resolve(true)
         }, 100)
-
-        if (element.textContent !== replacementText) {
-            element.textContent = replacementText
-        }
     })
 }
 

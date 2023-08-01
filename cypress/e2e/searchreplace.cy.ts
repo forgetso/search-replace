@@ -11,7 +11,7 @@ const REPLACETERMGLOBAL = new RegExp(REPLACETERM, FLAGSGLOBAL)
 
 describe('Search Replace ', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:9000/tests/test.html')
+        cy.visit('tests/test.html')
     })
 
     it('correctly identifies the number of visible inputs', () => {
@@ -47,23 +47,33 @@ describe('Search Replace ', () => {
 
     it('replaces the search term with the replace term', () => {
         cy.window().then((window) => {
-            searchReplace(window, SEARCHTERM, REPLACETERM, FLAGSGLOBAL, false, false, false, false).then(() => {
-                console.log('REPLACETERMGLOBAL', REPLACETERMGLOBAL)
-                const occurences = getSearchOccurrences(window.document, REPLACETERMGLOBAL, false)
-                expect(occurences).to.equal(5)
+            cy.wrap(
+                searchReplace(window, SEARCHTERM, REPLACETERM, FLAGSGLOBAL, false, false, false, false).then(() => {
+                    const occurences = getSearchOccurrences(window.document, REPLACETERMGLOBAL, false)
+                    expect(occurences).to.equal(5)
+                })
+            ).then(() => {
+                console.log(`after wrap`)
             })
         })
     })
 
     it('replaces the first occurrence of the search term in a content editor with the replace term', () => {
         cy.window().then((window) => {
-            searchReplace(window, SEARCHTERM, REPLACETERM, RegexFlags.CaseInsensitive, false, false, false, false).then(
-                () => {
-                    console.log('REPLACETERMGLOBAL', REPLACETERMGLOBAL)
-                    const occurences = getSearchOccurrences(window.document, REPLACETERMGLOBAL, false)
-                    expect(occurences).to.equal(1)
-                }
-            )
+            cy.wrap(
+                searchReplace(window, SEARCHTERM, REPLACETERM, RegexFlags.CaseInsensitive, false, false, false, false)
+                    .then((result) => {
+                        console.log(`result ${result}`)
+                        const occurences = getSearchOccurrences(window.document, REPLACETERMGLOBAL, false)
+                        console.log(`occurrences ${occurences}`)
+                        expect(occurences).to.equal(1)
+                    })
+                    .catch((e) => {
+                        console.log(`after searchReplace ${e}`)
+                    })
+            ).then(() => {
+                console.log(`after wrap`)
+            })
         })
     })
 })

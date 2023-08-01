@@ -10,7 +10,8 @@
     "build": "webpack --config webpack/webpack.prod.js",
     "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist",
     "start": "light-server -s . -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\"",
-    "test": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "devDependencies": {
     "@types/chrome": "*",
@@ -35,7 +36,5 @@
     "webpack": "^5.76.0",
     "webpack-cli": "^4.0.0",
     "webpack-merge": "^5.0.0"
-  },
-  "dependencies": {
   }
 }
