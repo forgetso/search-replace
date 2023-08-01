@@ -39,4 +39,4 @@ jobs:
         run: |
           cd search-replace
           npm run start 1>server.log 2>&1 &
-          cypress run
+          npm run cypress:run
