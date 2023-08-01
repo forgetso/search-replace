@@ -18,12 +18,15 @@
     "manifest.json"
   ],
   "types": [
-    "chrome"
+    "chrome",
+    "cypress"
   ],
   "exclude": [
     "node_modules",
     "build",
-    "tests"
+    "tests",
+    "cypress",
+    "cypress.config.ts"
   ],
 
 }

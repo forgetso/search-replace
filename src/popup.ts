@@ -24,7 +24,7 @@ const INPUT_ELEMENTS_AND_EVENTS = {
 
 const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceCheckboxNames)
 const MIN_SEARCH_TERM_LENGTH = 2
-let lastTimeTermsStored = 0
+const lastTimeTermsStored = 0
 window.addEventListener('DOMContentLoaded', function () {
     // Create a variable for storing the time since last time terms were stored
 
@@ -88,19 +88,7 @@ window.addEventListener('DOMContentLoaded', function () {
 })
 
 async function storeTermsHandler(e) {
-    // make sure that at least 500ms has passed since the last time the terms were stored
-    if (Date.now() - lastTimeTermsStored < 500) {
-        console.log('Storing terms')
-        lastTimeTermsStored = Date.now()
-        await storeTerms(e, false)
-    } else {
-        setTimeout(async () => {
-            console.log('Storing terms')
-            lastTimeTermsStored = Date.now()
-            await storeTerms(e, false)
-        }, 750)
-        console.log('Not storing terms because not enough time has passed')
-    }
+    await storeTerms(e, false)
 }
 
 // function to expand or contract the history section
