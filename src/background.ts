@@ -91,7 +91,7 @@ function getDefaultStorage(): SearchReplacePopupStorage {
         replaceTerm: '',
         options: {
             matchCase: false,
-            inputFieldsOnly: false,
+            inputFieldsOnly: true,
             visibleOnly: true,
             wholeWord: false,
             isRegex: false,
