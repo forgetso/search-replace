@@ -23,8 +23,7 @@ const INPUT_ELEMENTS_AND_EVENTS = {
 }
 
 const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceCheckboxNames)
-const MIN_SEARCH_TERM_LENGTH = 2
-const lastTimeTermsStored = 0
+const MIN_SEARCH_TERM_LENGTH = 1
 window.addEventListener('DOMContentLoaded', function () {
     // Create a variable for storing the time since last time terms were stored
 
@@ -232,7 +231,7 @@ async function storeTerms(e, save?: boolean) {
         const searchReplaceInput = getInputValues(false)
         const history = constructSearchReplaceHistory()
 
-        if (searchReplaceInput.searchTerm.length > MIN_SEARCH_TERM_LENGTH) {
+        if (searchReplaceInput.searchTerm.length >= MIN_SEARCH_TERM_LENGTH) {
             // This does the actual search replace
             const url = await tabQuery('store', searchReplaceInput, history, tabQueryCallback)
             // This sends the search replace terms to the background page and stores them
