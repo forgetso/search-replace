@@ -331,8 +331,12 @@ async function cmsEditor(
         } else {
             const editor = <HTMLElement>document.querySelector(richTextEditor.editor.value)
             const initialText = editor.textContent || ''
+            console.log('initial Text', initialText)
+            console.log('inner Text', editor.innerText)
+            console.log('inner HTML', editor.innerHTML)
             const newText = initialText.replace(searchPattern, replaceTerm)
-            await replaceInContentEditableElement(window, editor, newText)
+            console.log('newText', newText)
+            await replaceInContentEditableElement(window, editor, initialText, newText)
             replaced = initialText !== newText
         }
     } catch (err) {
@@ -347,55 +351,24 @@ async function cmsEditor(
 async function replaceInContentEditableElement(
     window: Window,
     element: HTMLElement,
+    initialText: string,
     replacementText: string
 ): Promise<boolean> {
     return new Promise((resolve) => {
-        const dataTransfer = new DataTransfer()
-
-        // this may be 'text/html' if it's required
-        dataTransfer.setData('text/plain', `${replacementText}`)
-
         // select the content editable area
         element.dispatchEvent(new FocusEvent('focus', { bubbles: true }))
+        console.log('element.textContent', element.textContent)
+        if (element.innerText === element.innerHTML) {
+            console.log('set textContent in element', element)
+            element.textContent = replacementText
+        } else {
+            console.log('replacing', initialText, 'in', element.innerHTML, 'with', replacementText)
+            element.innerHTML = element.innerHTML.replace(initialText, replacementText)
+        }
 
-        // select all the text
-        selectElementContents(window, element)
+        element.dispatchEvent(new Event('input', { bubbles: true }))
 
-        // delete any text in the content editable area
-        element.dispatchEvent(
-            new KeyboardEvent('keydown', {
-                bubbles: true,
-                cancelable: true,
-                keyCode: 46,
-                shiftKey: true,
-            })
-        )
-
-        // wait a short time for the delete to happen
-        setTimeout(() => {
-            // paste the replacement text
-            element.dispatchEvent(
-                new ClipboardEvent('paste', {
-                    clipboardData: dataTransfer,
-
-                    // need these for the event to reach Draft paste handler
-                    bubbles: true,
-                    cancelable: true,
-                })
-            )
-
-            // clear DataTransfer Data
-            dataTransfer.clearData()
-
-            if (element.textContent !== replacementText) {
-                console.log('set textContent')
-                element.textContent = replacementText
-            } else {
-                console.log("didn't need to set textContent ")
-                element.dispatchEvent(new Event('input', { bubbles: true }))
-            }
-            resolve(true)
-        }, 100)
+        resolve(element.innerText !== initialText)
     })
 }
 

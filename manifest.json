@@ -32,7 +32,7 @@
       ]
     }
   ],
-  "description": "Search for text in on a webpage and replace it with different text.",
+  "description": "Search for text on a webpage and replace it with different text.",
   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCr3R0tWRUKUERxg/cghorcvKPDxba+0Ko/3Metk/0XsUTPZcU1xBQZCY441i3lK2ZkH/Td3rs/l8HvbVnkN37NiFm0QQOIJGJi7vp1GdQsrr5uZA/611TsQAWpxxHzR9N4km5wu8e/Xmw2ZG5WKfWVPtUhozEDHTk5CVgeTUOMAQIDAQAB",
   "manifest_version": 3,
   "name": "Search and Replace",
@@ -46,6 +46,6 @@
     "https://*/*"
   ],
   "update_url": "http://clients2.google.com/service/update2/crx",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "options_page": "assets/options.html"
 }
