@@ -51,6 +51,8 @@ window.addEventListener('DOMContentLoaded', function () {
         if (recentSearch) {
             restoreSearchReplaceInstance(recentSearch)
         }
+        // Trigger a search term count if there is an existing search term
+        tabQuery('store', recentSearch, history, tabQueryCallback).then((r) => console.log(r))
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
