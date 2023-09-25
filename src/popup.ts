@@ -86,6 +86,13 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // Click handler for historyContent element. Will take the search term and replace term from the history item and populate the input fields
     ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', historyItemClickHandler)
+
+    // Click handler for swapping terms
+    ;(<HTMLButtonElement>document.getElementById('swapTerms')).addEventListener('click', function (e) {
+        const searchTerm = <HTMLTextAreaElement>document.getElementById('searchTerm')
+        const replaceTerm = <HTMLTextAreaElement>document.getElementById('replaceTerm')
+        swapTerms(searchTerm, replaceTerm)
+    })
 })
 
 async function storeTermsHandler(e) {
@@ -197,7 +204,7 @@ function tabQueryCallback(msg) {
         if ('searchTermCount' in msg) {
             ;(<HTMLDivElement>(
                 document.getElementById('searchTermCount')
-            )).innerHTML = `<p>${msg['searchTermCount']} matches</p>`
+            )).innerHTML = `${msg['searchTermCount']} matches`
         }
         const hintsElement = document.getElementById('hints')
 
@@ -307,6 +314,15 @@ function constructSearchReplaceHistory(searchReplaceInstance?: SearchReplaceInst
     }
 
     return historyItems
+}
+
+function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement) {
+    const sourceText = source.value
+    source.value = target.value
+    target.value = sourceText
+    storeTerms({}, true)
+        .then((r) => console.log(r))
+        .catch((e) => console.error(e))
 }
 
 function getHistoryItemsFromListItemsElements(history: HTMLElement): SearchReplaceInstance[] {
