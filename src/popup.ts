@@ -84,6 +84,13 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Handler for auto resizing the textareas
+    for (const elementName of ['searchTerm', 'replaceTerm']) {
+        ;(<HTMLTextAreaElement>document.getElementById(elementName)).addEventListener('input', function () {
+            autoGrow(this)
+        })
+    }
+
     // Click handler for historyContent element. Will take the search term and replace term from the history item and populate the input fields
     ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', historyItemClickHandler)
 
@@ -97,6 +104,13 @@ window.addEventListener('DOMContentLoaded', function () {
 
 async function storeTermsHandler(e) {
     await storeTerms(e, false)
+}
+
+// function to change the height of the textarea to fit the content
+function autoGrow(element) {
+    console.log('change height')
+    element.style.height = ''
+    element.style.height = element.scrollHeight + 'px'
 }
 
 // function to expand or contract the history section
