@@ -2,3 +2,5 @@
 jquery-2.1.4.min.js
 bootstrap-5.3.0-*
 dist
+node_modules
+.DS_Store
