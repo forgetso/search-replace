@@ -86,7 +86,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // Handler for auto resizing the textareas
     for (const elementName of ['searchTerm', 'replaceTerm']) {
-        ;(<HTMLTextAreaElement>document.getElementById(elementName)).addEventListener('input', function () {
+        const element = document.getElementById(elementName)
+        autoGrow(element)
+        ;(<HTMLTextAreaElement>element).addEventListener('input', function () {
             autoGrow(this)
         })
     }
@@ -99,6 +101,8 @@ window.addEventListener('DOMContentLoaded', function () {
         const searchTerm = <HTMLTextAreaElement>document.getElementById('searchTerm')
         const replaceTerm = <HTMLTextAreaElement>document.getElementById('replaceTerm')
         swapTerms(searchTerm, replaceTerm)
+        autoGrow(searchTerm)
+        autoGrow(replaceTerm)
     })
 })
 
