@@ -83,3 +83,17 @@ export enum RegexFlags {
     CaseInsensitive = 'i',
     Global = 'g',
 }
+
+export interface LangList {
+    languageCode: string
+    languageName: string
+}
+
+export interface LangFile {
+    [key: string]: {
+        message: string
+        description: string
+    }
+}
+
+export type TranslationProxy = (key: string) => string
