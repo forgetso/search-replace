@@ -1,5 +1,6 @@
 // Storing and retrieving popup values
 import {
+    LangList,
     SavedInstances,
     SearchReplaceInstance,
     SearchReplaceMessage,
@@ -124,6 +125,21 @@ chrome.runtime.onInstalled.addListener(function (details) {
         chrome.storage.local.set(storage, function () {
             console.debug('Installed')
         })
+
+        // Get the Chrome UI language and set it as the preferred language in sync storage (default: en)
+        chrome.i18n.getAcceptLanguages(function (uiLanguage) {
+            getAvailableLanguages().then((langList) => {
+                let initializeLang
+                initializeLang = 'en'
+                for (const lang of langList as LangList[]) {
+                    if (uiLanguage[0] === lang.languageCode) {
+                        initializeLang = lang.languageCode
+                    }
+                }
+                console.log('Fist Installation, preferredLanguage:', initializeLang)
+                chrome.storage.sync.set({ preferredLanguage: initializeLang })
+            })
+        })
     }
 })
 
@@ -173,4 +189,71 @@ chrome.tabs.onUpdated.addListener(async function (tabId, info) {
         })
     }
 })
+
+function getAvailableLanguages() {
+    return new Promise((resolve, reject) => {
+        const localePath = '_locales/list.json'
+
+        // Load the langlist content
+        fetch(chrome.runtime.getURL(localePath))
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                resolve(data)
+            })
+            .catch((error) => {
+                console.log(error)
+                reject(error)
+            })
+    })
+}
+
+function loadLocalizedContent(lng: string) {
+    return new Promise((resolve, reject) => {
+        const localePath = '_locales/' + lng + '/messages.json'
+
+        // Load the localized content
+        fetch(chrome.runtime.getURL(localePath))
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                resolve(data)
+            })
+            .catch((error) => {
+                console.log(error)
+                reject(error)
+            })
+    })
+}
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === 'getTranslation') {
+        chrome.storage.sync.get('preferredLanguage', (result) => {
+            const lng = result.preferredLanguage || 'en'
+
+            loadLocalizedContent(lng)
+                .then((data) => {
+                    console.log('data,', data)
+                    sendResponse(data)
+                })
+                .catch((error) => {
+                    console.error('Error loading translation data:', error)
+                    sendResponse(null) // You can send back an error response
+                })
+        })
+
+        return true // Indicate that the response will be asynchronous
+    } else if (request.action === 'getAvailableLanguages') {
+        getAvailableLanguages()
+            .then((availableLanguages) => {
+                sendResponse(availableLanguages)
+            })
+            .catch((error) => {
+                console.error('Error loading _locales folder:', error)
+                sendResponse(null)
+            })
+        return true // Indicate that the response will be asynchronous
+    }
+})
+
 export {}
