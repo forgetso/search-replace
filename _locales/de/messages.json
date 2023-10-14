@@ -1,0 +1,34 @@
+{
+    "ext_name": {
+        "message": "Search and Replace",
+        "description": "ext_name"
+    },
+    "ext_description": {
+        "message": "Suche nach Text auf einer Webseite und ersetze ihn durch einen anderen Text.",
+        "description": "ext_description"
+    },
+    "options": {
+        "message": "Optionen",
+        "description": "options"
+    },
+    "saved_rules": {
+        "message": "Gespeicherte Regeln",
+        "description": "Options Tab"
+    },
+    "select_language": {
+        "message": "Wählen Sie eine Sprache:",
+        "description": "Options Tab"
+    },
+    "settings": {
+        "message": "Einstellungen",
+        "description": "Settings"
+    },
+    "about": {
+        "message": "Über",
+        "description": "about"
+    },
+    "version": {
+        "message": "Version",
+        "description": "version"
+    }
+}
