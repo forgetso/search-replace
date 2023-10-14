@@ -1,4 +1,11 @@
-import { RegexFlags, SavedSearchReplaceInstance, SearchReplaceStorageMessage } from './types'
+import {
+    LangFile,
+    LangList,
+    RegexFlags,
+    SavedSearchReplaceInstance,
+    SearchReplaceStorageMessage,
+    TranslationProxy,
+} from './types'
 import { Simulate } from 'react-dom/test-utils'
 import input = Simulate.input
 
@@ -103,4 +110,53 @@ export function elementIsVisible(element: HTMLElement): boolean {
 
 export function inIframe() {
     return window !== window.top
+}
+
+export const manifest = chrome.runtime.getManifest()
+
+// Modify the getLang function to return a promise with the specified type
+export function getTranslation(): Promise<LangFile> {
+    return new Promise((resolve) => {
+        chrome.runtime.sendMessage({ action: 'getTranslation' }, (response) => {
+            const data = response
+            console.log('utils getTranslation', data)
+            resolve(response)
+        })
+    })
+}
+
+export function getAvailableLanguages(): Promise<LangList[]> {
+    return new Promise((resolve) => {
+        chrome.runtime.sendMessage({ action: 'getAvailableLanguages' }, (availableLanguages) => {
+            const data = availableLanguages
+            console.log('utils getAvailableLanguages', data)
+            resolve(data)
+        })
+    })
+}
+
+// Function to create a translation proxy
+export function createTranslationProxy(translationData: LangFile): TranslationProxy {
+    return (key: string) => {
+        if (translationData[key] && translationData[key].message) {
+            return translationData[key].message
+        } else {
+            // Return the key itself if a translation is not found
+            // return '-X-' // for debug
+            return key
+        }
+    }
+}
+
+export function localizeElements(translationData: LangFile) {
+    document.querySelectorAll('[data-locale]').forEach((elem) => {
+        const element = elem as HTMLElement
+        const localeKey = element.getAttribute('data-locale')
+
+        if (localeKey) {
+            const innerString = translationData[localeKey] ? translationData[localeKey].message : localeKey
+            // element.innerText = innerString
+            element.innerHTML = innerString
+        }
+    })
 }
