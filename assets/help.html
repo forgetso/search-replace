@@ -1,229 +1,263 @@
 <html>
+    <head>
+        <style>
+            body,
+            body div table {
+                font-family: 'Open Sans Light', sans-serif;
+                background-color: #eee;
+                font-size: 13px;
+                color: #444;
+            }
+        </style>
+        <link href="bootstrap.min.css" rel="stylesheet" />
+        <link href="bootstrap.min.js" rel="stylesheet" />
+        <link href="bootstrap.bundle.min.js" rel="stylesheet" />
+        <title data-locale="help_title">Help page for search and replace</title>
+    </head>
 
-<head>
-    <style>
-        body,
-        body div table {
-            font-family: "Open Sans Light", sans-serif;
-            background-color: #eee;
-            font-size: 13px;
-            color: #444;
-        }
-    </style>
-    <link href="bootstrap.min.css" rel="stylesheet">
-    <link href="bootstrap.min.js" rel="stylesheet">
-    <link href="bootstrap.bundle.min.js" rel="stylesheet">
-    <title>Help page for search and replace</title>
-</head>
+    <body>
+        <div class="container" class="bg-light-subtle">
+            <div class="row">
+                <div class="col-md-3" role="complementary">
+                    <nav class="navbar border-bottom border-bottom-dark">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#type" data-locale="next_vs_all"
+                                    >Replace Next vs. Replace All</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#editors" data-locale="replace_editors"
+                                    >Replacing text in editors and text fields</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-locale="Replacing_anywhere" href="#anywhere"
+                                    >Replacing text anywhere on the page</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-locale="Matching_case" href="#case"
+                                    >Matching the case of text</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-locale="Matching_whole" href="#whole">Matching whole words</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-locale="wildcards_and_regex" href="#wildcards"
+                                    >Wild Cards and Regular Expressions</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-locale="Replacing_wordpress" href="#wordpress"
+                                    >Replacing text in WordPress</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-locale="Save_apply" href="#save"
+                                    >Save and apply on page reload</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-locale="ReportingIssues" href="#issues">Reporting Issues</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
 
-<body>
-<div class="container" class="bg-light-subtle">
-    <div class="row">
-        <div class="col-md-3" role="complementary">
-            <nav class="navbar border-bottom border-bottom-dark">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#type">Replace Next vs. Replace All</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#editors">Replacing text in editors and text fields</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#anywhere">Replacing text anywhere on the page</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#case">Matching the case of text</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#whole">Matching whole words</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#wildcards">Wild Cards and Regular Expressions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#wordpress">Replacing text in WordPress</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#save">Save and apply on page reload</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#issues">Reporting Issues</a>
-                    </li>
-                </ul>
-            </nav>
+                <div class="col-md-9 container" role="main">
+                    <div class="row mb-2">
+                        <h2 id="type" data-locale="next_vs_all">Replace Next vs. Replace All</h2>
+                        <p data-locale="next_vs_all_p1">
+                            To replace the first occurrence of the search term, press <code>Replace Next</code>. You can
+                            continue to press the button until there are no more occurrences.
+                        </p>
+                        <p data-locale="next_vs_all_p2">
+                            To replace all occurrences of the search term, press <code>Replace All</code>.
+                        </p>
+                        <p data-locale="next_vs_all_p3">
+                            There is currently no undo function. If you make a mistake, you can reload the page to
+                            restore the original text. However, you will lose any unsaved changes in text editors and in
+                            text input fields.
+                        </p>
+                    </div>
+                    <div class="row mb-2">
+                        <h2 id="editors" data-locale="replace_editors">Replacing text in editors and text fields</h2>
+                        <p data-locale="replace_editors_p1">
+                            To replace text in text editors or input boxes you should check the
+                            <code>Input fields only?</code> check box. Otherwise, the search text will be replaced
+                            throughout the entire HTML, possibly breaking the page. To avoid changing hidden input
+                            fields, you should also check the <code>Visible elements only?</code>
+                            check box.
+                        </p>
+                    </div>
+                    <div class="row mb-2">
+                        <h3 data-locale="Setup">Setup</h3>
+                        <span><img src="setup-input-fields.png" class="img-thumbnail" /></span>
+
+                        <h2 id="anywhere" data-locale="Replacing_anywhere">Replacing text anywhere on the page</h2>
+                        <p data-locale="Replacing_anywhere_p1">
+                            To replace text that is not contained within a text editor and not contained within a text
+                            field, leave the <code>Input Fields only?</code> and
+                            <code>Only change visible content?</code> boxes <b>unchecked</b>.
+                        </p>
+
+                        <div class="alert alert-warning" data-locale="Replacing_anywhere_warning">
+                            WARNING: This setup will alter the page HTML and may break the page. You can restore the
+                            page by reloading, but you will lose any unsaved changes in text editors and in text input
+                            fields.
+                        </div>
+                        <p>
+                            <img
+                                class="img-responsive img-thumbnail"
+                                src="setup-entire-page.png"
+                                class="img-responsive img-thumbnail"
+                                alt="Basic setup for replacing wikipedia home page title"
+                            />
+                        </p>
+                    </div>
+                    <div class="row mb-2">
+                        <h2 id="Matching_case" data-locale="Matching_case">Matching the case of text</h2>
+                        <p data-locale="Matching_case_p1">
+                            If you need to replace <code>THIS</code> but not <code>This</code> then you should use the
+                            match case option.
+                        </p>
+                        <p data-locale="Matching_case_p2">
+                            The following setup will match <code>Condo</code> but not <code>condo</code>. It will
+                            replace <code>Condo</code> with <code>apartment</code> in text fields that are visible on
+                            the page.
+                        </p>
+                        <p><img src="setup-match-case.png" class="img-responsive img-thumbnail" /></p>
+                    </div>
+                    <div class="row mb-2">
+                        <h2 id="whole" data-locale="Matching_whole">Matching whole words</h2>
+                        <p data-locale="Matching_whole_p1">
+                            If you need to replace the word <code>partial</code> but not <code>partially</code> then you
+                            should use the <code>Match whole word?</code> option.
+                        </p>
+                        <p><img src="setup-whole-word.png" class="img-responsive img-thumbnail" /></p>
+                    </div>
+                    <div class="row mb-2">
+                        <h2 id="wildcards" data-locale="wildcards_and_regex">Wild Cards and Regular Expressions</h2>
+                        <p data-locale="wildcards_and_regex_p1">
+                            If you need to match a partial search term then you should check the Regular Expressions
+                            check box and specify a wild card. You will need to have a very basic knowledge of
+                            <a href="http://www.regular-expressions.info/quickstart.html" target="_blank"
+                                >regular expressions</a
+                            >
+                            to use this feature. I recommend
+                            <a href="https://regexpal.com" target="_blank">regexpal</a> for testing
+                        </p>
+                        <h3 data-locale="Before">Before</h3>
+                        <p><img src="start-wildcard.png" class="img-responsive img-thumbnail" /></p>
+                        <h3 data-locale="Setup">Setup</h3>
+                        <p><img src="setup-wildcard.png" class="img-responsive img-thumbnail" /></p>
+                        <h3 data-locale="After">After</h3>
+                        <p><img src="result-wildcard.png" class="img-responsive img-thumbnail" /></p>
+                    </div>
+                    <div class="row mb-2">
+                        <h2 id="wordpress" data-locale="Replacing_wordpress">Replacing text in WordPress</h2>
+                        <p data-locale="Replacing_wordpress_p1">
+                            WordPress is currently on version 6.6, as of March 2023. The post editor has changed
+                            significantly since this extension was created and a new setup is required to replace text
+                            in WordPress.
+                        </p>
+                        <h3 data-locale="Replacing_wordpress_setup_w6">Setup for WordPress 6+</h3>
+                        <p><img src="setup-wordpress-6.png" class="img-responsive img-thumbnail" /></p>
+                        <h3 data-locale="Replacing_wordpress_setup_w5">Setup for WordPress 5 and below</h3>
+                        <p><img src="setup-entire-page.png" class="img-responsive img-thumbnail" /></p>
+                    </div>
+                    <div class="row mb-2">
+                        <h2 id="save" data-locale="Save_apply">Save and apply on page reload</h2>
+                        <p data-locale="Save_apply_p1">
+                            You can check the <code>Save and apply on page reload</code> check box to save your search
+                            and apply it on subsequent page reloads. These will take effect even after you have closed
+                            and re-opened your browser.
+                        </p>
+                        <h3 data-locale="Save_apply_multi">Multiple Matching Rules</h3>
+                        <p data-locale="Save_apply_multi_p1">
+                            If multiple rules apply to the same page, the rules will be applied in order of
+                            <b>most</b> specific to <b>least</b> specific. For example:
+                        </p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th data-locale="URL">URL</th>
+                                    <th data-locale="Search">Search</th>
+                                    <th data-locale="Replace">Replace</th>
+                                    <th data-locale="Priority">Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>http://www.example.com/a/deeper/nested/page</td>
+                                    <td data-locale="Example">Example</td>
+                                    <td>A</td>
+                                    <td>1 - <span data-locale="applied_first">applied first</span></td>
+                                </tr>
+                                <tr>
+                                    <td>http://www.example.com/some/subpage</td>
+                                    <td data-locale="Example">Example</td>
+                                    <td>B</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>http://www.example.com</td>
+                                    <td data-locale="Example">Example</td>
+                                    <td>C</td>
+                                    <td>3 - <span data-locale="applied_last">applied last</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p data-locale="Save_apply_multi_p2">
+                            This means that any changes applied by the first rule will be fed into the subsequent rules.
+                            In the above example, the text <code>Example</code> will have been replaced by the rule
+                            matching <code>http://www.example.com/a/deeper/nested/page</code>. Subsequent rules will
+                            therefore have no effect.
+                        </p>
+                        <p data-locale="Save_apply_multi_p3">
+                            You can edit the saved rules by clicking on the <a href="options.html">Edit Rules</a> link
+                            in the extension popup. The <code>URL Pattern</code> field is a
+                            <a href="http://www.regular-expressions.info/quickstart.html" target="_blank"
+                                >regular expression</a
+                            >, which allows you to apply the same rule to many different websites.
+                        </p>
+                    </div>
+                    <div class="row mb-2">
+                        <h3 id="issues" data-locale="ReportingIssues">Reporting Issues</h3>
+                        <div>
+                            <div class="alert alert-warning" data-locale="ReportingIssuesWarning">
+                                Remember to REFRESH the page on which you wish to replace text after installing.
+                            </div>
+                            <div class="alert alert-info" data-locale="ReportingIssuesInfo">
+                                If the page has broken after using the extension, try refreshing the page, and then
+                                checking <code>Input fields only?</code> and <code>Only change visible content?</code>
+                                before performing a search and replace.
+                            </div>
+                            <p data-locale="ReportingIssues_p1">
+                                If you find a bug, please provide a detailed report on the
+                                <a
+                                    href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support"
+                                    target="_blank"
+                                    >Chrome Extension Store</a
+                                >
+                                or on <a href="https://github.com/forgetso/search-replace/issues">GitHub</a>.
+                            </p>
+                            <p data-locale="Rate_on_store">
+                                Please rate
+                                <a
+                                    href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews"
+                                    >&#9733;&#9733;&#9733;&#9733;&#9733;</a
+                                >
+                                on Chrome Store if the extension helps you!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-9 container" role="main">
-            <div class="row mb-2">
-                <h2 id="type">Replace Next vs. Replace All</h2>
-                <p>
-                    To replace the first occurrence of the search term, press <code>Replace Next</code>. You can
-                    continue to
-                    press
-                    the button until there are no more occurrences.
-                </p>
-                <p>
-                    To replace all occurrences of the search term, press <code>Replace All</code>.
-                </p>
-                <p>
-                    There is currently no undo function. If you make a mistake, you can reload the page to restore the
-                    original text. However, you will lose any unsaved changes in text editors and in text input fields.
-                </p>
-            </div>
-            <div class="row mb-2">
-                <h2 id="editors">Replacing text in editors and text fields</h2>
-                <p>To replace text in text editors or input boxes you should check the <code>Input
-                    fields
-                    only?</code>
-                    check box. Otherwise, the search text will be replaced throughout the entire HTML, possibly breaking
-                    the
-                    page. To avoid changing hidden input fields, you should also check the <code>Visible elements
-                        only?</code>
-                    check box.
-                </p>
-            </div>
-            <div class="row mb-2">
-                <h3>Setup</h3>
-                <span><img src="setup-input-fields.png" class="img-thumbnail"></span>
-
-                <h2 id="anywhere">Replacing text anywhere on the page</h2>
-                <p>To replace text that is not contained within a text editor and not contained within a
-                    text field, leave the <code>Input Fields only?</code> and <code>Only change visible content?</code>
-                    boxes <b>unchecked</b>.</p>
-
-                <div class="alert alert-warning">WARNING: This setup will alter the page HTML and may break the
-                    page. You can restore
-                    the page by reloading, but you will lose any unsaved changes in text editors and in text input
-                    fields.
-                </div>
-                <p><img class="img-responsive img-thumbnail" src="setup-entire-page.png"
-                        class="img-responsive img-thumbnail"
-                        alt="Basic setup for replacing wikipedia home page title"></p>
-            </div>
-            <div class="row mb-2">
-                <h2 id="case">Matching the case of text</h2>
-                <p>If you need to replace <code>THIS</code> but not <code>This</code> then you should use the
-                    match
-                    case option.
-                </p>
-                <p>The following setup will match <code>Condo</code> but not <code>condo</code>. It will replace
-                    <code>Condo</code> with <code>apartment</code> in text fields that are visible on the page.
-                </p>
-                <p><img src="setup-match-case.png" class="img-responsive img-thumbnail"></p>
-            </div>
-            <div class="row mb-2">
-                <h2 id="whole">Matching whole words</h2>
-                <p>If you need to replace the word <code>partial</code> but not <code>partially</code> then you should
-                    use
-                    the <code>Match whole word?</code> option.
-                </p>
-                <p><img src="setup-whole-word.png" class="img-responsive img-thumbnail"></p>
-            </div>
-            <div class="row mb-2">
-                <h2 id="wildcards">Wild Cards and Regular Expressions</h2>
-                <p>If you need to match a partial search term then you should check the Regular Expressions check box
-                    and
-                    specify a wild card. You will need to have a very basic knowledge of <a
-                            href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular
-                        expressions</a>
-                    to use this feature. I recommend <a href="https://regexpal.com" target="_blank">regexpal</a> for
-                    testing
-                </p>
-                <h3>Before</h3>
-                <p><img src="start-wildcard.png" class="img-responsive img-thumbnail"></p>
-                <h3>Setup</h3>
-                <p><img src="setup-wildcard.png" class="img-responsive img-thumbnail"></p>
-                <h3>After</h3>
-                <p><img src="result-wildcard.png" class="img-responsive img-thumbnail"></p>
-            </div>
-            <div class="row mb-2">
-                <h2 id="wordpress">Replacing text in WordPress</h2>
-                <p>WordPress is currently on version 6.6, as of March 2023. The post editor has changed significantly
-                    since
-                    this extension was created and a new setup is required to replace text in WordPress.</p>
-                </p>
-                <h3>Setup for WordPress 6+</h3>
-                <p><img src="setup-wordpress-6.png" class="img-responsive img-thumbnail"></p>
-                <h3>Setup for WordPress 5 and below</h3>
-                <p><img src="setup-entire-page.png" class="img-responsive img-thumbnail"></p>
-
-            </div>
-            <div class="row mb-2">
-                <h2 id="save">Save and apply on page reload</h2>
-                <p>You can check the <code>Save and apply on page reload</code> check box to save your search and apply
-                    it on subsequent page reloads. These will take effect even after you have closed and re-opened your
-                    browser.</p>
-                <h3>Multiple Matching Rules</h3>
-                <p>If multiple rules apply to the same page, the rules will be applied in order of <b>most</b> specific
-                    to
-                    <b>least</b> specific. For example:</p>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>URL</th>
-                        <th>Search</th>
-                        <th>Replace</th>
-                        <th>Priority</th>
-                    </tr>
-
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>http://www.example.com/a/deeper/nested/page</td>
-                        <td>Example</td>
-                        <td>A</td>
-                        <td>1 - applied first</td>
-                    </tr>
-                    <tr>
-                        <td>http://www.example.com/some/subpage</td>
-                        <td>Example</td>
-                        <td>B</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>http://www.example.com</td>
-                        <td>Example</td>
-                        <td>C</td>
-                        <td>3 - applied last</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <p>This means that any changes applied by the first rule will be fed into the subsequent rules. In the
-                    above example, the text <code>Example</code> will have been replaced by the rule matching
-                    <code>http://www.example.com/a/deeper/nested/page</code>. Subsequent rules will therefore have no
-                    effect.</p>
-                <p>You can edit the saved rules by clicking on the <a href="options.html">Edit Rules</a> link in the
-                    extension popup. The <code>URL Pattern</code> field is a <a
-                            href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular
-                        expression</a>, which allows you to
-                    apply the same rule to many different websites.</p>
-            </div>
-            <div class="row mb-2">
-                <h3 id="issues">Reporting Issues</h3>
-                <div>
-                    <div class="alert alert-warning">Remember to REFRESH the page on which you wish to replace text
-                        after
-                        installing.
-                    </div>
-                    <div class="alert alert-info">If the page has broken after using the extension, try refreshing the
-                        page, and then checking </code>Input fields only?</code> and <code>Only change visible
-                            content?</code>
-                        before performing a search and replace.
-                    </div>
-                    <p>If you find a bug, please provide a detailed report on the <a
-                            href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support"
-                            target="_blank">Chrome Extension Store</a> or on <a
-                            href="https://github.com/forgetso/search-replace/issues">GitHub</a>.
-                    </p>
-                    <p>
-                        Please rate <a
-                            href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews">&#9733;&#9733;&#9733;&#9733;&#9733;</a>
-                        on Chrome Store if the extension helps you!
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-
+        <script src="../help.js"></script>
+    </body>
 </html>
