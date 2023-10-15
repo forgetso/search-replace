@@ -7,7 +7,6 @@
         "message": "Search for text on a webpage and replace it with different text.",
         "description": "ext_description"
     },
-
     "options": {
         "message": "Options",
         "description": "options"
@@ -32,7 +31,6 @@
         "message": "Version",
         "description": "version"
     },
-
     "RuleID": {
         "message": "Rule ID",
         "description": "options"
@@ -57,7 +55,6 @@
         "message": "Save",
         "description": "options"
     },
-
     "matchCase": {
         "message": "Match case",
         "description": "checkbox matchCase"
@@ -82,11 +79,10 @@
         "message": "Replace all",
         "description": "checkbox replaceAll"
     },
-    "save": {
+    "saveApplyPageReload": {
         "message": "Save and apply on page reload",
         "description": "checkbox save"
     },
-
     "Searchfor": {
         "message": "Search for",
         "description": "popup"
@@ -145,12 +141,39 @@
     },
     "Help": {
         "message": "Help",
-        "description": "popup"
+        "description": ""
     },
-
     "help_title": {
         "message": "Help page for search and replace",
         "description": "help"
+    },
+    "URL": {
+        "message": "URL",
+        "description": ""
+    },
+    "Search": {
+        "message": "Search",
+        "description": ""
+    },
+    "Replace": {
+        "message": "Replace",
+        "description": ""
+    },
+    "Priority": {
+        "message": "Priority",
+        "description": ""
+    },
+    "Example": {
+        "message": "Example",
+        "description": ""
+    },
+    "applied_first": {
+        "message": "applied first",
+        "description": ""
+    },
+    "applied_last": {
+        "message": "applied last",
+        "description": ""
     },
     "next_vs_all": {
         "message": "Replace Next vs. Replace All",
@@ -294,35 +317,6 @@
     },
     "Rate_on_store": {
         "message": "Please rate <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> on Chrome Store if the extension helps you!",
-        "description": ""
-    },
-
-    "URL": {
-        "message": "URL",
-        "description": ""
-    },
-    "Search": {
-        "message": "Search",
-        "description": ""
-    },
-    "Replace": {
-        "message": "Replace",
-        "description": ""
-    },
-    "Priority": {
-        "message": "Priority",
-        "description": ""
-    },
-    "Example": {
-        "message": "Example",
-        "description": ""
-    },
-    "applied_first": {
-        "message": "applied first",
-        "description": ""
-    },
-    "applied_last": {
-        "message": "applied last",
         "description": ""
     }
 }
