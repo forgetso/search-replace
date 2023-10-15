@@ -198,11 +198,9 @@ function getAvailableLanguages() {
         fetch(chrome.runtime.getURL(localePath))
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
                 resolve(data)
             })
             .catch((error) => {
-                console.log(error)
                 reject(error)
             })
     })
@@ -216,11 +214,9 @@ function loadLocalizedContent(lng: string) {
         fetch(chrome.runtime.getURL(localePath))
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
                 resolve(data)
             })
             .catch((error) => {
-                console.log(error)
                 reject(error)
             })
     })
@@ -230,20 +226,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action === 'getTranslation') {
         chrome.storage.sync.get('preferredLanguage', (result) => {
             const lng = result.preferredLanguage || 'en'
+            const lngFallback = 'en'
 
-            loadLocalizedContent(lng)
-                .then((data) => {
-                    console.log('data,', data)
-                    sendResponse(data)
+            Promise.all([loadLocalizedContent(lng), loadLocalizedContent(lngFallback)])
+                .then(([data, dataFallback]) => {
+                    sendResponse({ data, dataFallback })
                 })
                 .catch((error) => {
                     console.error('Error loading translation data:', error)
-                    sendResponse(null) // You can send back an error response
+                    sendResponse(null)
                 })
         })
 
         return true // Indicate that the response will be asynchronous
-    } else if (request.action === 'getAvailableLanguages') {
+    }
+    if (request.action === 'getAvailableLanguages') {
         getAvailableLanguages()
             .then((availableLanguages) => {
                 sendResponse(availableLanguages)
@@ -252,6 +249,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 console.error('Error loading _locales folder:', error)
                 sendResponse(null)
             })
+
         return true // Indicate that the response will be asynchronous
     }
 })

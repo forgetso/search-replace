@@ -114,23 +114,20 @@ export function inIframe() {
 
 export const manifest = chrome.runtime.getManifest()
 
-// Modify the getLang function to return a promise with the specified type
+// Function to retrieve the translation data
 export function getTranslation(): Promise<LangFile> {
     return new Promise((resolve) => {
-        chrome.runtime.sendMessage({ action: 'getTranslation' }, (response) => {
-            const data = response
-            console.log('utils getTranslation', data)
-            resolve(response)
+        chrome.runtime.sendMessage({ action: 'getTranslation' }, (translation) => {
+            resolve(translation)
         })
     })
 }
 
+// Function to retrieve the list of available languages
 export function getAvailableLanguages(): Promise<LangList[]> {
     return new Promise((resolve) => {
         chrome.runtime.sendMessage({ action: 'getAvailableLanguages' }, (availableLanguages) => {
-            const data = availableLanguages
-            console.log('utils getAvailableLanguages', data)
-            resolve(data)
+            resolve(availableLanguages)
         })
     })
 }
@@ -138,25 +135,35 @@ export function getAvailableLanguages(): Promise<LangList[]> {
 // Function to create a translation proxy
 export function createTranslationProxy(translationData: LangFile): TranslationProxy {
     return (key: string) => {
-        if (translationData[key] && translationData[key].message) {
-            return translationData[key].message
+        if (translationData.data[key]) {
+            // Use the selected language translation
+            return translationData.data[key].message
+        } else if (translationData.dataFallback[key]) {
+            // Use the fallback language translation
+            return translationData.dataFallback[key].message
         } else {
-            // Return the key itself if a translation is not found
-            // return '-X-' // for debug
+            // Return the key itself if no translation is available
             return key
         }
     }
 }
 
+// Function to localize HTML elements using translation data
 export function localizeElements(translationData: LangFile) {
     document.querySelectorAll('[data-locale]').forEach((elem) => {
         const element = elem as HTMLElement
         const localeKey = element.getAttribute('data-locale')
 
         if (localeKey) {
-            const innerString = translationData[localeKey] ? translationData[localeKey].message : localeKey
-            // element.innerText = innerString
-            element.innerHTML = innerString
+            let innerString
+            if (translationData.data[localeKey]) {
+                innerString = translationData.data[localeKey].message
+            } else if (translationData.dataFallback[localeKey]) {
+                innerString = translationData.dataFallback[localeKey].message
+            } else {
+                innerString = localeKey
+            }
+            element.innerHTML = innerString // Use innerHTML to render HTML content
         }
     })
 }

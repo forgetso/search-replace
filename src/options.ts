@@ -11,7 +11,6 @@ import {
     SavedInstances,
     SavedSearchReplaceInstance,
     SearchReplaceAction,
-    SearchReplaceCheckboxLabels,
     SearchReplaceCheckboxNames,
     SearchReplaceInstance,
     SearchReplaceOptions,
@@ -24,7 +23,6 @@ window.addEventListener('DOMContentLoaded', async function () {
     const langData = await getTranslation()
     const getString = createTranslationProxy(langData)
 
-    console.log(langData.ext_description.message)
     // Add poller to refresh the page if storage changes detected
     chrome.storage.onChanged.addListener(function (changes, namespace) {
         console.log('changes', changes)

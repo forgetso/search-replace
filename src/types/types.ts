@@ -90,9 +90,17 @@ export interface LangList {
 }
 
 export interface LangFile {
-    [key: string]: {
-        message: string
-        description: string
+    data: {
+        [key: string]: {
+            message: string
+            description: string
+        }
+    }
+    dataFallback: {
+        [key: string]: {
+            message: string
+            description: string
+        }
     }
 }
 
