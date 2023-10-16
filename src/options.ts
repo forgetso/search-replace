@@ -76,7 +76,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     if (aboutContainer) {
         aboutContainer.innerHTML = `
         <div>
-        <p class="h5">${getString('ext_name')} <code>v${manifest.version}</code></p>
+        <p class="h5">${getString('ext_name')} <code>${manifest.version}</code></p>
         <p>${getString('ext_description')}</p>
         </div>
         `
@@ -88,16 +88,17 @@ window.addEventListener('DOMContentLoaded', async function () {
     port.onMessage.addListener(function (storageItems: SearchReplaceStorageItems) {
         console.log('storage msg received: ', storageItems)
         const saved: SavedInstances = storageItems.saved || ({} as SavedInstances)
+        const languageProxy = createTranslationProxy(langData)
         if (Object.keys(saved).length > 0) {
             // create a list of the saved search replace instances
 
             if (savedInstancesContainer) {
-                savedInstancesContainer.innerHTML = instancesToHTML(saved, createTranslationProxy(langData))
+                savedInstancesContainer.innerHTML = instancesToHTML(saved, languageProxy)
                 addFormSubmitListeners()
             }
         } else {
             if (savedInstancesContainer) {
-                savedInstancesContainer.innerHTML = '<p>No saved instances</p>'
+                savedInstancesContainer.innerHTML = `<p>${languageProxy('no_saved_instances')}</p>`
             }
         }
     })

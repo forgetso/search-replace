@@ -6,6 +6,7 @@ import {
     SearchReplaceOptions,
     SearchReplaceStorageItems,
     SearchReplaceStorageMessage,
+    TranslationProxy,
 } from './types'
 import {
     clearHistoryMessage,
@@ -34,7 +35,7 @@ const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceChec
 const MIN_SEARCH_TERM_LENGTH = 1
 window.addEventListener('DOMContentLoaded', async function () {
     const langData = await getTranslation()
-    // const getString = createTranslationProxy(langData)
+    const translationFn = createTranslationProxy(langData)
 
     // Create a variable for storing the time since last time terms were stored
 
@@ -73,7 +74,7 @@ window.addEventListener('DOMContentLoaded', async function () {
             restoreSearchReplaceInstance(recentSearch)
         }
         // Trigger a search term count if there is an existing search term
-        tabQuery('store', recentSearch, history, tabQueryCallback).then((r) => console.log(r))
+        tabQuery('store', recentSearch, history, translationFn, tabQueryCallback).then((r) => console.log(r))
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
@@ -81,7 +82,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     for (const elementId of ['#replaceNext', '#replaceAll']) {
         ;(<HTMLFormElement>document.querySelector(elementId)).addEventListener('click', function (event) {
             event.preventDefault()
-            formSubmitHandler('searchReplace', tabQueryCallback, elementId.slice(1) === 'replaceAll')
+            formSubmitHandler('searchReplace', translationFn, tabQueryCallback, elementId.slice(1) === 'replaceAll')
         })
     }
 
@@ -101,7 +102,9 @@ window.addEventListener('DOMContentLoaded', async function () {
     // Handlers for input elements changing value - storeTerms
     for (const elementName in INPUT_ELEMENTS_AND_EVENTS) {
         for (const eventType of INPUT_ELEMENTS_AND_EVENTS[elementName]) {
-            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, storeTermsHandler)
+            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, (e) =>
+                storeTermsHandler(e, translationFn)
+            )
         }
     }
 
@@ -113,21 +116,23 @@ window.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Click handler for historyContent element. Will take the search term and replace term from the history item and populate the input fields
-    ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', historyItemClickHandler)
+    ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', (e) =>
+        historyItemClickHandler(e, translationFn)
+    )
 
     // Click handler for swapping terms
     ;(<HTMLButtonElement>document.getElementById('swapTerms')).addEventListener('click', function (e) {
         const searchTerm = <HTMLTextAreaElement>document.getElementById('searchTerm')
         const replaceTerm = <HTMLTextAreaElement>document.getElementById('replaceTerm')
-        swapTerms(searchTerm, replaceTerm)
+        swapTerms(searchTerm, replaceTerm, translationFn)
     })
 
     // Localize HTML elements
     localizeElements(langData)
 })
 
-async function storeTermsHandler(e) {
-    await storeTerms(e, false)
+async function storeTermsHandler(e, translationFn: TranslationProxy) {
+    await storeTerms(e, translationFn, false)
 }
 
 // function to change the height of the textarea to fit the content
@@ -168,7 +173,7 @@ function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstan
     }
 }
 
-function historyItemClickHandler(e) {
+function historyItemClickHandler(e, translationFn: TranslationProxy) {
     const target = <HTMLElement>e.target
 
     if (target.tagName === 'LI') {
@@ -183,7 +188,7 @@ function historyItemClickHandler(e) {
             options,
         }
         restoreSearchReplaceInstance(searchReplaceInstance)
-        storeTerms(e, false)
+        storeTerms(e, translationFn, false)
             .then((r) => {
                 console.log(r)
             })
@@ -195,7 +200,12 @@ function historyItemClickHandler(e) {
  * @param action {SearchReplaceAction}
  * @param callbackHandler {function}
  **/
-function formSubmitHandler(action: SearchReplaceAction, callbackHandler, replaceAll: boolean) {
+function formSubmitHandler(
+    action: SearchReplaceAction,
+    translationFn: TranslationProxy,
+    callbackHandler,
+    replaceAll: boolean
+) {
     const loader = document.getElementById('loader')
     loader!.style.display = 'block'
     const content = document.getElementById('content')
@@ -205,9 +215,9 @@ function formSubmitHandler(action: SearchReplaceAction, callbackHandler, replace
     // create the new history list items
     createHistoryListItemElements(historyItems)
     // store the new history list items
-    storeTerms({}, true)
+    storeTerms({}, translationFn, true)
     // do the search replace
-    tabQuery(action, searchReplaceInstance, historyItems, callbackHandler)
+    tabQuery(action, searchReplaceInstance, historyItems, translationFn, callbackHandler)
 }
 
 /** Send the search and replace instance to the content script for processing **/
@@ -215,7 +225,8 @@ export async function tabQuery(
     action: SearchReplaceAction,
     searchReplaceInstance: SearchReplaceInstance,
     history: SearchReplaceInstance[],
-    callbackHandler
+    translationFn: TranslationProxy,
+    callbackHandler: typeof tabQueryCallback
 ): Promise<string | undefined> {
     const query = { active: true, currentWindow: true }
     let url: string | undefined = undefined
@@ -229,20 +240,20 @@ export async function tabQuery(
         }
         console.log('sending message to tab', message)
         chrome.tabs.sendMessage(tab.id, message, function (response) {
-            callbackHandler(response)
+            callbackHandler(response, translationFn)
         })
         url = tab.url
     }
     return url
 }
 
-function tabQueryCallback(msg) {
+function tabQueryCallback(msg, translationFn: TranslationProxy) {
     removeLoader()
     if (msg && 'inIframe' in msg && msg['inIframe'] === false) {
         if ('searchTermCount' in msg) {
-            ;(<HTMLDivElement>(
-                document.getElementById('searchTermCount')
-            )).innerHTML = `${msg['searchTermCount']} matches`
+            ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerHTML = `${
+                msg['searchTermCount']
+            } ${translationFn('matches')}`
         }
         const hintsElement = document.getElementById('hints')
 
@@ -268,23 +279,23 @@ function removeLoader() {
     content!.style.display = 'block'
 }
 
-async function storeTerms(e, save?: boolean) {
+async function storeTerms(e, translationFn: TranslationProxy, save?: boolean) {
     console.debug('storing terms')
     e = e || window.event
     if (e.keyCode === 13) {
         //if the user presses enter we want to trigger the search replace
-        formSubmitHandler('searchReplace', tabQueryCallback, false)
+        formSubmitHandler('searchReplace', translationFn, tabQueryCallback, false)
     } else {
         const searchReplaceInput = getInputValues(false)
         const history = constructSearchReplaceHistory()
 
         if (searchReplaceInput.searchTerm.length >= MIN_SEARCH_TERM_LENGTH) {
             // This does the actual search replace
-            const url = await tabQuery('store', searchReplaceInput, history, tabQueryCallback)
+            const url = await tabQuery('store', searchReplaceInput, history, translationFn, tabQueryCallback)
             // This sends the search replace terms to the background page and stores them
             sendToStorage(searchReplaceInput, history, url, save)
         } else {
-            tabQueryCallback({})
+            tabQueryCallback({}, translationFn)
         }
     }
 }
@@ -354,11 +365,11 @@ function constructSearchReplaceHistory(searchReplaceInstance?: SearchReplaceInst
     return historyItems
 }
 
-function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement) {
+function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement, translationFn: TranslationProxy) {
     const sourceText = source.value
     source.value = target.value
     target.value = sourceText
-    storeTerms({}, true)
+    storeTerms({}, translationFn, true)
         .then((r) => console.log(r))
         .catch((e) => console.error(e))
 }
