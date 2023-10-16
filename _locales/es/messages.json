@@ -318,5 +318,13 @@
     "Rate_on_store": {
         "message": "¡Por favor, califica <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> en la Tienda de Chrome si la extensión te ayuda!",
         "description": ""
+    },
+    "no_saved_instances": {
+        "message": "No hay instancias guardadas",
+        "description": "message to tell user that no rules were found"
+    },
+    "matches": {
+        "message": "partidos",
+        "description": "message to tell user how many instances of the search term were found"
     }
 }

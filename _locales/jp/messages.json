@@ -342,5 +342,13 @@
   "Home": {
     "message": "ホーム",
     "description": ""
+  },
+  "no_saved_instances": {
+    "message": "保存されたインスタンスはありません",
+    "description": "message to tell user that no rules were found"
+  },
+  "matches": {
+    "message": "マッチ",
+    "description": "message to tell user how many instances of the search term were found"
   }
 }

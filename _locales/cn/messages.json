@@ -318,5 +318,13 @@
   "Rate_on_store": {
     "message": "如果扩展对您有所帮助，请在 Chrome 商店上给予 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews'>★★★★★</a> 评价！",
     "description": ""
+  },
+  "no_saved_instances": {
+    "message": "没有保存的实例",
+    "description": "message to tell user that no rules were found"
+  },
+  "matches": {
+    "message": "火柴",
+    "description": "message to tell user how many instances of the search term were found"
   }
 }

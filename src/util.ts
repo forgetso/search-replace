@@ -135,6 +135,7 @@ export function getAvailableLanguages(): Promise<LangList[]> {
 // Function to create a translation proxy
 export function createTranslationProxy(translationData: LangFile): TranslationProxy {
     return (key: string) => {
+        console.log(`Translating key ${key}`)
         if (translationData.data[key]) {
             // Use the selected language translation
             return translationData.data[key].message

@@ -318,5 +318,13 @@
     "Rate_on_store": {
         "message": "Please rate <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> on Chrome Store if the extension helps you!",
         "description": ""
+    },
+    "no_saved_instances": {
+        "message": "No saved instances",
+        "description": "message to tell user that no rules were found"
+    },
+    "matches": {
+        "message": "matches",
+        "description": "message to tell user how many instances of the search term were found"
     }
 }
