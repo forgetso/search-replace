@@ -1,0 +1,346 @@
+{
+  "ext_name": {
+    "message": "検索と置換",
+    "description": "ext_name"
+  },
+  "ext_description": {
+    "message": "ウェブページ上のテキストを検索して異なるテキストに置き換えます。",
+    "description": "ext_description"
+  },
+  "options": {
+    "message": "オプション",
+    "description": "options"
+  },
+  "saved_rules": {
+    "message": "保存されたルール",
+    "description": "オプションタブ"
+  },
+  "select_language": {
+    "message": "言語を選択：",
+    "description": "オプションタブ"
+  },
+  "settings": {
+    "message": "設定",
+    "description": "設定"
+  },
+  "about": {
+    "message": "について",
+    "description": "about"
+  },
+  "version": {
+    "message": "バージョン",
+    "description": "version"
+  },
+  "RuleID": {
+    "message": "ルール ID",
+    "description": "options"
+  },
+  "URLPattern": {
+    "message": "URL パターン",
+    "description": "options"
+  },
+  "SearchTerm": {
+    "message": "検索語",
+    "description": "options"
+  },
+  "ReplaceTerm": {
+    "message": "置換語",
+    "description": "options"
+  },
+  "Delete": {
+    "message": "削除",
+    "description": "options"
+  },
+  "Save": {
+    "message": "保存",
+    "description": "options"
+  },
+  "matchCase": {
+    "message": "大文字と小文字の区別",
+    "description": "チェックボックス 大文字と小文字の区別"
+  },
+  "inputFieldsOnly": {
+    "message": "入力フィールドのみ",
+    "description": "チェックボックス 入力フィールドのみ"
+  },
+  "visibleOnly": {
+    "message": "可視コンテンツのみ",
+    "description": "チェックボックス 可視コンテンツのみ"
+  },
+  "wholeWord": {
+    "message": "完全一致",
+    "description": "チェックボックス 完全一致"
+  },
+  "isRegex": {
+    "message": "正規表現",
+    "description": "チェックボックス 正規表現"
+  },
+  "replaceAll": {
+    "message": "すべて置換",
+    "description": "チェックボックス すべて置換"
+  },
+  "saveApplyPageReload": {
+    "message": "保存してページ再読み込み時に適用",
+    "description": "チェックボックス 保存"
+  },
+  "Searchfor": {
+    "message": "検索対象",
+    "description": "ポップアップ"
+  },
+  "Swap": {
+    "message": "スワップ ⇅",
+    "description": "ポップアップ"
+  },
+  "Replacewith": {
+    "message": "置換対象",
+    "description": "ポップアップ"
+  },
+  "Matchcase": {
+    "message": "大文字と小文字の区別",
+    "description": "ポップアップ"
+  },
+  "Inputfields": {
+    "message": "入力フィールドのみ",
+    "description": "ポップアップ"
+  },
+  "Visiblecontent": {
+    "message": "可視コンテンツのみ",
+    "description": "ポップアップ"
+  },
+  "Matchwhole": {
+    "message": "完全一致",
+    "description": "ポップアップ"
+  },
+  "Regularexpression": {
+    "message": "正規表現",
+    "description": "ポップアップ"
+  },
+  "Saveandapply": {
+    "message": "保存してページ再読み込み時に適用",
+    "description": "ポップアップ"
+  },
+  "ReplaceNext": {
+    "message": "次を置換",
+    "description": "ポップアップ"
+  },
+  "ReplaceAll": {
+    "message": "すべて置換",
+    "description": "ポップアップ"
+  },
+  "History": {
+    "message": "履歴",
+    "description": "ポップアップ"
+  },
+  "Clear": {
+    "message": "クリア",
+    "description": "ポップアップ"
+  },
+  "EditRules": {
+    "message": "ルールの編集",
+    "description": "ポップアップ"
+  },
+  "Help": {
+    "message": "ヘルプ",
+    "description": ""
+  },
+  "help_title": {
+    "message": "検索と置換のヘルプページ",
+    "description": "ヘルプ"
+  },
+  "URL": {
+    "message": "URL",
+    "description": ""
+  },
+  "Search": {
+    "message": "検索",
+    "description": ""
+  },
+  "Replace": {
+    "message": "置換",
+    "description": ""
+  },
+  "Priority": {
+    "message": "優先度",
+    "description": ""
+  },
+  "Example": {
+    "message": "例",
+    "description": ""
+  },
+  "applied_first": {
+    "message": "最初に適用",
+    "description": ""
+  },
+  "applied_last": {
+    "message": "最後に適用",
+    "description": ""
+  },
+  "next_vs_all": {
+    "message": "次を置換 vs. すべて置換",
+    "description": "次を置換 vs. すべて置換"
+  },
+  "next_vs_all_p1": {
+    "message": "検索語の最初の出現を置換するには、<code>次を置換</code> ボタンを押します。出現がなくなるまでボタンを押し続けることができます。",
+    "description": "次を置換 vs. すべて置換"
+  },
+  "next_vs_all_p2": {
+    "message": "検索語のすべての出現を置換するには、<code>すべて置換</code> ボタンを押します。",
+    "description": "次を置換 vs. すべて置換"
+  },
+  "next_vs_all_p3": {
+    "message": "現在、元に戻す機能はありません。間違いを犯した場合、ページを再読み込みして元のテキストを復元できます。ただし、テキストエディタとテキスト入力フィールドの未保存の変更は失われます。",
+    "description": "次を置換 vs. すべて置換"
+  },
+  "replace_editors": {
+    "message": "エディタとテキストフィールドのテキストを置換",
+    "description": "エディタとテキストフィールドのテキストを置換に関する説明"
+  },
+  "replace_editors_p1": {
+    "message": "テキストエディタや入力ボックスのテキストを置換するには、<code>入力フィールドのみ？</code> チェックボックスをオンにする必要があります。そうしないと、検索テキストがHTML全体に置換され、ページが壊れる可能性があります。非表示の入力フィールドを変更しないようにするには、<code>可視要素のみ？</code> チェックボックスもオンにする必要があります。",
+    "description": "エディタとテキストフィールドのテキストを置換に関する説明"
+  },
+  "replace_editors_p2": {
+    "message": "テキストエディタや入力ボックスのテキストを置換するには、<code>入力フィールドのみ？</code> チェックボックスをオンにする必要があります。そうしないと、検索テキストがHTML全体に置換され、ページが壊れる可能性があります。非表示の入力フィールドを変更しないようにするには、<code>可視要素のみ？</code> チェックボックスもオンにする必要があります。",
+    "description": "エディタとテキストフィールドのテキストを置換に関する説明"
+  },
+  "Setup": {
+    "message": "設定",
+    "description": "ヘルプ"
+  },
+  "Replacing_anywhere": {
+    "message": "ページのどこでもテキストを置換",
+    "description": "ページのどこでもテキストを置換に関する説明"
+  },
+  "Replacing_anywhere_p1": {
+    "message": "テキストエディタに含まれず、テキストフィールドに含まれないテキストを置換するには、<code>入力フィールドのみ？</code> および <code>可視コンテンツのみ？</code> チェックボックスをオフにしておきます。",
+    "description": "ページのどこでもテキストを置換に関する説明"
+  },
+  "Replacing_anywhere_p2": {
+    "message": "テキストエディタに含まれず、テキストフィールドに含まれないテキストを置換するには、<code>入力フィールドのみ？</code> および <code>可視コンテンツのみ？</code> チェックボックスをオフにしておきます。",
+    "description": "ページのどこでもテキストを置換に関する説明"
+  },
+  "Replacing_anywhere_warning": {
+    "message": "警告：この設定はページのHTMLを変更し、ページを壊す可能性があります。ページを再読み込みして元に戻せますが、テキストエディタとテキスト入力フィールドの未保存の変更は失われます。",
+    "description": "ページのどこでもテキストを置換に関する説明"
+  },
+  "Matching_case": {
+    "message": "テキストの大文字と小文字の一致",
+    "description": "テキストの大文字と小文字の一致に関する説明"
+  },
+  "Matching_case_p1": {
+    "message": "テキスト <code>THIS</code> を置換する必要があるが、<code>This</code> は置換しない場合、大文字と小文字を区別するオプションを使用する必要があります。",
+    "description": "テキストの大文字と小文字の一致に関する説明"
+  },
+  "Matching_case_p2": {
+    "message": "以下の設定では、<code>Condo</code> を一致させ、<code>condo</code> を一致させません。ページ上で表示されているテキストフィールド内で、<code>Condo</code> を <code>apartment</code> に置換します。",
+    "description": "テキストの大文字と小文字の一致に関する説明"
+  },
+  "Matching_whole": {
+    "message": "完全一致",
+    "description": "完全一致"
+  },
+  "Matching_whole_p1": {
+    "message": "部分的な検索語を一致させる必要がある場合、<code>完全一致？</code> オプションを使用する必要があります。",
+    "description": "完全一致"
+  },
+  "wildcards_and_regex": {
+    "message": "ワイルドカードと正規表現",
+    "description": "ワイルドカードと正規表現に関する説明"
+  },
+  "wildcards_and_regex_p1": {
+    "message": "部分的な検索語を一致させる必要がある場合、正規表現チェックボックスをオンにしてワイルドカードを指定する必要があります。この機能を使用するためには、<a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>正規表現</a> の非常に基本的な知識が必要です。テストには<a href='https://regexpal.com' target='_blank'>regexpal</a> をお勧めします。",
+    "description": "ワイルドカードと正規表現に関する説明"
+  },
+  "Before": {
+    "message": "前",
+    "description": ""
+  },
+  "After": {
+    "message": "後",
+    "description": ""
+  },
+  "Replacing_wordpress": {
+    "message": "WordPressでテキストを置換",
+    "description": ""
+  },
+  "Replacing_wordpress_p1": {
+    "message": "2023年3月現在、WordPressはバージョン6.6です。この拡張が作成された以降、投稿エディタは大幅に変更され、WordPressでテキストを置換するための新しい設定が必要です。",
+    "description": ""
+  },
+  "Replacing_wordpress_setup_w6": {
+    "message": "WordPress 6+ の設定",
+    "description": ""
+  },
+  "Replacing_wordpress_setup_w5": {
+    "message": "WordPress 5 およびそれ以下のバージョンの設定",
+    "description": ""
+  },
+  "Save_apply": {
+    "message": "保存してページ再読み込み時に適用",
+    "description": "保存してページ再読み込み"
+  },
+  "Save_apply_p1": {
+    "message": "ページ再読み込み時に検索を保存して適用するには、<code>保存してページ再読み込み</code> チェックボックスをオンにできます。これにより、ブラウザが再読み込みされ、検索が再開されます。",
+    "description": "保存してページ再読み込み"
+  },
+  "Save_apply_multi": {
+    "message": "複数の一致ルール",
+    "description": "複数の一致ルール"
+  },
+  "Save_apply_multi_p1": {
+    "message": "同じページに複数のルールが適用される場合、ルールは最も具体的から最も一般的の順に適用されます。たとえば：",
+    "description": "複数の一致ルール"
+  },
+  "Save_apply_multi_p2": {
+    "message": "これは、最初のルールによって適用された変更が後続のルールに入力されることを意味します。上記の例では、テキスト <code>Example</code> は <code>http://www.example.com/a/deeper/nested/page</code> に一致するルールによって置換されているため、後続のルールには影響しません。",
+    "description": "複数の一致ルール"
+  },
+  "Save_apply_multi_p3": {
+    "message": "保存したルールを編集するには、拡張ポップアップ内の <a href='options.html'>ルールを編集</a> リンクをクリックできます。 <code>URL パターン</code> フィールドは、異なるウェブサイトに同じルールを適用できる<a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>正規表現</a> です。",
+    "description": "複数の一致ルール"
+  },
+  "ReportingIssues": {
+    "message": "問題の報告",
+    "description": ""
+  },
+  "ReportingIssuesWarning": {
+    "message": "インストール後、テキストを置換したいページをリフレッシュすることを忘れないでください。",
+    "description": ""
+  },
+  "ReportingIssuesInfo": {
+    "message": "拡張を使用した後にページが壊れた場合、ページをリフレッシュしてから、<code>入力フィールドのみ？</code> および <code>可視コンテンツのみ？</code> をチェックした後で検索と置換をやり直してみてください。",
+    "description": ""
+  },
+  "Updates": {
+    "message": "更新情報",
+    "description": ""
+  },
+  "Updates_p1": {
+    "message": "検索と置換がアップデートされた場合、ブラウザの拡張機能ページで手動で更新するか、ブラウザが自動的に更新します。変更ログにアクセスするには、<a href='https://github.com/Mottie/Chrome-Store-Foxified'>GitHub</a> を確認してください。",
+    "description": ""
+  },
+  "Updates_p2": {
+    "message": "バグを報告したり、提案を提出するには、<a href='https://github.com/Mottie/Chrome-Store-Foxified/issues'>GitHub の問題ページ</a> にアクセスしてください。",
+    "description": ""
+  },
+  "Redistribution": {
+    "message": "再配布",
+    "description": ""
+  },
+  "Redistribution_p1": {
+    "message": "このソフトウェアは<a href='https://www.gnu.org/licenses/gpl-3.0.html' target='_blank'>GPL ライセンス（バージョン 3）</a>に従って配布されています。",
+    "description": ""
+  },
+  "Redistribution_p2": {
+    "message": "したがって、ソースコードを無料で提供し、修正の場所を開示する必要があります。",
+    "description": ""
+  },
+  "Author": {
+    "message": "著者",
+    "description": ""
+  },
+  "Home": {
+    "message": "ホーム",
+    "description": ""
+  }
+}

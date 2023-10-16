@@ -1,10 +1,10 @@
 {
     "ext_name": {
-        "message": "Search and Replace",
+        "message": "Buscar y Reemplazar",
         "description": "ext_name"
     },
     "ext_description": {
-        "message": "Buscar texto en una página web y sustituirlo por un texto diferente.",
+        "message": "Buscar texto en una página web y reemplazarlo con un texto diferente.",
         "description": "ext_description"
     },
     "options": {
@@ -12,15 +12,15 @@
         "description": "options"
     },
     "saved_rules": {
-        "message": "Reglas guardadas",
+        "message": "Reglas Guardadas",
         "description": "Options Tab"
     },
     "select_language": {
-        "message": "Seleccione un idioma:",
+        "message": "Selecciona un idioma:",
         "description": "Options Tab"
     },
     "settings": {
-        "message": "Ajustes",
+        "message": "Configuración",
         "description": "Settings"
     },
     "about": {
@@ -32,7 +32,7 @@
         "description": "version"
     },
     "RuleID": {
-        "message": "ID de regla",
+        "message": "ID de Regla",
         "description": "options"
     },
     "URLPattern": {
@@ -40,11 +40,11 @@
         "description": "options"
     },
     "SearchTerm": {
-        "message": "Término de búsqueda",
+        "message": "Término de Búsqueda",
         "description": "options"
     },
     "ReplaceTerm": {
-        "message": "Reemplazar término",
+        "message": "Término de Reemplazo",
         "description": "options"
     },
     "Delete": {
@@ -52,39 +52,39 @@
         "description": "options"
     },
     "Save": {
-        "message": "Eliminar",
+        "message": "Guardar",
         "description": "options"
     },
     "matchCase": {
-        "message": "Caso coincidente",
+        "message": "Coincidir Mayúsculas y Minúsculas",
         "description": "checkbox matchCase"
     },
     "inputFieldsOnly": {
-        "message": "Sólo campos de entrada",
+        "message": "Solo Campos de Entrada",
         "description": "checkbox inputFieldsOnly"
     },
     "visibleOnly": {
-        "message": "Sólo contenido visible",
+        "message": "Solo Contenido Visible",
         "description": "checkbox visibleOnly"
     },
     "wholeWord": {
-        "message": "Sólo contenido visible",
+        "message": "Coincidir Palabra Completa",
         "description": "checkbox wholeWord"
     },
     "isRegex": {
-        "message": "Expresión regular",
+        "message": "Expresión Regular",
         "description": "checkbox isRegex"
     },
     "replaceAll": {
-        "message": "Reemplazar todo",
+        "message": "Reemplazar Todo",
         "description": "checkbox replaceAll"
     },
     "saveApplyPageReload": {
-        "message": "Guardar y aplicar al recargar la página",
+        "message": "Guardar y Aplicar al Recargar la Página",
         "description": "checkbox save"
     },
     "Searchfor": {
-        "message": "Buscar",
+        "message": "Buscar por",
         "description": "popup"
     },
     "Swap": {
@@ -96,31 +96,227 @@
         "description": "popup"
     },
     "Matchcase": {
-        "message": "Caso coincidente",
+        "message": "Coincidir Mayúsculas y Minúsculas",
         "description": "popup"
     },
     "Inputfields": {
-        "message": "Sólo campos de entrada",
+        "message": "Solo Campos de Entrada",
         "description": "popup"
     },
     "Visiblecontent": {
-        "message": "Sólo contenido visible",
+        "message": "Solo Contenido Visible",
         "description": "popup"
     },
     "Matchwhole": {
-        "message": "Relaciona la palabra completa",
+        "message": "Coincidir Palabra Completa",
         "description": "popup"
     },
     "Regularexpression": {
-        "message": "Regular expression",
+        "message": "Expresión Regular",
+        "description": "popup"
+    },
+    "Saveandapply": {
+        "message": "Guardar y Aplicar al Recargar la Página",
         "description": "popup"
     },
     "ReplaceNext": {
-        "message": "Reemplazar siguiente",
+        "message": "Reemplazar Siguiente",
         "description": "popup"
     },
     "ReplaceAll": {
-        "message": "Reemplazar todo",
+        "message": "Reemplazar Todo",
         "description": "popup"
+    },
+    "History": {
+        "message": "Historial",
+        "description": "popup"
+    },
+    "Clear": {
+        "message": "Borrar",
+        "description": "popup"
+    },
+    "EditRules": {
+        "message": "Editar Reglas",
+        "description": "popup"
+    },
+    "Help": {
+        "message": "Ayuda",
+        "description": ""
+    },
+    "help_title": {
+        "message": "Página de Ayuda para buscar y reemplazar",
+        "description": "help"
+    },
+    "URL": {
+        "message": "URL",
+        "description": ""
+    },
+    "Search": {
+        "message": "Buscar",
+        "description": ""
+    },
+    "Replace": {
+        "message": "Reemplazar",
+        "description": ""
+    },
+    "Priority": {
+        "message": "Prioridad",
+        "description": ""
+    },
+    "Example": {
+        "message": "Ejemplo",
+        "description": ""
+    },
+    "applied_first": {
+        "message": "aplicado primero",
+        "description": ""
+    },
+    "applied_last": {
+        "message": "aplicado al último",
+        "description": ""
+    },
+    "next_vs_all": {
+        "message": "Reemplazar Siguiente vs. Reemplazar Todo",
+        "description": "Reemplazar Siguiente vs. Reemplazar Todo"
+    },
+    "next_vs_all_p1": {
+        "message": "Para reemplazar la primera aparición del término de búsqueda, presiona <code>Reemplazar Siguiente</code>. Puedes continuar presionando el botón hasta que no haya más apariciones.",
+        "description": "Reemplazar Siguiente vs. Reemplazar Todo"
+    },
+    "next_vs_all_p2": {
+        "message": "Para reemplazar todas las apariciones del término de búsqueda, presiona <code>Reemplazar Todo</code>.",
+        "description": "Reemplazar Siguiente vs. Reemplazar Todo"
+    },
+    "next_vs_all_p3": {
+        "message": "Actualmente no hay función de deshacer. Si cometes un error, puedes recargar la página para restaurar el texto original. Sin embargo, perderás los cambios no guardados en editores de texto y en campos de entrada de texto.",
+        "description": "Reemplazar Siguiente vs. Reemplazar Todo"
+    },
+    "replace_editors": {
+        "message": "Reemplazar texto en editores y campos de texto",
+        "description": "Explicación sobre cómo reemplazar texto en editores y campos de texto"
+    },
+    "replace_editors_p1": {
+        "message": "Para reemplazar texto en editores de texto o campos de entrada, debes marcar la casilla <code>Solo Campos de Entrada</code>. De lo contrario, el texto de búsqueda se reemplazará en todo el HTML, lo que podría romper la página. Para evitar cambiar campos de entrada ocultos, también debes marcar la casilla <code>Solo Elementos Visibles</code>.",
+        "description": "Explicación sobre cómo reemplazar texto en editores y campos de texto"
+    },
+    "replace_editors_p2": {
+        "message": "Para reemplazar texto en editores de texto o campos de entrada, debes marcar la casilla <code>Solo Campos de Entrada</code>. De lo contrario, el texto de búsqueda se reemplazará en todo el HTML, lo que podría romper la página. Para evitar cambiar campos de entrada ocultos, también debes marcar la casilla <code>Solo Elementos Visibles</code>.",
+        "description": "Explicación sobre cómo reemplazar texto en editores y campos de texto"
+    },
+    "Setup": {
+        "message": "Configuración",
+        "description": "help"
+    },
+    "Replacing_anywhere": {
+        "message": "Reemplazar texto en cualquier lugar de la página",
+        "description": "Explicación sobre cómo reemplazar texto en cualquier lugar de la página"
+    },
+    "Replacing_anywhere_p1": {
+        "message": "Para reemplazar texto que no está contenido en un editor de texto ni en un campo de entrada, deja desmarcadas las casillas <code>Solo Campos de Entrada</code> y <code>Solo Cambiar Contenido Visible</code>.",
+        "description": "Explicación sobre cómo reemplazar texto en cualquier lugar de la página"
+    },
+    "Replacing_anywhere_p2": {
+        "message": "Para reemplazar texto que no está contenido en un editor de texto ni en un campo de entrada, deja desmarcadas las casillas <code>Solo Campos de Entrada</code> y <code>Solo Cambiar Contenido Visible</code>.",
+        "description": "Explicación sobre cómo reemplazar texto en cualquier lugar de la página"
+    },
+    "Replacing_anywhere_warning": {
+        "message": "ADVERTENCIA: Esta configuración alterará el HTML de la página y puede romperla. Puedes restaurar la página recargándola, pero perderás los cambios no guardados en editores de texto y campos de entrada de texto.",
+        "description": "Explicación sobre cómo reemplazar texto en cualquier lugar de la página"
+    },
+    "Matching_case": {
+        "message": "Coincidir con el caso del texto",
+        "description": "Explicación sobre cómo coincidir con el caso del texto"
+    },
+    "Matching_case_p1": {
+        "message": "Si necesitas reemplazar <code>ESTO</code> pero no <code>Esto</code>, debes usar la opción de coincidir con el caso.",
+        "description": "Explicación sobre cómo coincidir con el caso del texto"
+    },
+    "Matching_case_p2": {
+        "message": "La configuración siguiente coincidirá con <code>Condominio</code> pero no con <code>condominio</code>. Reemplazará <code>Condominio</code> por <code>apartamento</code> en campos de texto que sean visibles en la página.",
+        "description": "Explicación sobre cómo coincidir con el caso del texto"
+    },
+    "Matching_whole": {
+        "message": "Coincidir con palabras completas",
+        "description": "Coincidir con palabras completas"
+    },
+    "Matching_whole_p1": {
+        "message": "Si necesitas reemplazar la palabra <code>parcial</code> pero no <code>parcialmente</code>, debes usar la opción <code>Coincidir con la palabra completa</code>.",
+        "description": "Coincidir con palabras completas"
+    },
+    "wildcards_and_regex": {
+        "message": "Comodines y Expresiones Regulares",
+        "description": "Explicación sobre comodines y expresiones regulares"
+    },
+    "wildcards_and_regex_p1": {
+        "message": "Si necesitas hacer coincidir un término de búsqueda parcial, debes marcar la casilla de Expresiones Regulares y especificar un comodín. Deberás tener un conocimiento básico de <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expresiones regulares</a> para usar esta función. Te recomiendo <a href='https://regexpal.com' target='_blank'>regexpal</a> para probarlo.",
+        "description": "Explicación sobre comodines y expresiones regulares"
+    },
+    "Before": {
+        "message": "Antes",
+        "description": ""
+    },
+    "After": {
+        "message": "Después",
+        "description": ""
+    },
+    "Replacing_wordpress": {
+        "message": "Reemplazar texto en WordPress",
+        "description": ""
+    },
+    "Replacing_wordpress_p1": {
+        "message": "WordPress está actualmente en la versión 6.6, a partir de marzo de 2023. El editor de entradas ha cambiado significativamente desde la creación de esta extensión y se requiere una nueva configuración para reemplazar texto en WordPress.",
+        "description": ""
+    },
+    "Replacing_wordpress_setup_w6": {
+        "message": "Configuración para WordPress 6+",
+        "description": ""
+    },
+    "Replacing_wordpress_setup_w5": {
+        "message": "Configuración para WordPress 5 y versiones anteriores",
+        "description": ""
+    },
+    "Save_apply": {
+        "message": "Guardar y Aplicar al Recargar la Página",
+        "description": "Guardar y Aplicar al Recargar la Página"
+    },
+    "Save_apply_p1": {
+        "message": "Puedes marcar la casilla <code>Guardar y Aplicar al Recargar la Página</code> para guardar tu búsqueda y aplicarla en recargas posteriores de la página. Estas configuraciones se mantendrán al reabrir tu navegador.",
+        "description": "Guardar y Aplicar al Recargar la Página"
+    },
+    "Save_apply_multi": {
+        "message": "Reglas de Coincidencia Múltiple",
+        "description": "Reglas de Coincidencia Múltiple"
+    },
+    "Save_apply_multi_p1": {
+        "message": "Si varias reglas se aplican a la misma página, las reglas se aplicarán en orden de la más específica a la menos específica. Por ejemplo:",
+        "description": "Reglas de Coincidencia Múltiple"
+    },
+    "Save_apply_multi_p2": {
+        "message": "Esto significa que los cambios aplicados por la primera regla se aplicarán en las reglas posteriores. En el ejemplo anterior, el texto <code>Ejemplo</code> habrá sido reemplazado por la regla que coincida con <code>http://www.ejemplo.com/unanpagina/anidadamasprofunda</code>. Las reglas posteriores no tendrán efecto.",
+        "description": "Reglas de Coincidencia Múltiple"
+    },
+    "Save_apply_multi_p3": {
+        "message": "Puedes editar las reglas guardadas haciendo clic en el enlace <a href='options.html'>Editar Reglas</a> en la ventana emergente de la extensión. El campo <code>Patrón de URL</code> es una <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expresión regular</a>, que te permite aplicar la misma regla a muchos sitios web diferentes.",
+        "description": "Reglas de Coincidencia Múltiple"
+    },
+    "ReportingIssues": {
+        "message": "Reportar Problemas",
+        "description": ""
+    },
+    "ReportingIssuesWarning": {
+        "message": "Recuerda RECARGAR la página en la que deseas reemplazar texto después de instalar la extensión.",
+        "description": ""
+    },
+    "ReportingIssuesInfo": {
+        "message": "Si la página se ha dañado después de usar la extensión, intenta recargar la página y luego marca las casillas <code>Solo Campos de Entrada</code> y <code>Solo Cambiar Contenido Visible</code> antes de realizar una búsqueda y reemplazo.",
+        "description": ""
+    },
+    "ReportingIssues_p1": {
+        "message": "Si encuentras un error, proporciona un informe detallado en la <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank'>Tienda de Extensiones de Chrome</a> o en <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>.",
+        "description": ""
+    },
+    "Rate_on_store": {
+        "message": "¡Por favor, califica <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> en la Tienda de Chrome si la extensión te ayuda!",
+        "description": ""
     }
 }
