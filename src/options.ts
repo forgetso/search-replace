@@ -65,10 +65,7 @@ window.addEventListener('DOMContentLoaded', async function () {
         languageSelect.addEventListener('change', function () {
             const selectedLanguage = this.value
 
-            chrome.storage.sync.set({ preferredLanguage: selectedLanguage }, function () {
-                // Reload the current page to apply the language change
-                location.reload()
-            })
+            chrome.storage.sync.set({ preferredLanguage: selectedLanguage })
         })
     }
 
