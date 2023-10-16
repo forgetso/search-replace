@@ -1,0 +1,322 @@
+{
+    "ext_name": {
+        "message": "Search and Replace",
+        "description": "ext_name"
+    },
+    "ext_description": {
+        "message": "Search for text on a webpage and replace it with different text.",
+        "description": "ext_description"
+    },
+    "options": {
+        "message": "Options",
+        "description": "options"
+    },
+    "saved_rules": {
+        "message": "Saved Rules",
+        "description": "Options Tab"
+    },
+    "select_language": {
+        "message": "Select a language:",
+        "description": "Options Tab"
+    },
+    "settings": {
+        "message": "Settings",
+        "description": "Settings"
+    },
+    "about": {
+        "message": "About",
+        "description": "about"
+    },
+    "version": {
+        "message": "Version",
+        "description": "version"
+    },
+    "RuleID": {
+        "message": "Rule ID",
+        "description": "options"
+    },
+    "URLPattern": {
+        "message": "URL Pattern",
+        "description": "options"
+    },
+    "SearchTerm": {
+        "message": "Search Term",
+        "description": "options"
+    },
+    "ReplaceTerm": {
+        "message": "Replace Term",
+        "description": "options"
+    },
+    "Delete": {
+        "message": "Delete",
+        "description": "options"
+    },
+    "Save": {
+        "message": "Save",
+        "description": "options"
+    },
+    "matchCase": {
+        "message": "Match case",
+        "description": "checkbox matchCase"
+    },
+    "inputFieldsOnly": {
+        "message": "Input fields only",
+        "description": "checkbox inputFieldsOnly"
+    },
+    "visibleOnly": {
+        "message": "Visible content only",
+        "description": "checkbox visibleOnly"
+    },
+    "wholeWord": {
+        "message": "Match whole word",
+        "description": "checkbox wholeWord"
+    },
+    "isRegex": {
+        "message": "Regular expression",
+        "description": "checkbox isRegex"
+    },
+    "replaceAll": {
+        "message": "Replace all",
+        "description": "checkbox replaceAll"
+    },
+    "saveApplyPageReload": {
+        "message": "Save and apply on page reload",
+        "description": "checkbox save"
+    },
+    "Searchfor": {
+        "message": "Search for",
+        "description": "popup"
+    },
+    "Swap": {
+        "message": "Swap ⇅",
+        "description": "popup"
+    },
+    "Replacewith": {
+        "message": "Replace with",
+        "description": "popup"
+    },
+    "Matchcase": {
+        "message": "Match case",
+        "description": "popup"
+    },
+    "Inputfields": {
+        "message": "Input fields only",
+        "description": "popup"
+    },
+    "Visiblecontent": {
+        "message": "Visible content only",
+        "description": "popup"
+    },
+    "Matchwhole": {
+        "message": "Match whole word",
+        "description": "popup"
+    },
+    "Regularexpression": {
+        "message": "Regular expression",
+        "description": "popup"
+    },
+    "Saveandapply": {
+        "message": "Save and apply on page reload",
+        "description": "popup"
+    },
+    "ReplaceNext": {
+        "message": "Replace Next",
+        "description": "popup"
+    },
+    "ReplaceAll": {
+        "message": "Replace All",
+        "description": "popup"
+    },
+    "History": {
+        "message": "History",
+        "description": "popup"
+    },
+    "Clear": {
+        "message": "Clear",
+        "description": "popup"
+    },
+    "EditRules": {
+        "message": "Edit Rules",
+        "description": "popup"
+    },
+    "Help": {
+        "message": "Help",
+        "description": ""
+    },
+    "help_title": {
+        "message": "Help page for search and replace",
+        "description": "help"
+    },
+    "URL": {
+        "message": "URL",
+        "description": ""
+    },
+    "Search": {
+        "message": "Search",
+        "description": ""
+    },
+    "Replace": {
+        "message": "Replace",
+        "description": ""
+    },
+    "Priority": {
+        "message": "Priority",
+        "description": ""
+    },
+    "Example": {
+        "message": "Example",
+        "description": ""
+    },
+    "applied_first": {
+        "message": "applied first",
+        "description": ""
+    },
+    "applied_last": {
+        "message": "applied last",
+        "description": ""
+    },
+    "next_vs_all": {
+        "message": "Replace Next vs. Replace All",
+        "description": "Replace Next vs. Replace All"
+    },
+    "next_vs_all_p1": {
+        "message": "To replace the first occurrence of the search term, press <code>Replace Next</code>. You can continue to press the button until there are no more occurrences.",
+        "description": "Replace Next vs. Replace All"
+    },
+    "next_vs_all_p2": {
+        "message": "To replace all occurrences of the search term, press <code>Replace All</code>.",
+        "description": "Replace Next vs. Replace All"
+    },
+    "next_vs_all_p3": {
+        "message": "There is currently no undo function. If you make a mistake, you can reload the page to restore the original text. However, you will lose any unsaved changes in text editors and in text input fields.",
+        "description": "Replace Next vs. Replace All"
+    },
+    "replace_editors": {
+        "message": "Replacing text in editors and text fields",
+        "description": "Explanation about replacing text in editors and text fields"
+    },
+    "replace_editors_p1": {
+        "message": "To replace text in text editors or input boxes you should check the <code>Input fields only?</code> check box. Otherwise, the search text will be replaced throughout the entire HTML, possibly breaking the page. To avoid changing hidden input  fields, you should also check the <code>Visible elements only?</code> check box.",
+        "description": "Explanation about replacing text in editors and text fields"
+    },
+    "replace_editors_p2": {
+        "message": "To replace text in text editors or input boxes you should check the <code>Input fields only?</code> check box. Otherwise, the search text will be replaced throughout the entire HTML, possibly breaking the page. To avoid changing hidden input  fields, you should also check the <code>Visible elements only?</code> check box.",
+        "description": "Explanation about replacing text in editors and text fields"
+    },
+    "Setup": {
+        "message": "Setup",
+        "description": "help"
+    },
+    "Replacing_anywhere": {
+        "message": "Replacing text anywhere on the page",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Replacing_anywhere_p1": {
+        "message": "To replace text that is not contained within a text editor and not contained within a text field, leave the <code>Input Fields only?</code> and <code>Only change visible content?</code> boxes <b>unchecked</b>.",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Replacing_anywhere_p2": {
+        "message": "To replace text that is not contained within a text editor and not contained within a text field, leave the <code>Input Fields only?</code> and <code>Only change visible content?</code> boxes <b>unchecked</b>.",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Replacing_anywhere_warning": {
+        "message": "WARNING: This setup will alter the page HTML and may break the page. You can restore the page by reloading, but you will lose any unsaved changes in text editors and in text input fields.",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Matching_case": {
+        "message": "Matching the case of text",
+        "description": "Explanation about matching the case of text"
+    },
+    "Matching_case_p1": {
+        "message": "If you need to replace <code>THIS</code>  but not <code>This</code> then you should use the match case option.",
+        "description": "Explanation about matching the case of text"
+    },
+    "Matching_case_p2": {
+        "message": "The following setup will match <code>Condo</code> but not <code>condo</code>. It will replace <code>Condo</code> with <code>apartment</code> in text fields that are visible on the page.",
+        "description": "Explanation about matching the case of text"
+    },
+    "Matching_whole": {
+        "message": "Matching whole words",
+        "description": "Matching whole words"
+    },
+    "Matching_whole_p1": {
+        "message": "If you need to replace the word <code>partial</code> but not <code>partially</code> then you should use the <code>Match whole word?</code> option.",
+        "description": "Matching whole words"
+    },
+    "wildcards_and_regex": {
+        "message": "Wild Cards and Regular Expressions",
+        "description": "Explanation about wild cards and regular expressions"
+    },
+    "wildcards_and_regex_p1": {
+        "message": "If you need to match a partial search term then you should check the Regular Expressions check box and specify a wild card. You will need to have a very basic knowledge of <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regular expressions</a> to use this feature. I recommend <a href='https://regexpal.com' target='_blank'>regexpal</a> for testing",
+        "description": "Explanation about wild cards and regular expressions"
+    },
+    "Before": {
+        "message": "Before",
+        "description": ""
+    },
+    "After": {
+        "message": "After",
+        "description": ""
+    },
+    "Replacing_wordpress": {
+        "message": "Replacing text in WordPress",
+        "description": ""
+    },
+    "Replacing_wordpress_p1": {
+        "message": "WordPress is currently on version 6.6, as of March 2023. The post editor has changed significantly since this extension was created and a new setup is required to replace text in WordPress.",
+        "description": ""
+    },
+    "Replacing_wordpress_setup_w6": {
+        "message": "Setup for WordPress 6+",
+        "description": ""
+    },
+    "Replacing_wordpress_setup_w5": {
+        "message": "Setup for WordPress 5 and below",
+        "description": ""
+    },
+    "Save_apply": {
+        "message": "Save and apply on page reload",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_p1": {
+        "message": "You can check the <code>Save and apply on page reload</code> check box to save your search and apply it on subsequent page reloads. These will take and re-opened your browser.",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_multi": {
+        "message": "Multiple Matching Rules",
+        "description": "Multiple Matching Rules"
+    },
+    "Save_apply_multi_p1": {
+        "message": "If multiple rules apply to the same page, the rules will be applied in order of <b>most</b> specific to <b>least</b> specific. For example:",
+        "description": "Multiple Matching Rules"
+    },
+    "Save_apply_multi_p2": {
+        "message": "This means that any changes applied by the first rule will be fed into the subsequent rules. In the above example, the text <code>Example</code> will have been replaced by the rule matching <code>http://www.example.com/a/deeper/nested/page</code>. Subsequent rules will therefore have no effect.",
+        "description": "Multiple Matching Rules"
+    },
+    "Save_apply_multi_p3": {
+        "message": "You can edit the saved rules by clicking on the <a href='options.html'>Edit Rules</a> link in the extension popup. The <code>URL Pattern</code> field is a <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regular expression</a>, which allows you to apply the same rule to many different websites.",
+        "description": "Multiple Matching Rules"
+    },
+    "ReportingIssues": {
+        "message": "Reporting Issues",
+        "description": ""
+    },
+    "ReportingIssuesWarning": {
+        "message": "Remember to REFRESH the page on which you wish to replace text after installing.",
+        "description": ""
+    },
+    "ReportingIssuesInfo": {
+        "message": "If the page has broken after using the extension, try refreshing the page, and then checking <code>Input fields only?</code> and <code>Only change visible content?</code> before performing a search and replace.",
+        "description": ""
+    },
+    "ReportingIssues_p1": {
+        "message": "If you find a bug, please provide a detailed report on the <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank' >Chrome Extension Store</a > or on <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>.",
+        "description": ""
+    },
+    "Rate_on_store": {
+        "message": "Please rate <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> on Chrome Store if the extension helps you!",
+        "description": ""
+    }
+}

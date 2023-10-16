@@ -7,7 +7,15 @@ import {
     SearchReplaceStorageItems,
     SearchReplaceStorageMessage,
 } from './types'
-import { clearHistoryMessage, recoverMessage, tabConnect } from './util'
+import {
+    clearHistoryMessage,
+    createTranslationProxy,
+    getTranslation,
+    localizeElements,
+    manifest,
+    recoverMessage,
+    tabConnect,
+} from './util'
 
 const { matchCase, inputFieldsOnly, visibleOnly, wholeWord, isRegex, save, replaceAll } = SearchReplaceCheckboxNames
 
@@ -24,8 +32,21 @@ const INPUT_ELEMENTS_AND_EVENTS = {
 
 const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceCheckboxNames)
 const MIN_SEARCH_TERM_LENGTH = 1
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', async function () {
+    const langData = await getTranslation()
+    // const getString = createTranslationProxy(langData)
+
     // Create a variable for storing the time since last time terms were stored
+
+    // Update popup version number and github link dynamically with manifest.version
+    const versionNumberElement = document.getElementById('version_number')
+    if (versionNumberElement) {
+        versionNumberElement.innerHTML = manifest.version
+    }
+    const githubVersionElement = document.getElementById('github_version') as HTMLAnchorElement
+    if (githubVersionElement) {
+        githubVersionElement.href = `https://github.com/forgetso/search-replace/releases/tag/${manifest.version}`
+    }
 
     // Set the onchange and onkeydown functions for the input fields
     const inputs: HTMLCollectionOf<Element> = document.getElementsByClassName('data_field')
@@ -100,6 +121,9 @@ window.addEventListener('DOMContentLoaded', function () {
         const replaceTerm = <HTMLTextAreaElement>document.getElementById('replaceTerm')
         swapTerms(searchTerm, replaceTerm)
     })
+
+    // Localize HTML elements
+    localizeElements(langData)
 })
 
 async function storeTermsHandler(e) {

@@ -1,0 +1,126 @@
+{
+    "ext_name": {
+        "message": "Search and Replace",
+        "description": "ext_name"
+    },
+    "ext_description": {
+        "message": "Buscar texto en una página web y sustituirlo por un texto diferente.",
+        "description": "ext_description"
+    },
+    "options": {
+        "message": "Opciones",
+        "description": "options"
+    },
+    "saved_rules": {
+        "message": "Reglas guardadas",
+        "description": "Options Tab"
+    },
+    "select_language": {
+        "message": "Seleccione un idioma:",
+        "description": "Options Tab"
+    },
+    "settings": {
+        "message": "Ajustes",
+        "description": "Settings"
+    },
+    "about": {
+        "message": "Acerca de",
+        "description": "about"
+    },
+    "version": {
+        "message": "Versión",
+        "description": "version"
+    },
+    "RuleID": {
+        "message": "ID de regla",
+        "description": "options"
+    },
+    "URLPattern": {
+        "message": "Patrón de URL",
+        "description": "options"
+    },
+    "SearchTerm": {
+        "message": "Término de búsqueda",
+        "description": "options"
+    },
+    "ReplaceTerm": {
+        "message": "Reemplazar término",
+        "description": "options"
+    },
+    "Delete": {
+        "message": "Eliminar",
+        "description": "options"
+    },
+    "Save": {
+        "message": "Eliminar",
+        "description": "options"
+    },
+    "matchCase": {
+        "message": "Caso coincidente",
+        "description": "checkbox matchCase"
+    },
+    "inputFieldsOnly": {
+        "message": "Sólo campos de entrada",
+        "description": "checkbox inputFieldsOnly"
+    },
+    "visibleOnly": {
+        "message": "Sólo contenido visible",
+        "description": "checkbox visibleOnly"
+    },
+    "wholeWord": {
+        "message": "Sólo contenido visible",
+        "description": "checkbox wholeWord"
+    },
+    "isRegex": {
+        "message": "Expresión regular",
+        "description": "checkbox isRegex"
+    },
+    "replaceAll": {
+        "message": "Reemplazar todo",
+        "description": "checkbox replaceAll"
+    },
+    "saveApplyPageReload": {
+        "message": "Guardar y aplicar al recargar la página",
+        "description": "checkbox save"
+    },
+    "Searchfor": {
+        "message": "Buscar",
+        "description": "popup"
+    },
+    "Swap": {
+        "message": "Intercambiar ⇅",
+        "description": "popup"
+    },
+    "Replacewith": {
+        "message": "Reemplazar con",
+        "description": "popup"
+    },
+    "Matchcase": {
+        "message": "Caso coincidente",
+        "description": "popup"
+    },
+    "Inputfields": {
+        "message": "Sólo campos de entrada",
+        "description": "popup"
+    },
+    "Visiblecontent": {
+        "message": "Sólo contenido visible",
+        "description": "popup"
+    },
+    "Matchwhole": {
+        "message": "Relaciona la palabra completa",
+        "description": "popup"
+    },
+    "Regularexpression": {
+        "message": "Regular expression",
+        "description": "popup"
+    },
+    "ReplaceNext": {
+        "message": "Reemplazar siguiente",
+        "description": "popup"
+    },
+    "ReplaceAll": {
+        "message": "Reemplazar todo",
+        "description": "popup"
+    }
+}
