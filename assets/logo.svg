@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512mm"
+   height="512mm"
+   viewBox="0 0 512.00001 512.00001"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/home/chris/dev/search-replace/assets/icon-16.png"
+   inkscape:export-xdpi="0.79374999"
+   inkscape:export-ydpi="0.79374999"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     width="512mm"
+     inkscape:zoom="0.125"
+     inkscape:cx="-92"
+     inkscape:cy="860"
+     inkscape:window-width="1850"
+     inkscape:window-height="1016"
+     inkscape:window-x="70"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4159" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient24935">
+      <stop
+         style="stop-color:#8f8f8f;stop-opacity:1"
+         offset="0"
+         id="stop24931" />
+      <stop
+         style="stop-color:#c9c9c9;stop-opacity:1"
+         offset="0.84719539"
+         id="stop27929" />
+      <stop
+         style="stop-color:#7d7d7d;stop-opacity:0.12941176;"
+         offset="0.99999982"
+         id="stop27799" />
+      <stop
+         style="stop-color:#7b7b7b;stop-opacity:0;"
+         offset="1"
+         id="stop24933" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient21341">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop21337" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop21339" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient12876"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#87e4f1;stop-opacity:1;"
+         offset="0"
+         id="stop12874" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient11256">
+      <stop
+         style="stop-color:#edfdff;stop-opacity:1;"
+         offset="0"
+         id="stop11252" />
+      <stop
+         style="stop-color:#ccf9ff;stop-opacity:1"
+         offset="0.47619048"
+         id="stop12350" />
+      <stop
+         style="stop-color:#fcffff;stop-opacity:1"
+         offset="1"
+         id="stop11836" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0"
+         offset="1"
+         id="stop11254" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient6150"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#edfdff;stop-opacity:1;"
+         offset="0"
+         id="stop6148" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient11256"
+       id="linearGradient11258"
+       x1="508"
+       y1="-508"
+       x2="63.5"
+       y2="-63.5"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.90759297,0,0,0.90759297,12.419093,-12.515148)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient21341"
+       id="linearGradient21345"
+       x1="-48.64307"
+       y1="-514.4281"
+       x2="5.6843419e-14"
+       y2="-516.36475"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient24935"
+       id="linearGradient25747"
+       gradientUnits="userSpaceOnUse"
+       x1="105.83334"
+       y1="-296.33334"
+       x2="42.333332"
+       y2="-359.83334" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:4.94264;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="rect19269"
+       width="95.250008"
+       height="355.60001"
+       x="-48.643055"
+       y="-692.22809"
+       transform="rotate(135)"
+       ry="37.417763" />
+    <rect
+       style="fill:url(#linearGradient21345);fill-opacity:1;stroke:none;stroke-width:4.94264;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke;opacity:0.57569461"
+       id="rect19269-5"
+       width="95.250008"
+       height="355.60001"
+       x="-48.64307"
+       y="-692.22809"
+       transform="rotate(135)"
+       ry="37.417763" />
+    <circle
+       style="opacity:1;fill:url(#linearGradient25747);fill-opacity:1;stroke:none;stroke-width:4.43971;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path55"
+       cx="192.50485"
+       cy="-192.50485"
+       r="192.50485"
+       transform="rotate(90)"
+       inkscape:export-filename="/home/chris/Pictures/magnifyingglass.png"
+       inkscape:export-xdpi="44.3438"
+       inkscape:export-ydpi="44.3438" />
+    <circle
+       style="opacity:1;mix-blend-mode:normal;fill:url(#linearGradient11258);fill-opacity:1;stroke:none;stroke-width:3.4808;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       id="path55-3"
+       cx="192.50485"
+       cy="-192.50485"
+       transform="rotate(90)"
+       r="150.92628"
+       inkscape:export-filename="/home/chris/dev/search-replace/assets/icon-256.png"
+       inkscape:export-xdpi="19.551043"
+       inkscape:export-ydpi="19.551043" />
+  </g>
+</svg>
