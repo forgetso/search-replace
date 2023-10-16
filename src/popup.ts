@@ -110,6 +110,10 @@ window.addEventListener('DOMContentLoaded', function () {
         autoGrow(searchTerm)
         autoGrow(replaceTerm)
     })
+
+    // Resize the text areas on load
+    autoGrow(getSearchTermElement())
+    autoGrow(getReplaceTermElement())
 })
 
 async function storeTermsHandler(e) {
@@ -118,7 +122,7 @@ async function storeTermsHandler(e) {
 
 // function to change the height of the textarea to fit the content
 function autoGrow(element) {
-    console.log('change height')
+    console.log(`change height to scroll height ${element.scrollHeight} px`)
     element.style.height = ''
     element.style.height = element.scrollHeight + 'px'
 }
