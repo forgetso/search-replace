@@ -150,6 +150,13 @@ export function createTranslationProxy(translationData: LangFile): TranslationPr
 
 // Function to localize HTML elements using translation data
 export function localizeElements(translationData: LangFile) {
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+        if (areaName === 'sync' && 'preferredLanguage' in changes) {
+            // Reload the page when the preferredLanguage is changed
+            location.reload()
+        }
+    })
+
     document.querySelectorAll('[data-locale]').forEach((elem) => {
         const element = elem as HTMLElement
         const localeKey = element.getAttribute('data-locale')
