@@ -111,8 +111,13 @@ export function elementIsVisible(element: HTMLElement): boolean {
 export function inIframe() {
     return window !== window.top
 }
-
-export const manifest = chrome.runtime.getManifest()
+let manifestJSON = {
+    version: 'test',
+}
+if (chrome && chrome.runtime) {
+    manifestJSON = chrome.runtime.getManifest()
+}
+export const manifest = manifestJSON
 
 // Function to retrieve the translation data
 export function getTranslation(): Promise<LangFile> {

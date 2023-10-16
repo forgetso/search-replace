@@ -76,7 +76,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     if (aboutContainer) {
         aboutContainer.innerHTML = `
         <div>
-        <p class="h5">${getString('ext_name')} <code>v${manifest.version}</code></p>
+        <p class="h5">${getString('ext_name')} <code>${manifest.version}</code></p>
         <p>${getString('ext_description')}</p>
         </div>
         `
