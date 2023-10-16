@@ -135,8 +135,8 @@
         "message": "Borrar",
         "description": "popup"
     },
-    "EditRules": {
-        "message": "Editar Reglas",
+    "EditSettings": {
+        "message": "Editar ajustes",
         "description": "popup"
     },
     "Help": {

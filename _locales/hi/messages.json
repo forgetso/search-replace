@@ -135,8 +135,8 @@
     "message": "साफ़ करें",
     "description": "popup"
   },
-  "EditRules": {
-    "message": "नियमों का संपादन करें",
+  "EditSettings": {
+    "message": "विन्यास बदलें",
     "description": "popup"
   },
   "Help": {

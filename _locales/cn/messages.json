@@ -135,8 +135,8 @@
     "message": "清除",
     "description": "弹出窗口"
   },
-  "EditRules": {
-    "message": "编辑规则",
+  "EditSettings": {
+    "message": "编辑设置",
     "description": "弹出窗口"
   },
   "Help": {

@@ -135,9 +135,9 @@
     "message": "クリア",
     "description": "ポップアップ"
   },
-  "EditRules": {
-    "message": "ルールの編集",
-    "description": "ポップアップ"
+  "EditSettings": {
+    "message": "編集の設定",
+    "description": "Edit Settings"
   },
   "Help": {
     "message": "ヘルプ",
