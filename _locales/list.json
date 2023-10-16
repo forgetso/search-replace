@@ -3,5 +3,6 @@
     { "languageCode": "cn", "languageName": "Chinese" },
     { "languageCode": "de", "languageName": "German" },
     { "languageCode": "es", "languageName": "Spanish" },
+    { "languageCode": "hi", "languageName": "Hindi" },
     { "languageCode": "jp", "languageName": "Japanese" }
 ]

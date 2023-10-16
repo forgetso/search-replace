@@ -1,0 +1,330 @@
+{
+  "ext_name": {
+    "message": "खोज और बदलें",
+    "description": "ext_name"
+  },
+  "ext_description": {
+    "message": "वेबपृष्ठ पर पाठ की खोज करें और उसे विभिन्न पाठ से बदलें।",
+    "description": "ext_description"
+  },
+  "options": {
+    "message": "विकल्प",
+    "description": "options"
+  },
+  "saved_rules": {
+    "message": "सहेजे गए नियम",
+    "description": "Options Tab"
+  },
+  "select_language": {
+    "message": "एक भाषा चुनें:",
+    "description": "Options Tab"
+  },
+  "settings": {
+    "message": "सेटिंग्स",
+    "description": "Settings"
+  },
+  "about": {
+    "message": "के बारे में",
+    "description": "about"
+  },
+  "version": {
+    "message": "संस्करण",
+    "description": "version"
+  },
+  "RuleID": {
+    "message": "नियम आईडी",
+    "description": "options"
+  },
+  "URLPattern": {
+    "message": "URL पैटर्न",
+    "description": "options"
+  },
+  "SearchTerm": {
+    "message": "खोज शब्द",
+    "description": "options"
+  },
+  "ReplaceTerm": {
+    "message": "बदलें शब्द",
+    "description": "options"
+  },
+  "Delete": {
+    "message": "मिटाएं",
+    "description": "options"
+  },
+  "Save": {
+    "message": "सहेजें",
+    "description": "options"
+  },
+  "matchCase": {
+    "message": "मैच केस",
+    "description": "checkbox matchCase"
+  },
+  "inputFieldsOnly": {
+    "message": "केवल इनपुट फ़ील्ड्स",
+    "description": "checkbox inputFieldsOnly"
+  },
+  "visibleOnly": {
+    "message": "केवल दिखाई देने वाला सामग्री",
+    "description": "checkbox visibleOnly"
+  },
+  "wholeWord": {
+    "message": "पूरे शब्द का मैच",
+    "description": "checkbox wholeWord"
+  },
+  "isRegex": {
+    "message": "नियमित अभिव्यक्ति",
+    "description": "checkbox isRegex"
+  },
+  "replaceAll": {
+    "message": "सभी को बदलें",
+    "description": "checkbox replaceAll"
+  },
+  "saveApplyPageReload": {
+    "message": "पृष्ठ पुन: लोड होने पर सहेजें और लागू करें",
+    "description": "checkbox save"
+  },
+  "Searchfor": {
+    "message": "खोजें",
+    "description": "popup"
+  },
+  "Swap": {
+    "message": "बदलें ⇅",
+    "description": "popup"
+  },
+  "Replacewith": {
+    "message": "के साथ बदलें",
+    "description": "popup"
+  },
+  "Matchcase": {
+    "message": "मैच केस",
+    "description": "popup"
+  },
+  "Inputfields": {
+    "message": "केवल इनपुट फ़ील्ड्स",
+    "description": "popup"
+  },
+  "Visiblecontent": {
+    "message": "केवल दिखाई देने वाला सामग्री",
+    "description": "popup"
+  },
+  "Matchwhole": {
+    "message": "पूरे शब्द का मैच",
+    "description": "popup"
+  },
+  "Regularexpression": {
+    "message": "नियमित अभिव्यक्ति",
+    "description": "popup"
+  },
+  "Saveandapply": {
+    "message": "पृष्ठ पुन: लोड होने पर सहेजें और लागू करें",
+    "description": "popup"
+  },
+  "ReplaceNext": {
+    "message": "अगला बदलें",
+    "description": "popup"
+  },
+  "ReplaceAll": {
+    "message": "सभी को बदलें",
+    "description": "popup"
+  },
+  "History": {
+    "message": "इतिहास",
+    "description": "popup"
+  },
+  "Clear": {
+    "message": "साफ़ करें",
+    "description": "popup"
+  },
+  "EditRules": {
+    "message": "नियमों का संपादन करें",
+    "description": "popup"
+  },
+  "Help": {
+    "message": "सहायता",
+    "description": ""
+  },
+  "help_title": {
+    "message": "खोज और बदलें के लिए सहायता पृष्ठ",
+    "description": "help"
+  },
+  "URL": {
+    "message": "यूआरएल",
+    "description": ""
+  },
+  "Search": {
+    "message": "खोजें",
+    "description": ""
+  },
+  "Replace": {
+    "message": "बदलें",
+    "description": ""
+  },
+  "Priority": {
+    "message": "प्राथमिकता",
+    "description": ""
+  },
+  "Example": {
+    "message": "उदाहरण",
+    "description": ""
+  },
+  "applied_first": {
+    "message": "सबसे पहले लागू किया गया",
+    "description": ""
+  },
+  "applied_last": {
+    "message": "सबसे आखिर में लागू किया गया",
+    "description": ""
+  },
+  "next_vs_all": {
+    "message": "अगला बदलें बनाम सभी को बदलें",
+    "description": "अगला बदलें बनाम सभी को बदलें"
+  },
+  "next_vs_all_p1": {
+    "message": "खोज शब्द के पहले प्रकट होने को बदलने के लिए, <code>अगला बदलें</code> दबाएं। आप इस बटन को जब तक कोई और उपस्थिति नहीं होती, तब तक दबा सकते हैं।",
+    "description": "अगला बदलें बनाम सभी को बदलें"
+  },
+  "next_vs_all_p2": {
+    "message": "खोज शब्द के सभी प्रकट होने को बदलने के लिए, <code>सभी को बदलें</code> दबाएं।",
+    "description": "अगला बदलें बनाम सभी को बदलें"
+  },
+  "next_vs_all_p3": {
+    "message": "वर्तमान में कोई आनडू फ़ंक्शन नहीं है। अगर आप गलती से कुछ गड़बड़ करते हैं, तो पृष्ठ को पुनर्लोड करके मूल पाठ को पुनर्स्थापित कर सकते हैं। हालांकि, पाठ संपादकों में और पाठ इनपुट फ़ील्ड में असहेजे बदलाव को खो देंगे।",
+    "description": "अगला बदलें बनाम सभी को बदलें"
+  },
+  "replace_editors": {
+    "message": "पाठ संपादकों और पाठ फ़ील्डों में पाठ को बदलना",
+    "description": "Pाठ संपादकों और पाठ फ़ील्डों में पाठ को बदलने के बारे में व्याख्या"
+  },
+  "replace_editors_p1": {
+    "message": "पाठ संपादकों या इनपुट बॉक्स में पाठ को बदलने के लिए, आपको <code>केवल इनपुट फ़ील्ड्स?</code> चेक बॉक्स की जांच करनी चाहिए। अन्यथा, खोज पाठ को पूरे HTML के माध्यम से बदल दिया जाएगा, जिससे पृष्ठ टूट सकता है। छिपे हुए इनपुट फ़ील्डों को बदलने से बचने के लिए आपको <code>केवल दिखाई देने वाले तत्वों को ही चेक करना चाहिए?</code> भी करनी चाहिए।",
+    "description": "Pाठ संपादकों और पाठ फ़ील्डों में पाठ को बदलने के बारे में व्याख्या"
+  },
+  "replace_editors_p2": {
+    "message": "पाठ संपादकों या इनपुट बॉक्स में पाठ को बदलने के लिए, आपको <code>केवल इनपुट फ़ील्ड्स?</code> चेक बॉक्स की जांच करनी चाहिए। अन्यथा, खोज पाठ को पूरे HTML के माध्यम से बदल दिया जाएगा, जिससे पृष्ठ टूट सकता है। छिपे हुए इनपुट फ़ील्डों को बदलने से बचने के लिए आपको <code>केवल दिखाई देने वाले तत्वों को ही चेक करना चाहिए?</code> भी करनी चाहिए।",
+    "description": "Pाठ संपादकों और पाठ फ़ील्डों में पाठ को बदलने के बारे में व्याख्या"
+  },
+  "Setup": {
+    "message": "सेटअप",
+    "description": "help"
+  },
+  "Replacing_anywhere": {
+    "message": "पृष्ठ पर कहीं भी पाठ को बदलना",
+    "description": "कहीं भी पाठ को बदलने के बारे में व्याख्या"
+  },
+  "Replacing_anywhere_p1": {
+    "message": "यदि आप पृष्ठ पर संपादक या पाठ फ़ील्ड में शामिल नहीं होने वाले पाठ को बदलना चाहते हैं, तो <code>केवल इनपुट फ़ील्ड्स?</code> और <code>केवल दिखाई देने वाले सामग्री को ही बदलने की आवश्यकता है?</code> चेक बॉक्स खाली छोड़ दें।",
+    "description": "कहीं भी पाठ को बदलने के बारे में व्याख्या"
+  },
+  "Replacing_anywhere_p2": {
+    "message": "यदि आप पृष्ठ पर संपादक या पाठ फ़ील्ड में शामिल नहीं होने वाले पाठ को बदलना चाहते हैं, तो <code>केवल इनपुट फ़ील्ड्स?</code> और <code>केवल दिखाई देने वाले सामग्री को ही बदलने की आवश्यकता है?</code> चेक बॉक्स खाली छोड़ दें।",
+    "description": "कहीं भी पाठ को बदलने के बारे में व्याख्या"
+  },
+  "Replacing_anywhere_warning": {
+    "message": "चेतावनी: इस सेटअप से पृष्ठ का HTML बदल जाएगा और पृष्ठ टूट सकता है। आप पृष्ठ को पुन: लोड करके पृष्ठ को पुनर्स्थापित कर सकते हैं, लेकिन पाठ संपादकों में और पाठ इनपुट फ़ील्डों में किए गए असहेजे बदलावों को खो देंगे।",
+    "description": "कहीं भी पाठ को बदलने के बारे में व्याख्या"
+  },
+  "Matching_case": {
+    "message": "पाठ के मैच करने की स्थिति",
+    "description": "पाठ के मैच करने की स्थिति"
+  },
+  "Matching_case_p1": {
+    "message": "यदि आप <code>यह</code> को बदलने की आवश्यकता है लेकिन <code>यह</code> को नहीं, तो आपको मैच केस विकल्प का उपयोग करना चाहिए।",
+    "description": "पाठ के मैच करने की स्थिति"
+  },
+  "Matching_case_p2": {
+    "message": "निम्नलिखित सेटअप में <code>कॉन्डो</code> को मैच करेगा लेकिन <code>कॉन्डो</code> को नहीं। यह पृष्ठ पर दिखाई देने वाले पाठ क्षेत्रों में <code>कॉन्डो</code> को <code>अपार्टमेंट</code> के साथ बदल देगा।",
+    "description": "पाठ के मैच करने की स्थिति"
+  },
+  "Matching_whole": {
+    "message": "पूरे शब्द का मैच",
+    "description": "पूरे शब्द का मैच"
+  },
+  "Matching_whole_p1": {
+    "message": "यदि आप केवल पूरे शब्द को मैच करने की आवश्यकता है, तो आपको पूरे शब्द के मैच विकल्प का उपयोग करना चाहिए।",
+    "description": "पूरे शब्द का मैच"
+  },
+  "wildcards_and_regex": {
+    "message": "वाइल्ड कार्ड और रेगुलर एक्सप्रेशन",
+    "description": "Explanation about wild cards and regular expressions"
+  },
+  "wildcards_and_regex_p1": {
+    "message": "यदि आपको आंशिक खोज शब्द का मिलान करना है तो आपको रेगुलर एक्सप्रेशन चेक बॉक्स को चेक करना चाहिए और वाइल्ड कार्ड निर्दिष्ट करना चाहिए। इस सुविधा का उपयोग करने के लिए आपको <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>नियमित अभिव्यक्तियों</a> का बहुत ही बुनियादी ज्ञान होना आवश्यक है। मैं परीक्षण के लिए <a href='https://regexpal.com' target='_blank'>regexpal</a> की अनुशंसा करता हूं",
+    "description": "Explanation about wild cards and regular expressions"
+  },
+  "Before": {
+    "message": "पहले",
+    "description": ""
+  },
+  "After": {
+    "message": "बाद",
+    "description": ""
+  },
+  "Replacing_wordpress": {
+    "message": "में टेक्स्ट बदलना WordPress",
+    "description": ""
+  },
+  "Replacing_wordpress_p1": {
+    "message": "मार्च 2023 तक वर्डप्रेस वर्तमान में संस्करण 6.6 पर है। इस एक्सटेंशन के बनने के बाद से पोस्ट एडिटर में काफी बदलाव आया है और वर्डप्रेस में टेक्स्ट को बदलने के लिए एक नए सेटअप की आवश्यकता है।",
+    "description": ""
+  },
+  "Replacing_wordpress_setup_w6": {
+    "message": "वर्डप्रेस 6+ के लिए सेटअप",
+    "description": ""
+  },
+  "Replacing_wordpress_setup_w5": {
+    "message": "वर्डप्रेस 5 और उससे नीचे के लिए सेटअप",
+    "description": ""
+  },
+  "Save_apply": {
+    "message": "पृष्ठ पुनः लोड होने पर सहेजें और लागू करें",
+    "description": "Save and apply on page reload"
+  },
+  "Save_apply_p1": {
+    "message": "आप अपनी खोज को सहेजने के लिए <कोड>सहेजें और पृष्ठ पुनः लोड पर लागू करें</कोड> चेक बॉक्स को चेक कर सकते हैं और इसे बाद के पृष्ठ पुनः लोड पर लागू कर सकते हैं। ये आपके ब्राउज़र को ले लेंगे और पुनः खोल देंगे।",
+    "description": "Save and apply on page reload"
+  },
+  "Save_apply_multi": {
+    "message": "एकाधिक मिलान नियम",
+    "description": "Multiple Matching Rules"
+  },
+  "Save_apply_multi_p1": {
+    "message": "यदि एक ही पृष्ठ पर एकाधिक नियम लागू होते हैं, तो नियम <b>अधिकांश</b> विशिष्ट से <b>न्यूनतम</b> विशिष्ट के क्रम में लागू किए जाएंगे। उदाहरण के लिए:",
+    "description": "Multiple Matching Rules"
+  },
+  "Save_apply_multi_p2": {
+    "message": "इसका मतलब यह है कि पहले नियम द्वारा लागू किए गए किसी भी बदलाव को बाद के नियमों में शामिल किया जाएगा। उपरोक्त उदाहरण में, टेक्स्ट <code>उदाहरण</code> को <code>http://www.example.com/a/deper/nested/page</code> से मेल खाने वाले नियम से बदल दिया जाएगा। इसलिए बाद के नियमों का कोई प्रभाव नहीं पड़ेगा।",
+    "description": "Multiple Matching Rules"
+  },
+  "Save_apply_multi_p3": {
+    "message": "आप एक्सटेंशन पॉपअप में <a href='options.html'>नियम संपादित करें</a> लिंक पर क्लिक करके सहेजे गए नियमों को संपादित कर सकते हैं। <कोड>यूआरएल पैटर्न</कोड> फ़ील्ड एक <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>नियमित अभिव्यक्ति</a> है, जो आपको अनुमति देता है कई अलग-अलग वेबसाइटों पर एक ही नियम लागू करना।",
+    "description": "Multiple Matching Rules"
+  },
+  "ReportingIssues": {
+    "message": "रिपोर्टिंग मुद्दे",
+    "description": ""
+  },
+  "ReportingIssuesWarning": {
+    "message": "इंस्टाल करने के बाद उस पेज को रिफ्रेश करना याद रखें जिस पर आप टेक्स्ट बदलना चाहते हैं।",
+    "description": ""
+  },
+  "ReportingIssuesInfo": {
+    "message": "यदि एक्सटेंशन का उपयोग करने के बाद पेज टूट गया है, तो पेज को रीफ्रेश करने का प्रयास करें, और फिर खोज करने और बदलने से पहले <कोड>केवल इनपुट फ़ील्ड?</कोड> और <कोड>केवल दृश्य सामग्री बदलें?</कोड> की जांच करें।",
+    "description": ""
+  },
+  "ReportingIssues_p1": {
+    "message": "यदि आपको कोई बग मिलता है, तो कृपया <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimasiljpilanilmbnofo/support' target='_blank' >Chrome एक्सटेंशन पर एक विस्तृत रिपोर्ट प्रदान करें स्टोर करें</a> या <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a> पर।",
+    "description": ""
+  },
+  "Rate_on_store": {
+    "message": "कृपया <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimasiljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&# रेट करें 9733;</a> यदि एक्सटेंशन आपकी सहायता करता है तो क्रोम स्टोर पर!",
+    "description": ""
+  },
+  "no_saved_instances": {
+    "message": "कोई सहेजा गया उदाहरण नहीं",
+    "description": "message to tell user that no rules were found"
+  },
+  "matches": {
+    "message": "माचिस",
+    "description": "message to tell user how many instances of the search term were found"
+  }
+}
