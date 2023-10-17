@@ -12,6 +12,7 @@ module.exports = {
         searchreplace: path.join(srcDir, 'searchreplace.ts'),
         options: path.join(srcDir, 'options.ts'),
         util: path.join(srcDir, 'util.ts'),
+        help: path.join(srcDir, 'help.ts'),
     },
     output: {
         path: path.join(__dirname, '../dist'),
@@ -44,6 +45,10 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [{ from: '.', to: '../dist/assets', context: 'assets' }],
+            options: {},
+        }),
+        new CopyPlugin({
+            patterns: [{ from: '.', to: '../dist/_locales', context: '_locales' }],
             options: {},
         }),
     ],

@@ -1,190 +1,223 @@
+<!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link href="bootstrap.min.css" rel="stylesheet" />
+        <style>
+            html {
+                height: fit-content;
+            }
 
-<head>
-    <meta charset="UTF-8">
-    <link href="bootstrap.min.css" rel="stylesheet">
-    <script src="../util.js"></script>
-    <script src="../popup.js"></script>
-    <style>
-        html {
-            height: fit-content;
-        }
+            body,
+            body div table {
+                font-family: 'Open Sans', sans-serif;
+                background-color: #eee;
+                font-size: 13px;
+                text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+                width: 240px;
+                height: fit-content;
+                color: #444;
+            }
 
-        body,
-        body div table {
-            font-family: "Open Sans", sans-serif;
-            background-color: #eee;
-            font-size: 13px;
-            text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-            width: 240px;
-            height: fit-content;
-            color: #444;
-        }
+            textarea {
+                height: calc(1.5em + 0.75rem + calc(var(--bs-border-width)));
+                overflow: hidden;
+            }
 
-        textarea {
-            height: calc(1.5em + .75rem + calc(var(--bs-border-width)));
-            overflow: hidden;
-        }
+            button {
+                width: 100%;
+            }
 
-        button {
-            width: 100%;
-        }
+            a {
+                color: dodgerblue;
+            }
 
-        a {
-            color: dodgerblue;
-        }
+            #loader {
+                display: none;
+            }
 
-        #loader {
-            display: none;
-        }
+            #historyHeader {
+                color: dodgerblue;
+                text-decoration: underline;
+            }
 
-        #historyHeader {
-            color: dodgerblue;
-            text-decoration: underline;
-        }
+            #historyHeader:hover {
+                cursor: pointer;
+            }
 
-        #historyHeader:hover {
-            cursor: pointer;
-        }
+            #historyContent {
+                display: none;
+            }
 
-        #historyContent {
-            display: none;
-        }
+            #historyList {
+                padding-inline-start: 0;
+            }
 
-        #historyList {
-            padding-inline-start: 0;
-        }
+            #historyList li {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
 
-        #historyList li {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
+            #historyList li:hover {
+                color: dodgerblue;
+                cursor: pointer;
+                background-color: #ccc;
+            }
 
-        #historyList li:hover {
-            color: dodgerblue;
-            cursor: pointer;
-            background-color: #ccc;
-        }
+            .historyRow-0 {
+                background-color: #f5f5f5;
+            }
 
-        .historyRow-0 {
-            background-color: #F5F5F5;
-        }
+            .historyRow-1 {
+                background-color: #eee;
+            }
 
-        .historyRow-1 {
-            background-color: #eee;
-        }
+            #clearHistory {
+                width: 50%;
+                margin: 0 auto;
+            }
 
-        #clearHistory {
-            width: 50%;
-            margin: 0 auto;
-        }
+            #swapTerms {
+                text-align: right;
+            }
+        </style>
+        <title>Search and Replace</title>
+    </head>
 
-        #swapTerms {
-            text-align: right;
-        }
-
-    </style>
-    <title>Search and Replace</title>
-</head>
-
-<body>
-<div id="loader">
-    <img src="ajax-loader.gif" width="16" height="16" name="loading" alt="searching and replacing...">
-</div>
-<div id="content" class="container-fluid mt-2">
-    <div class="row">
-        <form id="searchReplaceForm">
-            <div class="first-row form-group">
-                <label for="searchTerm">Search for</label>
-                <textarea class="data_field form-control rounded-1" name="searchTerm" id="searchTerm"
-                          type="text"></textarea>
+    <body>
+        <div id="loader">
+            <img src="ajax-loader.gif" width="16" height="16" name="loading" alt="searching and replacing..." />
+        </div>
+        <div id="content" class="container-fluid mt-2">
+            <div class="row">
+                <form id="searchReplaceForm">
+                    <div class="first-row form-group">
+                        <label for="searchTerm" data-locale="Searchfor">Search for</label>
+                        <textarea
+                            class="data_field form-control rounded-1"
+                            name="searchTerm"
+                            id="searchTerm"
+                            type="text"
+                        ></textarea>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6" id="searchTermCount"></div>
+                        <div class="col-6 link-body-emphasis" id="swapTerms" data-locale="Swap">Swap ⇅</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="replaceTerm" data-locale="Replacewith">Replace with</label>
+                        <textarea
+                            class="data_field form-control rounded-1"
+                            name="replaceTerm"
+                            id="replaceTerm"
+                            type="text"
+                        ></textarea>
+                    </div>
+                    <div class="form-group" id="hints">
+                        <p></p>
+                    </div>
+                    <div class="form-check">
+                        <label for="matchCase" class="form-check-label" data-locale="Matchcase">Match case</label>?
+                        <input name="matchCase" id="matchCase" type="checkbox" class="form-check-input" />
+                    </div>
+                    <div class="form-check">
+                        <label for="inputFieldsOnly" class="form-check-label" data-locale="Inputfields"
+                            >Input fields only</label
+                        >?
+                        <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox" class="form-check-input" />
+                    </div>
+                    <div class="form-check">
+                        <label for="visibleOnly" class="form-check-label" data-locale="Visiblecontent"
+                            >Visible content only</label
+                        >?
+                        <input name="visibleOnly" id="visibleOnly" type="checkbox" class="form-check-input" />
+                    </div>
+                    <div class="form-check">
+                        <label for="wholeWord" class="form-check-label" data-locale="Matchwhole">Match whole word</label
+                        >?
+                        <input name="wholeWord" id="wholeWord" type="checkbox" class="form-check-input" />
+                    </div>
+                    <div class="form-check">
+                        <label for="isRegex" class="form-check-label" data-locale="Regularexpression"
+                            >Regular expression</label
+                        >?
+                        <input name="isRegex" id="isRegex" type="checkbox" class="form-check-input" />
+                    </div>
+                    <div class="form-check mb-3">
+                        <label for="save" class="form-check-label" data-locale="saveApplyPageReload"
+                            >Save and apply on page reload?</label
+                        >
+                        <input name="save" id="save" type="checkbox" class="form-check-input" />
+                    </div>
+                    <div class="form-group">
+                        <button
+                            name="replaceNext"
+                            id="replaceNext"
+                            class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle"
+                            type="submit"
+                            data-locale="ReplaceNext"
+                        >
+                            Replace Next
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <button
+                            name="replaceAll"
+                            id="replaceAll"
+                            class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle"
+                            type="submit"
+                            data-locale="ReplaceAll"
+                        >
+                            Replace All
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group row">
-                <div class="col-6" id="searchTermCount"></div>
-                <div class="col-6 link-body-emphasis" id="swapTerms">Swap ⇅</div>
-            </div>
-            <div class="form-group">
-                <label for="replaceTerm">Replace with</label>
-                <textarea class="data_field form-control rounded-1" name="replaceTerm" id="replaceTerm"
-                          type="text"></textarea>
-            </div>
-            <div class="form-group" id="hints">
-                <p></p>
-            </div>
-            <div class="form-check">
-                <label for="matchCase" class="form-check-label">Match case?</label>
-                <input name="matchCase" id="matchCase" type="checkbox" class="form-check-input"/>
-            </div>
-            <div class="form-check">
-                <label for="inputFieldsOnly" class="form-check-label">Input fields only?</label>
-                <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox" class="form-check-input"/>
-            </div>
-            <div class="form-check">
-                <label for="visibleOnly" class="form-check-label">Visible content only?</label>
-                <input name="visibleOnly" id="visibleOnly" type="checkbox" class="form-check-input"/>
-            </div>
-            <div class="form-check">
-                <label for="wholeWord" class="form-check-label">Match whole word?</label>
-                <input name="wholeWord" id="wholeWord" type="checkbox" class="form-check-input"/>
-            </div>
-            <div class="form-check">
-                <label for="isRegex" class="form-check-label">Regular expression?</label>
-                <input name="isRegex" id="isRegex" type="checkbox" class="form-check-input"/>
-            </div>
-            <div class="form-check mb-3">
-                <label for="save" class="form-check-label">Save and apply on page reload?</label>
-                <input name="save" id="save" type="checkbox" class="form-check-input"/>
-            </div>
-            <div class="form-group">
-                <button name="replaceNext" id="replaceNext"
-                        class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle" type="submit">Replace Next
-                </button>
-            </div>
-            <div class="form-group">
-                <button name="replaceAll" id="replaceAll"
-                        class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle" type="submit">Replace All
-                </button>
-            </div>
 
-        </form>
-    </div>
-
-    <div class="row text-center">
-        <form>
-            <!--Search and Replace History
+            <div class="row text-center">
+                <form>
+                    <!--Search and Replace History
             This is an expandable list of previously searched and replaced terms. Users can click on a term to populate the
             search and replace fields.
     -->
-            <div id="history" class="form-group mt-1 mb-2 collapsible border border-1 border-dark-subtle rounded-1">
-                <div id="historyHeader">
-                    <a class="fs-6" href="#">History</a>
-                </div>
-                <div id="historyContent">q
-                    <ul id="historyList">
-                    </ul>
-                    <button class="btn btn-light btn-sm rounded-1 border-1 border-dark-subtle mb-2" id="clearHistory">
-                        Clear
-                    </button>
-                </div>
+                    <div
+                        id="history"
+                        class="form-group mt-1 mb-2 collapsible border border-1 border-dark-subtle rounded-1"
+                    >
+                        <div id="historyHeader">
+                            <a class="fs-6" href="#" data-locale="History">History</a>
+                        </div>
+                        <div id="historyContent">
+                            <ul id="historyList"></ul>
+                            <button
+                                class="btn btn-light btn-sm rounded-1 border-1 border-dark-subtle mb-2"
+                                id="clearHistory"
+                                data-locale="Clear"
+                            >
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Options Link -->
+                    <div id="options" class="form-group mt-1 mb-2 border border-1 border-dark-subtle rounded-1">
+                        <a class="fs-6" href="#" data-locale="EditSettings">Edit Settings</a>
+                    </div>
+                    <!-- Help Link -->
+                    <div id="help" class="form-group mt-1 mb-1 border border-1 border-dark-subtle rounded-1">
+                        <a class="fs-6" href="#" data-locale="Help">Help</a>
+                    </div>
+                </form>
             </div>
-            <!-- Options Link -->
-            <div id="options" class="form-group mt-1 mb-2 border border-1 border-dark-subtle rounded-1">
-                <a class="fs-6" href="#">Edit Rules</a>
-            </div>
-            <!-- Help Link -->
-            <div id="help" class="form-group mt-1 mb-1 border border-1 border-dark-subtle rounded-1">
-                <a class="fs-6" href="#">Help</a>
-            </div>
-        </form>
+        </div>
 
-    </div>
+        <div class="text-center">
+            <a href="#" target="_blank" class="link-body-emphasis" id="github_version"
+                ><span data-locale="version"></span> <span id="version_number"></span
+            ></a>
+        </div>
 
-</div>
-
-<div class="text-center">
-    <a href="https://github.com/forgetso/search-replace/releases/tag/1.6.12" target="_blank" class="link-body-emphasis">Version 1.6.12</a>
-</div>
-</body>
-
+        <script src="../util.js"></script>
+        <script src="../popup.js"></script>
+    </body>
 </html>

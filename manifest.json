@@ -1,51 +1,44 @@
 {
-  "background": {
-    "service_worker": "background.js"
-  },
-  "action": {
-    "default_icon": "assets/icon.png",
-    "default_popup": "assets/popup.html",
-    "default_title": "Search and Replace"
-  },
-  "commands": {
-    "toggle-popup": {
-      "description": "Toggle Search and Replace popup",
-      "global": true,
-      "suggested_key": {
-        "default": "Ctrl+Shift+S"
-      }
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_icon": "assets/icon.png",
+        "default_popup": "assets/popup.html",
+        "default_title": "Search and Replace"
+    },
+    "commands": {
+        "toggle-popup": {
+            "description": "Toggle Search and Replace popup",
+            "global": true,
+            "suggested_key": {
+                "default": "Ctrl+Shift+S"
+            }
+        }
+    },
+    "content_scripts": [
+        {
+            "all_frames": true,
+            "js": ["searchreplace.js", "options.js", "popup.js", "util.js", "help.js"],
+            "matches": ["http://*/*", "https://*/*", "file:///*"]
+        }
+    ],
+    "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCr3R0tWRUKUERxg/cghorcvKPDxba+0Ko/3Metk/0XsUTPZcU1xBQZCY441i3lK2ZkH/Td3rs/l8HvbVnkN37NiFm0QQOIJGJi7vp1GdQsrr5uZA/611TsQAWpxxHzR9N4km5wu8e/Xmw2ZG5WKfWVPtUhozEDHTk5CVgeTUOMAQIDAQAB",
+    "default_locale": "en",
+    "name": "Search and Replace",
+    "description": "__MSG_ext_description__",
+    "manifest_version": 3,
+    "permissions": ["activeTab", "storage", "notifications"],
+    "host_permissions": ["http://*/*", "https://*/*"],
+    "update_url": "http://clients2.google.com/service/update2/crx",
+    "version": "1.6.12",
+    "options_page": "assets/options.html",
+    "icons": {
+        "16": "assets/icon-16.png",
+        "32": "assets/icon-32.png",
+        "64": "assets/icon-64.png",
+        "128": "assets/icon-128.png",
+        "256": "assets/icon-256.png",
+        "512": "assets/icon-512.png"
     }
-  },
-  "content_scripts": [
-    {
-      "all_frames": true,
-      "js": [
-        "searchreplace.js",
-        "options.js",
-        "popup.js",
-        "util.js"
-      ],
-      "matches": [
-        "http://*/*",
-        "https://*/*",
-        "file:///*"
-      ]
-    }
-  ],
-  "description": "Search for text on a webpage and replace it with different text.",
-  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCr3R0tWRUKUERxg/cghorcvKPDxba+0Ko/3Metk/0XsUTPZcU1xBQZCY441i3lK2ZkH/Td3rs/l8HvbVnkN37NiFm0QQOIJGJi7vp1GdQsrr5uZA/611TsQAWpxxHzR9N4km5wu8e/Xmw2ZG5WKfWVPtUhozEDHTk5CVgeTUOMAQIDAQAB",
-  "manifest_version": 3,
-  "name": "Search and Replace",
-  "permissions": [
-    "activeTab",
-    "storage",
-    "notifications"
-  ],
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
-  "update_url": "http://clients2.google.com/service/update2/crx",
-  "version": "1.6.12",
-  "options_page": "assets/options.html"
 }

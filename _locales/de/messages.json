@@ -1,0 +1,330 @@
+{
+    "ext_name": {
+        "message": "Suchen und Ersetzen",
+        "description": "ext_name"
+    },
+    "ext_description": {
+        "message": "Suchen Sie nach Text auf einer Webseite und ersetzen Sie ihn durch einen anderen Text.",
+        "description": "ext_description"
+    },
+    "options": {
+        "message": "Optionen",
+        "description": "options"
+    },
+    "saved_rules": {
+        "message": "Gespeicherte Regeln",
+        "description": "Options Tab"
+    },
+    "select_language": {
+        "message": "Sprache auswählen:",
+        "description": "Options Tab"
+    },
+    "settings": {
+        "message": "Einstellungen",
+        "description": "Settings"
+    },
+    "about": {
+        "message": "Über",
+        "description": "about"
+    },
+    "version": {
+        "message": "Version",
+        "description": "version"
+    },
+    "RuleID": {
+        "message": "Regel-ID",
+        "description": "options"
+    },
+    "URLPattern": {
+        "message": "URL-Muster",
+        "description": "options"
+    },
+    "SearchTerm": {
+        "message": "Suchbegriff",
+        "description": "options"
+    },
+    "ReplaceTerm": {
+        "message": "Ersetzungstext",
+        "description": "options"
+    },
+    "Delete": {
+        "message": "Löschen",
+        "description": "options"
+    },
+    "Save": {
+        "message": "Speichern",
+        "description": "options"
+    },
+    "matchCase": {
+        "message": "Groß-/Kleinschreibung beachten",
+        "description": "checkbox matchCase"
+    },
+    "inputFieldsOnly": {
+        "message": "Nur Eingabefelder",
+        "description": "checkbox inputFieldsOnly"
+    },
+    "visibleOnly": {
+        "message": "Nur sichtbarer Inhalt",
+        "description": "checkbox visibleOnly"
+    },
+    "wholeWord": {
+        "message": "Ganzes Wort suchen",
+        "description": "checkbox wholeWord"
+    },
+    "isRegex": {
+        "message": "Regulärer Ausdruck",
+        "description": "checkbox isRegex"
+    },
+    "replaceAll": {
+        "message": "Alle ersetzen",
+        "description": "checkbox replaceAll"
+    },
+    "saveApplyPageReload": {
+        "message": "Speichern und bei Seitenneuladen anwenden",
+        "description": "checkbox save"
+    },
+    "Searchfor": {
+        "message": "Suchen nach",
+        "description": "popup"
+    },
+    "Swap": {
+        "message": "Tauschen ⇅",
+        "description": "popup"
+    },
+    "Replacewith": {
+        "message": "Ersetzen durch",
+        "description": "popup"
+    },
+    "Matchcase": {
+        "message": "Groß-/Kleinschreibung beachten",
+        "description": "popup"
+    },
+    "Inputfields": {
+        "message": "Nur Eingabefelder",
+        "description": "popup"
+    },
+    "Visiblecontent": {
+        "message": "Nur sichtbarer Inhalt",
+        "description": "popup"
+    },
+    "Matchwhole": {
+        "message": "Ganzes Wort suchen",
+        "description": "popup"
+    },
+    "Regularexpression": {
+        "message": "Regulärer Ausdruck",
+        "description": "popup"
+    },
+    "Saveandapply": {
+        "message": "Speichern und bei Seitenneuladen anwenden",
+        "description": "popup"
+    },
+    "ReplaceNext": {
+        "message": "Nächstes ersetzen",
+        "description": "popup"
+    },
+    "ReplaceAll": {
+        "message": "Alle ersetzen",
+        "description": "popup"
+    },
+    "History": {
+        "message": "Verlauf",
+        "description": "popup"
+    },
+    "Clear": {
+        "message": "Löschen",
+        "description": "popup"
+    },
+    "EditSettings": {
+        "message": "Einstellungen bearbeiten",
+        "description": "popup"
+    },
+    "Help": {
+        "message": "Hilfe",
+        "description": ""
+    },
+    "help_title": {
+        "message": "Hilfeseite für Suche und Ersetzen",
+        "description": "help"
+    },
+    "URL": {
+        "message": "URL",
+        "description": ""
+    },
+    "Search": {
+        "message": "Suchen",
+        "description": ""
+    },
+    "Replace": {
+        "message": "Ersetzen",
+        "description": ""
+    },
+    "Priority": {
+        "message": "Priorität",
+        "description": ""
+    },
+    "Example": {
+        "message": "Beispiel",
+        "description": ""
+    },
+    "applied_first": {
+        "message": "zuerst angewendet",
+        "description": ""
+    },
+    "applied_last": {
+        "message": "zuletzt angewendet",
+        "description": ""
+    },
+    "next_vs_all": {
+        "message": "Nächstes ersetzen vs. Alle ersetzen",
+        "description": "Nächstes ersetzen vs. Alle ersetzen"
+    },
+    "next_vs_all_p1": {
+        "message": "Um das erste Vorkommen des Suchbegriffs zu ersetzen, klicken Sie auf <code>Nächstes ersetzen</code>. Sie können diesen Schaltfläche weiterhin drücken, bis keine weiteren Vorkommen vorhanden sind.",
+        "description": "Nächstes ersetzen vs. Alle ersetzen"
+    },
+    "next_vs_all_p2": {
+        "message": "Um alle Vorkommen des Suchbegriffs zu ersetzen, klicken Sie auf <code>Alle ersetzen</code>.",
+        "description": "Nächstes ersetzen vs. Alle ersetzen"
+    },
+    "next_vs_all_p3": {
+        "message": "Derzeit gibt es keine Rückgängig-Funktion. Wenn Sie einen Fehler machen, können Sie die Seite neu laden, um den Originaltext wiederherzustellen. Dabei gehen jedoch alle ungespeicherten Änderungen in Texteditoren und Texteingabefeldern verloren.",
+        "description": "Nächstes ersetzen vs. Alle ersetzen"
+    },
+    "replace_editors": {
+        "message": "Text in Editoren und Textfeldern ersetzen",
+        "description": "Erklärung zum Ersetzen von Text in Editoren und Textfeldern"
+    },
+    "replace_editors_p1": {
+        "message": "Um Text in Texteditoren oder Eingabefeldern zu ersetzen, sollten Sie das Kontrollkästchen <code>Nur Eingabefelder</code> aktivieren. Andernfalls wird der Suchtext im gesamten HTML ersetzt, was möglicherweise die Seite beschädigen kann. Um das Ändern von versteckten Eingabefeldern zu vermeiden, sollten Sie auch das Kontrollkästchen <code>Nur sichtbare Elemente</code> aktivieren.",
+        "description": "Erklärung zum Ersetzen von Text in Editoren und Textfeldern"
+    },
+    "replace_editors_p2": {
+        "message": "Um Text in Texteditoren oder Eingabefeldern zu ersetzen, sollten Sie das Kontrollkästchen <code>Nur Eingabefelder</code> aktivieren. Andernfalls wird der Suchtext im gesamten HTML ersetzt, was möglicherweise die Seite beschädigen kann. Um das Ändern von versteckten Eingabefeldern zu vermeiden, sollten Sie auch das Kontrollkästchen <code>Nur sichtbare Elemente</code> aktivieren.",
+        "description": "Erklärung zum Ersetzen von Text in Editoren und Textfeldern"
+    },
+    "Setup": {
+        "message": "Einstellungen",
+        "description": "help"
+    },
+    "Replacing_anywhere": {
+        "message": "Text überall auf der Seite ersetzen",
+        "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
+    },
+    "Replacing_anywhere_p1": {
+        "message": "Um Text zu ersetzen, der nicht in einem Texteditor enthalten ist und sich nicht in einem Textfeld befindet, deaktivieren Sie die Kontrollkästchen <code>Nur Eingabefelder</code> und <code>Nur sichtbaren Inhalt ändern</code>.",
+        "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
+    },
+    "Replacing_anywhere_p2": {
+        "message": "Um Text zu ersetzen, der nicht in einem Texteditor enthalten ist und sich nicht in einem Textfeld befindet, deaktivieren Sie die Kontrollkästchen <code>Nur Eingabefelder</code> und <code>Nur sichtbaren Inhalt ändern</code>.",
+        "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
+    },
+    "Replacing_anywhere_warning": {
+        "message": "WARNUNG: Diese Einstellung ändert den HTML-Code der Seite und kann sie beschädigen. Sie können die Seite durch erneutes Laden wiederherstellen, verlieren jedoch alle nicht gespeicherten Änderungen in Texteditoren und Texteingabefeldern.",
+        "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
+    },
+    "Matching_case": {
+        "message": "Groß-/Kleinschreibung beachten",
+        "description": "Erklärung zur Groß-/Kleinschreibung des Textes"
+    },
+    "Matching_case_p1": {
+        "message": "Wenn Sie <code>DAS</code> ersetzen möchten, aber nicht <code>Das</code>, sollten Sie die Option zur Groß-/Kleinschreibung beachten verwenden.",
+        "description": "Erklärung zur Groß-/Kleinschreibung des Textes"
+    },
+    "Matching_case_p2": {
+        "message": "Die folgende Einstellung entspricht <code>Wohnung</code>, aber nicht <code>wohnung</code>. Sie ersetzt <code>Wohnung</code> durch <code>Appartement</code> in Textfeldern, die auf der Seite sichtbar sind.",
+        "description": "Erklärung zur Groß-/Kleinschreibung des Textes"
+    },
+    "Matching_whole": {
+        "message": "Ganzes Wort suchen",
+        "description": "Ganzes Wort suchen"
+    },
+    "Matching_whole_p1": {
+        "message": "Wenn Sie das Wort <code>teilweise</code> ersetzen möchten, aber nicht <code>teilweise</code>, sollten Sie die Option <code>Ganzes Wort suchen</code> verwenden.",
+        "description": "Ganzes Wort suchen"
+    },
+    "wildcards_and_regex": {
+        "message": "Platzhalter und reguläre Ausdrücke",
+        "description": "Erklärung zu Platzhaltern und regulären Ausdrücken"
+    },
+    "wildcards_and_regex_p1": {
+        "message": "Wenn Sie einen teilweisen Suchbegriff finden müssen, sollten Sie das Kontrollkästchen für reguläre Ausdrücke aktivieren und einen Platzhalter angeben. Sie benötigen grundlegende Kenntnisse von <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regulären Ausdrücken</a>, um diese Funktion zu verwenden. Ich empfehle <a href='https://regexpal.com' target='_blank'>regexpal</a> zum Testen.",
+        "description": "Erklärung zu Platzhaltern und regulären Ausdrücken"
+    },
+    "Before": {
+        "message": "Vorher",
+        "description": ""
+    },
+    "After": {
+        "message": "Nachher",
+        "description": ""
+    },
+    "Replacing_wordpress": {
+        "message": "Text in WordPress ersetzen",
+        "description": ""
+    },
+    "Replacing_wordpress_p1": {
+        "message": "WordPress ist derzeit in Version 6.6, Stand März 2023. Der Beitrag-Editor hat sich seit der Erstellung dieser Erweiterung erheblich verändert, und es ist eine neue Konfiguration erforderlich, um Text in WordPress zu ersetzen.",
+        "description": ""
+    },
+    "Replacing_wordpress_setup_w6": {
+        "message": "Konfiguration für WordPress 6+",
+        "description": ""
+    },
+    "Replacing_wordpress_setup_w5": {
+        "message": "Konfiguration für WordPress 5 und ältere Versionen",
+        "description": ""
+    },
+    "Save_apply": {
+        "message": "Speichern und bei Seitenneuladen anwenden",
+        "description": "Speichern und bei Seitenneuladen anwenden"
+    },
+    "Save_apply_p1": {
+        "message": "Sie können das Kontrollkästchen <code>Speichern und bei Seitenneuladen anwenden</code> aktivieren, um Ihre Suche zu speichern und bei nachfolgenden Seitenneuladen anzuwenden. Diese werden in Ihrem Browser gespeichert und erneut geöffnet.",
+        "description": "Speichern und bei Seitenneuladen anwenden"
+    },
+    "Save_apply_multi": {
+        "message": "Mehrere Übereinstimmungsregeln",
+        "description": "Mehrere Übereinstimmungsregeln"
+    },
+    "Save_apply_multi_p1": {
+        "message": "Wenn mehrere Regeln auf dieselbe Seite zutreffen, werden die Regeln in der Reihenfolge von <b>am spezifischsten</b> zu <b>am allgemeinsten</b> angewendet. Zum Beispiel:",
+        "description": "Mehrere Übereinstimmungsregeln"
+    },
+    "Save_apply_multi_p2": {
+        "message": "Das bedeutet, dass Änderungen, die durch die erste Regel vorgenommen wurden, in die nachfolgenden Regeln einfließen. Im obigen Beispiel wurde der Text <code>Beispiel</code> durch die Regel, die zu <code>http://www.beispiel.com/eine/tiefere/verschachtelte/seite</code> passt, ersetzt. Nachfolgende Regeln haben daher keine Auswirkungen.",
+        "description": "Mehrere Übereinstimmungsregeln"
+    },
+    "Save_apply_multi_p3": {
+        "message": "Sie können die gespeicherten Regeln bearbeiten, indem Sie auf den Link <a href='options.html'>Regeln bearbeiten</a> in der Erweiterungspopup klicken. Das <code>URL-Muster</code> Feld ist ein <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regulärer Ausdruck</a>, der es Ihnen ermöglicht, dieselbe Regel auf viele verschiedene Websites anzuwenden.",
+        "description": "Mehrere Übereinstimmungsregeln"
+    },
+    "ReportingIssues": {
+        "message": "Probleme melden",
+        "description": ""
+    },
+    "ReportingIssuesWarning": {
+        "message": "Denken Sie daran, die Seite, auf der Sie Text ersetzen möchten, nach der Installation der Erweiterung zu AKTUALISIEREN.",
+        "description": ""
+    },
+    "ReportingIssuesInfo": {
+        "message": "Wenn die Seite nach Verwendung der Erweiterung beschädigt ist, versuchen Sie, die Seite zu aktualisieren und aktivieren Sie dann die Kontrollkästchen <code>Nur Eingabefelder</code> und <code>Nur sichtbaren Inhalt ändern</code>, bevor Sie eine Suche und einen Ersatz durchführen.",
+        "description": ""
+    },
+    "ReportingIssues_p1": {
+        "message": "Wenn Sie einen Fehler finden, geben Sie bitte einen ausführlichen Bericht in der <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank' >Chrome-Erweiterungsspeicher</a > oder auf <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a> ab.",
+        "description": ""
+    },
+    "Rate_on_store": {
+        "message": "Bitte bewerten Sie <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> im Chrome Store, wenn Ihnen die Erweiterung hilft!",
+        "description": ""
+    },
+    "no_saved_instances": {
+        "message": "Keine gespeicherten Instanzen",
+        "description": "message to tell user that no rules were found"
+    },
+    "matches": {
+        "message": "streichhölzer",
+        "description": "message to tell user how many instances of the search term were found"
+    }
+}
