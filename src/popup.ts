@@ -47,7 +47,7 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     // Create a variable for storing the time since last time terms were stored
 
-    // Update popup version number and github link dynamically with manifest.version
+    // Update popup version number and GitHub link dynamically with manifest.version
     const versionNumberElement = document.getElementById('version_number')
     if (versionNumberElement) {
         versionNumberElement.innerHTML = manifest.version
@@ -140,10 +140,6 @@ window.addEventListener('DOMContentLoaded', async function () {
     })
     // Localize HTML elements
     localizeElements(langData)
-
-    // Resize the text areas on load
-    autoGrow(getSearchTermElement())
-    autoGrow(getReplaceTermElement())
 })
 
 async function storeTermsHandler(e, translationFn: TranslationProxy) {
@@ -153,7 +149,8 @@ async function storeTermsHandler(e, translationFn: TranslationProxy) {
 // function to change the height of the textarea to fit the content
 function autoGrow(element) {
     console.log(`change height to scroll height ${element.scrollHeight} px`)
-    element.style.height = ''
+    console.log(`element value ${element.value}`)
+    element.style.height = 'auto'
     element.style.height = element.scrollHeight + 'px'
 }
 
@@ -180,11 +177,16 @@ function clearHistoryClickHandler() {
 }
 
 function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstance) {
-    getSearchTermElement().value = searchReplaceInstance.searchTerm
-    getReplaceTermElement().value = searchReplaceInstance.replaceTerm
+    const searchTerm = getSearchTermElement()
+    const replaceTerm = getReplaceTermElement()
+    searchTerm.value = searchReplaceInstance.searchTerm
+    replaceTerm.value = searchReplaceInstance.replaceTerm
     for (const checkbox of CHECKBOXES) {
         ;(<HTMLInputElement>document.getElementById(checkbox)).checked = searchReplaceInstance.options[checkbox]
     }
+    // Resize the text areas after populating the saved terms
+    autoGrow(searchTerm)
+    autoGrow(replaceTerm)
 }
 
 function historyItemClickHandler(e, translationFn: TranslationProxy) {
