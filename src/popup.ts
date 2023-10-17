@@ -31,6 +31,14 @@ const INPUT_ELEMENTS_AND_EVENTS = {
     help: ['click'],
 }
 
+function getSearchTermElement() {
+    return <HTMLTextAreaElement>document.getElementById('searchTerm')
+}
+
+function getReplaceTermElement() {
+    return <HTMLTextAreaElement>document.getElementById('replaceTerm')
+}
+
 const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceCheckboxNames)
 const MIN_SEARCH_TERM_LENGTH = 1
 window.addEventListener('DOMContentLoaded', async function () {
@@ -39,7 +47,7 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     // Create a variable for storing the time since last time terms were stored
 
-    // Update popup version number and github link dynamically with manifest.version
+    // Update popup version number and GitHub link dynamically with manifest.version
     const versionNumberElement = document.getElementById('version_number')
     if (versionNumberElement) {
         versionNumberElement.innerHTML = manifest.version
@@ -110,7 +118,9 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     // Handler for auto resizing the textareas
     for (const elementName of ['searchTerm', 'replaceTerm']) {
-        ;(<HTMLTextAreaElement>document.getElementById(elementName)).addEventListener('input', function () {
+        const element = document.getElementById(elementName)
+        autoGrow(element)
+        ;(<HTMLTextAreaElement>element).addEventListener('input', function () {
             autoGrow(this)
         })
     }
@@ -122,11 +132,12 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     // Click handler for swapping terms
     ;(<HTMLButtonElement>document.getElementById('swapTerms')).addEventListener('click', function (e) {
-        const searchTerm = <HTMLTextAreaElement>document.getElementById('searchTerm')
-        const replaceTerm = <HTMLTextAreaElement>document.getElementById('replaceTerm')
+        const searchTerm = getSearchTermElement()
+        const replaceTerm = getReplaceTermElement()
         swapTerms(searchTerm, replaceTerm, translationFn)
+        autoGrow(searchTerm)
+        autoGrow(replaceTerm)
     })
-
     // Localize HTML elements
     localizeElements(langData)
 })
@@ -137,8 +148,9 @@ async function storeTermsHandler(e, translationFn: TranslationProxy) {
 
 // function to change the height of the textarea to fit the content
 function autoGrow(element) {
-    console.log('change height')
-    element.style.height = ''
+    console.log(`change height to scroll height ${element.scrollHeight} px`)
+    console.log(`element value ${element.value}`)
+    element.style.height = 'auto'
     element.style.height = element.scrollHeight + 'px'
 }
 
@@ -165,12 +177,16 @@ function clearHistoryClickHandler() {
 }
 
 function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstance) {
-    ;(<HTMLInputElement>document.getElementById('searchTerm')).value = searchReplaceInstance.searchTerm
-    ;(<HTMLInputElement>document.getElementById('replaceTerm')).value = searchReplaceInstance.replaceTerm
-
+    const searchTerm = getSearchTermElement()
+    const replaceTerm = getReplaceTermElement()
+    searchTerm.value = searchReplaceInstance.searchTerm
+    replaceTerm.value = searchReplaceInstance.replaceTerm
     for (const checkbox of CHECKBOXES) {
         ;(<HTMLInputElement>document.getElementById(checkbox)).checked = searchReplaceInstance.options[checkbox]
     }
+    // Resize the text areas after populating the saved terms
+    autoGrow(searchTerm)
+    autoGrow(replaceTerm)
 }
 
 function historyItemClickHandler(e, translationFn: TranslationProxy) {
@@ -250,10 +266,12 @@ export async function tabQuery(
 function tabQueryCallback(msg, translationFn: TranslationProxy) {
     removeLoader()
     if (msg && 'inIframe' in msg && msg['inIframe'] === false) {
-        if ('searchTermCount' in msg) {
+        if ('searchTermCount' in msg && getSearchTermElement().value.length >= MIN_SEARCH_TERM_LENGTH) {
             ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerHTML = `${
                 msg['searchTermCount']
             } ${translationFn('matches')}`
+        } else {
+            ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerHTML = ''
         }
         const hintsElement = document.getElementById('hints')
 
@@ -279,7 +297,7 @@ function removeLoader() {
     content!.style.display = 'block'
 }
 
-async function storeTerms(e, translationFn: TranslationProxy, save?: boolean) {
+async function storeTerms(e, translationFn: TranslationProxy, save?: boolean, ignoreLength?: boolean) {
     console.debug('storing terms')
     e = e || window.event
     if (e.keyCode === 13) {
@@ -289,7 +307,7 @@ async function storeTerms(e, translationFn: TranslationProxy, save?: boolean) {
         const searchReplaceInput = getInputValues(false)
         const history = constructSearchReplaceHistory()
 
-        if (searchReplaceInput.searchTerm.length >= MIN_SEARCH_TERM_LENGTH) {
+        if (searchReplaceInput.searchTerm.length >= MIN_SEARCH_TERM_LENGTH || ignoreLength) {
             // This does the actual search replace
             const url = await tabQuery('store', searchReplaceInput, history, translationFn, tabQueryCallback)
             // This sends the search replace terms to the background page and stores them
@@ -369,8 +387,8 @@ function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement, tra
     const sourceText = source.value
     source.value = target.value
     target.value = sourceText
-    storeTerms({}, translationFn, true)
-        .then((r) => console.log(r))
+    storeTerms({}, translationFn, true, true)
+        .then((r) => console.log(`swapTerms response: ${r}`))
         .catch((e) => console.error(e))
 }
 
@@ -394,8 +412,8 @@ function getUniqueHistoryItems(historyItems: SearchReplaceInstance[]) {
 }
 
 function getInputValues(replaceAll: boolean): SearchReplaceInstance {
-    const searchTerm = (<HTMLInputElement>document.getElementById('searchTerm')).value || ''
-    const replaceTerm = (<HTMLInputElement>document.getElementById('replaceTerm')).value || ''
+    const searchTerm = getSearchTermElement().value || ''
+    const replaceTerm = getReplaceTermElement().value || ''
     const matchCase = (<HTMLInputElement>document.getElementById('matchCase')).checked
     const inputFieldsOnly = (<HTMLInputElement>document.getElementById('inputFieldsOnly')).checked
     const visibleOnly = (<HTMLInputElement>document.getElementById('visibleOnly')).checked

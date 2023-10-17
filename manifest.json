@@ -31,7 +31,7 @@
     "permissions": ["activeTab", "storage", "notifications"],
     "host_permissions": ["http://*/*", "https://*/*"],
     "update_url": "http://clients2.google.com/service/update2/crx",
-    "version": "1.6.12",
+    "version": "1.7.0",
     "options_page": "assets/options.html",
     "icons": {
         "16": "assets/icon-16.png",
