@@ -1,8 +1,12 @@
 [
+    { "languageCode": "ar", "languageName": "العربية"},
+    { "languageCode": "de", "languageName": "Deutsch" },
     { "languageCode": "en", "languageName": "English" },
-    { "languageCode": "zh_CN", "languageName": "Chinese" },
-    { "languageCode": "de", "languageName": "German" },
-    { "languageCode": "es", "languageName": "Spanish" },
-    { "languageCode": "hi", "languageName": "Hindi" },
-    { "languageCode": "ja", "languageName": "Japanese" }
+    { "languageCode": "es", "languageName": "Española" },
+    { "languageCode": "hi", "languageName": "हिंदी" },
+    { "languageCode": "ja", "languageName": "日本語" },
+    { "languageCode": "ko", "languageName": "한국인" },
+    { "languageCode": "pt", "languageName": "Português" },
+    { "languageCode": "ru", "languageName": "Русский" },
+    { "languageCode": "zh_CN", "languageName": "中国人" }
 ]

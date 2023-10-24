@@ -1,0 +1,330 @@
+{
+  "ext_name": {
+    "message": "Поиск и Замена",
+    "description": "ext_name"
+  },
+  "ext_description": {
+    "message": "Ищите текст на веб-странице и заменяйте его другим текстом.",
+    "description": "ext_description"
+  },
+  "options": {
+    "message": "Настройки",
+    "description": "options"
+  },
+  "saved_rules": {
+    "message": "Сохраненные правила",
+    "description": "Options Tab"
+  },
+  "select_language": {
+    "message": "Выберите язык:",
+    "description": "Options Tab"
+  },
+  "settings": {
+    "message": "Настройки",
+    "description": "Settings"
+  },
+  "about": {
+    "message": "О программе",
+    "description": "about"
+  },
+  "version": {
+    "message": "Версия",
+    "description": "version"
+  },
+  "RuleID": {
+    "message": "Идентификатор правила",
+    "description": "options"
+  },
+  "URLPattern": {
+    "message": "Шаблон URL",
+    "description": "options"
+  },
+  "SearchTerm": {
+    "message": "Искомый термин",
+    "description": "options"
+  },
+  "ReplaceTerm": {
+    "message": "Заменяемый термин",
+    "description": "options"
+  },
+  "Delete": {
+    "message": "Удалить",
+    "description": "options"
+  },
+  "Save": {
+    "message": "Сохранить",
+    "description": "options"
+  },
+  "matchCase": {
+    "message": "Учитывать регистр",
+    "description": "checkbox matchCase"
+  },
+  "inputFieldsOnly": {
+    "message": "Только поля ввода",
+    "description": "checkbox inputFieldsOnly"
+  },
+  "visibleOnly": {
+    "message": "Только видимое содержание",
+    "description": "checkbox visibleOnly"
+  },
+  "wholeWord": {
+    "message": "Соответствие целому слову",
+    "description": "checkbox wholeWord"
+  },
+  "isRegex": {
+    "message": "Регулярное выражение",
+    "description": "checkbox isRegex"
+  },
+  "replaceAll": {
+    "message": "Заменить все",
+    "description": "checkbox replaceAll"
+  },
+  "saveApplyPageReload": {
+    "message": "Сохранить и применить при перезагрузке страницы",
+    "description": "checkbox save"
+  },
+  "Searchfor": {
+    "message": "Искать",
+    "description": "popup"
+  },
+  "Swap": {
+    "message": "Заменить ⇅",
+    "description": "popup"
+  },
+  "Replacewith": {
+    "message": "Заменить на",
+    "description": "popup"
+  },
+  "Matchcase": {
+    "message": "Учитывать регистр",
+    "description": "popup"
+  },
+  "Inputfields": {
+    "message": "Только поля ввода",
+    "description": "popup"
+  },
+  "Visiblecontent": {
+    "message": "Только видимое содержание",
+    "description": "popup"
+  },
+  "Matchwhole": {
+    "message": "Соответствие целому слову",
+    "description": "popup"
+  },
+  "Regularexpression": {
+    "message": "Регулярное выражение",
+    "description": "popup"
+  },
+  "Saveandapply": {
+    "message": "Сохранить и применить при перезагрузке страницы",
+    "description": "popup"
+  },
+  "ReplaceNext": {
+    "message": "Заменить следующее",
+    "description": "popup"
+  },
+  "ReplaceAll": {
+    "message": "Заменить все",
+    "description": "popup"
+  },
+  "History": {
+    "message": "История",
+    "description": "popup"
+  },
+  "Clear": {
+    "message": "Очистить",
+    "description": "popup"
+  },
+  "EditSettings": {
+    "message": "Изменить настройки",
+    "description": "popup"
+  },
+  "Help": {
+    "message": "Помощь",
+    "description": ""
+  },
+  "help_title": {
+    "message": "Страница помощи по поиску и замене",
+    "description": "help"
+  },
+  "URL": {
+    "message": "URL",
+    "description": ""
+  },
+  "Search": {
+    "message": "Поиск",
+    "description": ""
+  },
+  "Replace": {
+    "message": "Замена",
+    "description": ""
+  },
+  "Priority": {
+    "message": "Приоритет",
+    "description": ""
+  },
+  "Example": {
+    "message": "Пример",
+    "description": ""
+  },
+  "applied_first": {
+    "message": "применяется первым",
+    "description": ""
+  },
+  "applied_last": {
+    "message": "применяется последним",
+    "description": ""
+  },
+  "next_vs_all": {
+    "message": "Заменить следующее против Заменить все",
+    "description": "Replace Next vs. Replace All"
+  },
+  "next_vs_all_p1": {
+    "message": "Для замены первого вхождения искомого термина нажмите кнопку <code>Заменить следующее</code>. Вы можете продолжать нажимать эту кнопку, пока не останется больше вхождений.",
+    "description": "Replace Next vs. Replace All"
+  },
+  "next_vs_all_p2": {
+    "message": "Для замены всех вхождений искомого термина нажмите кнопку <code>Заменить все</code>.",
+    "description": "Replace Next vs. Replace All"
+  },
+  "next_vs_all_p3": {
+    "message": "На данный момент отсутствует функция отмены. Если вы сделаете ошибку, вы можете перезагрузить страницу, чтобы восстановить исходный текст. Однако вы потеряете все несохраненные изменения в текстовых редакторах и полях ввода текста.",
+    "description": "Replace Next vs. Replace All"
+  },
+  "replace_editors": {
+    "message": "Замена текста в редакторах и текстовых полях",
+    "description": "Explanation about replacing text in editors and text fields"
+  },
+  "replace_editors_p1": {
+    "message": "Для замены текста в текстовых редакторах или полях ввода следует установить флажок <code>Только поля ввода?</code>. В противном случае искомый текст будет заменен во всем HTML, что может повредить страницу. Для избежания изменения скрытых полей ввода, также установите флажок <code>Только видимые элементы?</code>.",
+    "description": "Explanation about replacing text in editors and text fields"
+  },
+  "replace_editors_p2": {
+    "message": "Для замены текста в текстовых редакторах или полях ввода следует установить флажок <code>Только поля ввода?</code>. В противном случае искомый текст будет заменен во всем HTML, что может повредить страницу. Для избежания изменения скрытых полей ввода, также установите флажок <code>Только видимые элементы?</code>.",
+    "description": "Explanation about replacing text in editors and text fields"
+  },
+  "Setup": {
+    "message": "Настройка",
+    "description": "help"
+  },
+  "Replacing_anywhere": {
+    "message": "Замена текста в любом месте на странице",
+    "description": "Explanation about replacing text anywhere on the page"
+  },
+  "Replacing_anywhere_p1": {
+    "message": "Чтобы заменить текст, который не содержится в текстовом редакторе и не находится в текстовом поле, оставьте флажки <code>Только поля ввода?</code> и <code>Только изменять видимое содержание?</code> неотмеченными.",
+    "description": "Explanation about replacing text anywhere on the page"
+  },
+  "Replacing_anywhere_p2": {
+    "message": "Чтобы заменить текст, который не содержится в текстовом редакторе и не находится в текстовом поле, оставьте флажки <code>Только поля ввода?</code> и <code>Только изменять видимое содержание?</code> неотмеченными.",
+    "description": "Explanation about replacing text anywhere on the page"
+  },
+  "Replacing_anywhere_warning": {
+    "message": "ПРЕДУПРЕЖДЕНИЕ: Эта настройка изменит HTML-страницу и может привести к ее повреждению. Вы можете восстановить страницу, перезагрузив ее, но при этом потеряете все несохраненные изменения в текстовых редакторах и полях ввода текста.",
+    "description": "Explanation about replacing text anywhere on the page"
+  },
+  "Matching_case": {
+    "message": "Учет регистра текста",
+    "description": "Explanation about matching the case of text"
+  },
+  "Matching_case_p1": {
+    "message": "Если вам нужно заменить <code>ЭТО</code>, но не <code>Это</code>, то вы должны использовать опцию 'учитывать регистр'.",
+    "description": "Explanation about matching the case of text"
+  },
+  "Matching_case_p2": {
+    "message": "В следующей настройке будет совпадать <code>Квартира</code>, но не <code>квартира</code>. Она будет заменять <code>Квартира</code> на <code>квартира</code> в текстовых полях, видимых на странице.",
+    "description": "Explanation about matching the case of text"
+  },
+  "Matching_whole": {
+    "message": "Соответствие целому слову",
+    "description": "Matching whole words"
+  },
+  "Matching_whole_p1": {
+    "message": "Если вам нужно заменить слово <code>частичный</code>, но не <code>частично</code>, то вы должны использовать опцию 'соответствие целому слову'.",
+    "description": "Matching whole words"
+  },
+  "wildcards_and_regex": {
+    "message": "Маски и регулярные выражения",
+    "description": "Explanation about wild cards and regular expressions"
+  },
+  "wildcards_and_regex_p1": {
+    "message": "Если вам нужно сопоставить часть искомого термина, установите флажок 'Регулярное выражение' и укажите шаблон. Для использования этой функции вам потребуется базовое знание <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>регулярных выражений</a>. Рекомендуется использовать <a href='https://regexpal.com' target='_blank'>regexpal</a> для тестирования.",
+    "description": "Explanation about wild cards and regular expressions"
+  },
+  "Before": {
+    "message": "До",
+    "description": ""
+  },
+  "After": {
+    "message": "После",
+    "description": ""
+  },
+  "Replacing_wordpress": {
+    "message": "Замена текста в WordPress",
+    "description": ""
+  },
+  "Replacing_wordpress_p1": {
+    "message": "На момент марта 2023 года WordPress находится на версии 6.6. Редактор постов претерпел значительные изменения с момента создания этого расширения, и требуется новая настройка для замены текста в WordPress.",
+    "description": ""
+  },
+  "Replacing_wordpress_setup_w6": {
+    "message": "Настройка для WordPress 6+",
+    "description": ""
+  },
+  "Replacing_wordpress_setup_w5": {
+    "message": "Настройка для WordPress 5 и более ранних версий",
+    "description": ""
+  },
+  "Save_apply": {
+    "message": "Сохранить и применить при перезагрузке страницы",
+    "description": "Save and apply on page reload"
+  },
+  "Save_apply_p1": {
+    "message": "Вы можете установить флажок <code>Сохранить и применить при перезагрузке страницы</code>, чтобы сохранить ваш поиск и применить его при последующей перезагрузке страницы. Они будут сохранены и восстановлены при повторном открытии вашего браузера.",
+    "description": "Save and apply on page reload"
+  },
+  "Save_apply_multi": {
+    "message": "Несколько совпадающих правил",
+    "description": "Multiple Matching Rules"
+  },
+  "Save_apply_multi_p1": {
+    "message": "Если на одной странице применяется несколько правил, они будут применены в порядке от <b>самого</b> специфического к <b>менее</b> специфическому. Например:",
+    "description": "Multiple Matching Rules"
+  },
+  "Save_apply_multi_p2": {
+    "message": "Это означает, что любые изменения, внесенные первым правилом, будут передаваться последующим правилам. В приведенном выше примере текст <code>Пример</code> будет заменен правилом, совпадающим с <code>http://www.example.com/a/deeper/nested/page</code>. Последующие правила, следовательно, не будут иметь никакого влияния.",
+    "description": "Multiple Matching Rules"
+  },
+  "Save_apply_multi_p3": {
+    "message": "Вы можете редактировать сохраненные правила, нажав на ссылку <a href='options.html'>Редактировать правила</a> в выпадающем окне расширения. Поле <code>Шаблон URL</code> представляет собой <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>регулярное выражение</a>, которое позволяет применять одно и то же правило к множеству разных веб-сайтов.",
+    "description": "Multiple Matching Rules"
+  },
+  "ReportingIssues": {
+    "message": "Сообщение о проблемах",
+    "description": ""
+  },
+  "ReportingIssuesWarning": {
+    "message": "Не забудьте ОБНОВИТЬ страницу, на которой вы хотите заменить текст после установки.",
+    "description": ""
+  },
+  "ReportingIssuesInfo": {
+    "message": "Если страница сломалась после использования расширения, попробуйте обновить страницу и затем установить флажки <code>Только поля ввода?</code> и <code>Только изменять видимое содержание?</code> перед выполнением поиска и замены.",
+    "description": ""
+  },
+  "ReportingIssues_p1": {
+    "message": "Если вы обнаружили ошибку, пожалуйста, предоставьте подробный отчет на <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank' >Chrome Extension Store</a > или на <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>.",
+    "description": ""
+  },
+  "Rate_on_store": {
+    "message": "Пожалуйста, оцените расширение <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> в Chrome Store, если оно вам помогло!",
+    "description": ""
+  },
+  "no_saved_instances": {
+    "message": "Нет сохраненных экземпляров",
+    "description": "message to tell user that no rules were found"
+  },
+  "matches": {
+    "message": "совпадения",
+    "description": "message to tell user how many instances of the search term were found"
+  }
+}
