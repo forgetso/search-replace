@@ -48,12 +48,14 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     if (settingsContainer && languageSelect) {
         // Populate the select element
-        languages.forEach((option) => {
-            const optionElement = document.createElement('option')
-            optionElement.value = option.languageCode
-            optionElement.textContent = option.languageName
-            languageSelect.appendChild(optionElement)
-        })
+        languages
+            .sort((a, b) => (a.languageName > b.languageName ? 1 : -1))
+            .forEach((option) => {
+                const optionElement = document.createElement('option')
+                optionElement.value = option.languageCode
+                optionElement.textContent = option.languageName
+                languageSelect.appendChild(optionElement)
+            })
 
         // Load the preferred language from storage and select the corresponding option
         chrome.storage.sync.get({ preferredLanguage: 'en' }, (result) => {
