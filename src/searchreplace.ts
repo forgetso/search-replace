@@ -240,11 +240,11 @@ function replaceHTMLInIframes(
     visibleOnly: boolean
 ): boolean {
     let replaced = false
-    for (let iframeCount = 0; iframeCount < iframes.length; iframeCount++) {
-        const iframe = iframes[0]
+    for (const iframe of iframes) {
         if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
             try {
                 const content = iframe.contentDocument.documentElement.body as HTMLBodyElement
+                console.log('iframe.contentDocument', iframe.contentDocument)
                 if (visibleOnly) {
                     replaced = replaceVisibleOnly(document, [content], searchPattern, replaceTerm, flags)
                 } else {
@@ -400,10 +400,12 @@ export async function searchReplace(
     for (const richTextEditor of RICH_TEXT_EDITORS) {
         if (richTextEditor.container) {
             if (document.querySelectorAll(richTextEditor.container.value).length) {
+                console.log('Replacing in rich text editor')
                 replaced = await cmsEditor(window, document, searchPattern, replaceTerm, flags, richTextEditor)
             }
         } else {
             if (document.querySelectorAll(richTextEditor.editor.value).length) {
+                console.log('Replacing in rich text editor')
                 replaced = await cmsEditor(window, document, searchPattern, replaceTerm, flags, richTextEditor)
             }
         }

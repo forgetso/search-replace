@@ -60,28 +60,42 @@ export function getSearchOccurrences(
     let iframeMatches = 0
     console.log('inputFieldsOnly', inputFieldsOnly, 'visibleOnly', visibleOnly)
     if (visibleOnly && !inputFieldsOnly) {
+        console.log(
+            'looking for visible only, but not visible input fields only... visible anything. Search pattern: ',
+            searchPattern
+        )
         matches = document.body.innerText.match(searchPattern) || []
         const inputs = getInputElements(document, visibleOnly)
         const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
-
+        console.log('searching in an iframe', iframe)
         if (!iframe) {
             const iframes = Array.from(document.querySelectorAll('iframe'))
+            console.log(iframes.length, iframes)
             iframeMatches = iframes
                 .map((iframe) => {
                     try {
-                        return getSearchOccurrences(iframe.contentDocument!, searchPattern, visibleOnly, true)
+                        console.log('checking in iframe')
+                        return getSearchOccurrences(
+                            iframe.contentDocument!,
+                            searchPattern,
+                            visibleOnly,
+                            inputFieldsOnly,
+                            true
+                        )
                     } catch (e) {
                         return 0
                     }
                 })
                 .reduce((a, b) => a + b, 0)
         }
+        console.log('matches', matches)
+        console.log('inputMatches', inputMatches)
         // combine the matches from the body and the inputs and remove empty matches
-        if (inputFieldsOnly) {
-            matches = inputMatches.filter((match) => match.length > 0).flat()
-        } else {
-            matches = [...matches, ...inputMatches].filter((match) => match.length > 0).flat()
-        }
+        // if (inputFieldsOnly) {
+        //     matches = inputMatches.filter((match) => match.length > 0).flat()
+        // } else {
+        matches = [...matches, ...inputMatches].filter((match) => match.length > 0).flat()
+        //}
     } else if (inputFieldsOnly) {
         const inputs = getInputElements(document, visibleOnly)
         const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
@@ -98,6 +112,7 @@ export function getSearchOccurrences(
 }
 
 export function elementIsVisible(element: HTMLElement): boolean {
+    console.log('element', element.nodeName)
     const styleVisible = element.style.display !== 'none'
 
     if (element.nodeName === 'INPUT') {

@@ -265,7 +265,9 @@ export async function tabQuery(
 
 function tabQueryCallback(msg, translationFn: TranslationProxy) {
     removeLoader()
+    console.log('tabQueryCallback')
     if (msg && 'inIframe' in msg && msg['inIframe'] === false) {
+        console.log('msg', msg)
         if ('searchTermCount' in msg && getSearchTermElement().value.length >= MIN_SEARCH_TERM_LENGTH) {
             ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerHTML = `${
                 msg['searchTermCount']
@@ -336,7 +338,7 @@ function sendToStorage(
     }
     port.postMessage(storageMessage)
     port.onMessage.addListener(function (msg) {
-        console.debug('Message received: ' + msg)
+        console.log('Message received: ' + msg)
     })
 }
 
