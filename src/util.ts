@@ -43,12 +43,15 @@ export const clearHistoryMessage: SearchReplaceStorageMessage = {
     actions: { clearHistory: true },
 }
 
-function getInputElements(document: Document, visibleOnly?: boolean): (HTMLInputElement | HTMLTextAreaElement)[] {
+export function getInputElements(
+    document: Document,
+    visibleOnly?: boolean
+): (HTMLInputElement | HTMLTextAreaElement)[] {
     const inputs = Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea'))
     return visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
 }
 
-function getIframeElements(document: Document): HTMLIFrameElement[] {
+export function getIframeElements(document: Document): HTMLIFrameElement[] {
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe'))
 }
 
@@ -111,13 +114,16 @@ export function getSearchOccurrences(
 }
 
 export function elementIsVisible(element: HTMLElement): boolean {
-    const styleVisible = element.style.display !== 'none'
-    if (element.nodeName === 'INPUT') {
-        const inputElement = element as HTMLInputElement
-        return inputElement.type !== 'hidden' && styleVisible
-    } else {
-        return styleVisible
+    if (element && 'style' in element) {
+        const styleVisible = element.style.display !== 'none'
+        if (element.nodeName === 'INPUT') {
+            const inputElement = element as HTMLInputElement
+            return inputElement.type !== 'hidden' && styleVisible
+        } else {
+            return styleVisible
+        }
     }
+    return false
 }
 
 export function inIframe() {
