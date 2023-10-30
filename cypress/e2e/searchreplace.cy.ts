@@ -27,14 +27,14 @@ describe('Search Replace ', () => {
     it('counts the correct number of occurrences', () => {
         cy.document().then((document) => {
             const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, false)
-            expect(occurences).to.equal(6)
+            expect(occurences).to.equal(8)
         })
     })
 
     it('counts the correct number of visible occurrences', () => {
         cy.document().then((document) => {
             const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, true)
-            expect(occurences).to.equal(5)
+            expect(occurences).to.equal(7)
         })
     })
 
@@ -48,14 +48,14 @@ describe('Search Replace ', () => {
     it('counts the correct number of occurrences for inputs only', () => {
         cy.document().then((document) => {
             const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, false, true)
-            expect(occurences).to.equal(4)
+            expect(occurences).to.equal(5)
         })
     })
 
     it('counts the correct number of occurrences for visible inputs only', () => {
         cy.document().then((document) => {
             const occurences = getSearchOccurrences(document, SEARCHPATTERNGLOBAL, true, true)
-            expect(occurences).to.equal(3)
+            expect(occurences).to.equal(4)
         })
     })
 
