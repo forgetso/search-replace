@@ -48,7 +48,10 @@ function getInputElements(document: Document, visibleOnly?: boolean): (HTMLInput
     return visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
 }
 
-//TODO fix this spaghetti
+function getIframeElements(document: Document): HTMLIFrameElement[] {
+    return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe'))
+}
+
 export function getSearchOccurrences(
     document: Document,
     searchPattern: RegExp,
@@ -58,53 +61,49 @@ export function getSearchOccurrences(
 ): number {
     let matches
     let iframeMatches = 0
-    console.log('inputFieldsOnly', inputFieldsOnly, 'visibleOnly', visibleOnly)
     if (visibleOnly && !inputFieldsOnly) {
-        console.log(
-            'looking for visible only, but not visible input fields only... visible anything. Search pattern: ',
-            searchPattern
-        )
+        // Get visible matches only, anywhere on the page
         matches = document.body.innerText.match(searchPattern) || []
         const inputs = getInputElements(document, visibleOnly)
         const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
-        console.log('searching in an iframe', iframe)
-        if (!iframe) {
-            const iframes = Array.from(document.querySelectorAll('iframe'))
-            console.log(iframes.length, iframes)
-            iframeMatches = iframes
-                .map((iframe) => {
-                    try {
-                        console.log('checking in iframe')
-                        return getSearchOccurrences(
-                            iframe.contentDocument!,
-                            searchPattern,
-                            visibleOnly,
-                            inputFieldsOnly,
-                            true
-                        )
-                    } catch (e) {
-                        return 0
-                    }
-                })
-                .reduce((a, b) => a + b, 0)
-        }
-        console.log('matches', matches)
-        console.log('inputMatches', inputMatches)
+
         // combine the matches from the body and the inputs and remove empty matches
-        // if (inputFieldsOnly) {
-        //     matches = inputMatches.filter((match) => match.length > 0).flat()
-        // } else {
         matches = [...matches, ...inputMatches].filter((match) => match.length > 0).flat()
-        //}
     } else if (inputFieldsOnly) {
+        // Get matches in input fields only, visible or hidden, depending on `visibleOnly`
         const inputs = getInputElements(document, visibleOnly)
         const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
         matches = inputMatches.filter((match) => match.length > 0).flat()
     } else {
+        // Get matches anywhere in the page, visible or not
         matches = Array.from(document.body.innerHTML.match(searchPattern) || [])
     }
+
+    // Now check in any iframes by calling this function again, summing the total number of matches from each iframe
+    const iframes = getIframeElements(document)
+    if (!iframe) {
+        iframeMatches = iframes
+            .map((iframe) => {
+                try {
+                    return getSearchOccurrences(
+                        iframe.contentDocument!,
+                        searchPattern,
+                        visibleOnly,
+                        inputFieldsOnly,
+                        true
+                    )
+                } catch (e) {
+                    return 0
+                }
+            })
+            .reduce((a, b) => a + b, 0)
+    }
+
     let occurences = 0
     if (matches) {
+        console.debug(
+            `Matches ${matches.length}, Iframe matches: ${iframeMatches}, Total: ${matches.length + iframeMatches}`
+        )
         occurences = matches.length + iframeMatches
     }
 
@@ -112,9 +111,7 @@ export function getSearchOccurrences(
 }
 
 export function elementIsVisible(element: HTMLElement): boolean {
-    console.log('element', element.nodeName)
     const styleVisible = element.style.display !== 'none'
-
     if (element.nodeName === 'INPUT') {
         const inputElement = element as HTMLInputElement
         return inputElement.type !== 'hidden' && styleVisible
