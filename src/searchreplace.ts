@@ -8,10 +8,11 @@ import { getFlags, getSearchPattern } from './regex'
 function replaceInInnerHTML(element: HTMLElement, searchPattern: RegExp, replaceTerm: string) {
     const searchStr = element.innerHTML
     element.innerHTML = searchStr.replace(searchPattern, replaceTerm)
+    element.dispatchEvent(new Event('input', { bubbles: true }))
     return !(element.innerHTML === searchStr)
 }
 
-function setNativeValue(element, value) {
+function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
     const valueFn = Object.getOwnPropertyDescriptor(element, 'value')
     let valueSetter: ((v: any) => void) | undefined
     let prototypeValueSetter: ((v: any) => void) | undefined
@@ -233,7 +234,6 @@ function replaceHTMLInIframes(
         if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
             try {
                 const content = iframe.contentDocument?.body as HTMLBodyElement
-                console.log('iframe.body', content)
                 if (visibleOnly) {
                     replaced = replaceVisibleOnly(document, [content], searchPattern, replaceTerm, flags)
                 } else {
@@ -307,9 +307,12 @@ async function cmsEditor(
     let replaced = false
     try {
         if (richTextEditor.container && richTextEditor.container.iframe) {
-            const container = <HTMLIFrameElement>(
-                document.querySelector(richTextEditor.container.value)?.querySelector('iframe')
-            )
+            const containerOuter = document.querySelector(richTextEditor.container.value)
+            // if container is an iframe use it, otherwise search inside for an iframe
+            const container: HTMLIFrameElement | null | undefined =
+                containerOuter && containerOuter?.tagName === 'IFRAME'
+                    ? <HTMLIFrameElement>containerOuter
+                    : <HTMLIFrameElement>containerOuter?.querySelector('iframe')
             const editor: HTMLElement | null | undefined = container?.contentDocument?.querySelector(
                 richTextEditor.editor.value
             )
@@ -319,11 +322,7 @@ async function cmsEditor(
         } else {
             const editor = <HTMLElement>document.querySelector(richTextEditor.editor.value)
             const initialText = editor.textContent || ''
-            console.log('initial Text', initialText)
-            console.log('inner Text', editor.innerText)
-            console.log('inner HTML', editor.innerHTML)
             const newText = initialText.replace(searchPattern, replaceTerm)
-            console.log('newText', newText)
             await replaceInContentEditableElement(editor, initialText, newText)
             replaced = initialText !== newText
         }
@@ -344,12 +343,9 @@ async function replaceInContentEditableElement(
     return new Promise((resolve) => {
         // select the content editable area
         element.dispatchEvent(new FocusEvent('focus', { bubbles: true }))
-        console.log('element.textContent', element.textContent)
         if (element.innerText === element.innerHTML) {
-            console.log('set textContent in element', element)
             element.textContent = replacementText
         } else {
-            console.log('replacing', initialText, 'in', element.innerHTML, 'with', replacementText)
             element.innerHTML = element.innerHTML.replace(initialText, replacementText)
         }
 
@@ -381,12 +377,10 @@ async function replaceInCMSEditors(
     for (const richTextEditor of RICH_TEXT_EDITORS) {
         if (richTextEditor.container) {
             if (document.querySelectorAll(richTextEditor.container.value).length) {
-                console.log('Replacing in rich text editor')
                 replaced = await cmsEditor(document, searchPattern, replaceTerm, flags, richTextEditor)
             }
         } else {
             if (document.querySelectorAll(richTextEditor.editor.value).length) {
-                console.log('Replacing in rich text editor')
                 replaced = await cmsEditor(document, searchPattern, replaceTerm, flags, richTextEditor)
             }
         }
@@ -463,7 +457,6 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             globalFlags,
             instance.options.wholeWord
         )
-        console.log(`instance ${JSON.stringify(instance, null, 4)}`)
         if (action === 'searchReplace') {
             sessionStorage.setItem('searchTerm', instance.searchTerm)
             sessionStorage.setItem('replaceTerm', instance.replaceTerm)
