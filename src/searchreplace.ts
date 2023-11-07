@@ -5,13 +5,6 @@ import { getHints } from './hints'
 import { ELEMENT_FILTER, INPUT_TEXTAREA_FILTER, RICH_TEXT_EDITORS } from './constants'
 import { getFlags, getSearchPattern } from './regex'
 
-function replaceInInnerHTML(element: HTMLElement, searchPattern: RegExp, replaceTerm: string) {
-    const searchStr = element.innerHTML
-    element.innerHTML = searchStr.replace(searchPattern, replaceTerm)
-    element.dispatchEvent(new Event('input', { bubbles: true }))
-    return !(element.innerHTML === searchStr)
-}
-
 function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
     const valueFn = Object.getOwnPropertyDescriptor(element, 'value')
     let valueSetter: ((v: any) => void) | undefined
@@ -297,34 +290,40 @@ function replaceVisibleOnly(
 
 // Custom Functions
 
-async function cmsEditor(
-    document: Document,
+async function replaceInEditorContainers(
     searchPattern: RegExp,
     replaceTerm: string,
     flags: string,
-    richTextEditor: RichTextEditor
+    richTextEditor: RichTextEditor,
+    containers: (Element | Document)[]
 ): Promise<boolean> {
     let replaced = false
     try {
-        if (richTextEditor.container && richTextEditor.container.iframe) {
-            const containerOuter = document.querySelector(richTextEditor.container.value)
-            // if container is an iframe use it, otherwise search inside for an iframe
-            const container: HTMLIFrameElement | null | undefined =
-                containerOuter && containerOuter?.tagName === 'IFRAME'
-                    ? <HTMLIFrameElement>containerOuter
-                    : <HTMLIFrameElement>containerOuter?.querySelector('iframe')
-            const editor: HTMLElement | null | undefined = container?.contentDocument?.querySelector(
-                richTextEditor.editor.value
-            )
-            if (editor) {
-                replaced = replaceInInnerHTML(editor, searchPattern, replaceTerm)
+        // Loop to select editor elements inside their containers
+        for (const containerOuter of containers) {
+            let container = containerOuter
+
+            if ('contentDocument' in containerOuter && containerOuter.contentDocument !== null) {
+                // container is an iframe use its contentDocument
+                container = <Document>containerOuter.contentDocument
+            } else if (
+                richTextEditor.container &&
+                richTextEditor.container.iframe &&
+                'tagName' in containerOuter &&
+                containerOuter?.tagName !== 'IFRAME'
+            ) {
+                // container contains an iframe so use that iframe and its contentDocument
+                const innerIframe = containerOuter?.querySelector('iframe')
+                if (innerIframe !== null && innerIframe.contentDocument !== null) {
+                    container = innerIframe.contentDocument
+                }
             }
-        } else {
-            const editor = <HTMLElement>document.querySelector(richTextEditor.editor.value)
-            const initialText = editor.textContent || ''
-            const newText = initialText.replace(searchPattern, replaceTerm)
-            await replaceInContentEditableElement(editor, initialText, newText)
-            replaced = initialText !== newText
+
+            const editors = Array.from(container.querySelectorAll(richTextEditor.editor.value.join(',')) || [])
+            replaced = await replaceInEditors(searchPattern, replaceTerm, editors, flags)
+            if (replaceNextOnly(flags) && replaced) {
+                return replaced
+            }
         }
     } catch (err) {
         console.error(err)
@@ -334,54 +333,75 @@ async function cmsEditor(
     return replaced
 }
 
-// taken from https://stackoverflow.com/a/69656905/1178971
-async function replaceInContentEditableElement(
-    element: HTMLElement,
-    initialText: string,
-    replacementText: string
+async function replaceInEditors(
+    searchPattern: RegExp,
+    replaceTerm: string,
+    editors: Element[],
+    flags: string
 ): Promise<boolean> {
-    return new Promise((resolve) => {
-        // select the content editable area
-        element.dispatchEvent(new FocusEvent('focus', { bubbles: true }))
-        if (element.innerText === element.innerHTML) {
-            element.textContent = replacementText
-        } else {
-            element.innerHTML = element.innerHTML.replace(initialText, replacementText)
+    let replaced = false
+    for (const editor of editors) {
+        const newReplaced = replaceInInnerHTML(editor as HTMLElement, searchPattern, replaceTerm)
+        replaced = replaced || newReplaced
+        if (replaceNextOnly(flags) && replaced) {
+            return replaced
         }
-
-        element.dispatchEvent(new Event('input', { bubbles: true }))
-
-        resolve(element.innerText !== initialText)
-    })
+    }
+    return replaced
 }
 
-function selectElementContents(window: Window, el: HTMLElement) {
-    const range = window.document.createRange()
-    range.selectNodeContents(el)
-    const sel = window.getSelection()
-    if (sel) {
-        sel.removeAllRanges()
-        sel.addRange(range)
+function replaceInInnerHTML(element: HTMLElement | Element, searchPattern: RegExp, replaceTerm: string): boolean {
+    // select the content editable area
+    element.dispatchEvent(new FocusEvent('focus', { bubbles: true }))
+    const initialText = getTextContent(element)
+    const initialHTML = element.innerHTML
+    if ('innerText' in element && element.innerText === element.innerHTML) {
+        element.textContent = element.innerText.replace(searchPattern, replaceTerm)
+    } else {
+        element.innerHTML = element.innerHTML.replace(searchPattern, replaceTerm)
     }
+    element.dispatchEvent(new Event('input', { bubbles: true }))
+    return ('innerText' in element && element.innerText !== initialText) || element.innerHTML !== initialHTML
+}
+
+function getTextContent(element: HTMLElement | Element): string {
+    if (element.textContent) {
+        return element.textContent
+    } else if ('innerText' in element && element.innerText) {
+        return element.innerText
+    }
+    return ''
 }
 
 async function replaceInCMSEditors(
     document: Document,
     searchPattern: RegExp,
     replaceTerm: string,
-    flags: string,
-    visibleOnly: boolean
+    flags: string
 ): Promise<boolean> {
     let replaced = false
     // replacement functions for pages with text editors
     for (const richTextEditor of RICH_TEXT_EDITORS) {
         if (richTextEditor.container) {
-            if (document.querySelectorAll(richTextEditor.container.value).length) {
-                replaced = await cmsEditor(document, searchPattern, replaceTerm, flags, richTextEditor)
+            const containers = Array.from(document.querySelectorAll(richTextEditor.container.value.join(',')))
+            if (containers.length) {
+                replaced = await replaceInEditorContainers(
+                    searchPattern,
+                    replaceTerm,
+                    flags,
+                    richTextEditor,
+                    containers
+                )
+                if (replaceNextOnly(flags) && replaced) {
+                    return replaced
+                }
             }
         } else {
-            if (document.querySelectorAll(richTextEditor.editor.value).length) {
-                replaced = await cmsEditor(document, searchPattern, replaceTerm, flags, richTextEditor)
+            const editors = Array.from(document.querySelectorAll(richTextEditor.editor.value.join(',')))
+            replaced = await replaceInEditors(searchPattern, replaceTerm, editors, flags)
+            document.body.dispatchEvent(new Event('input', { bubbles: true }))
+            if (replaceNextOnly(flags) && replaced) {
+                return replaced
             }
         }
     }
@@ -404,7 +424,7 @@ export async function searchReplace(
     let replaced = false
 
     // replacement functions for pages with text editors
-    replaced = await replaceInCMSEditors(document, searchPattern, replaceTerm, flags, visibleOnly)
+    replaced = await replaceInCMSEditors(document, searchPattern, replaceTerm, flags)
 
     if (replaceNextOnly(flags) && replaced) {
         return replaced
@@ -415,14 +435,7 @@ export async function searchReplace(
     const iframes = getIframeElements(document)
     for (const iframe of iframes) {
         if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
-            const richTextEditors = RICH_TEXT_EDITORS.filter((editor) => editor.container?.iframe)
-            replaced = await replaceInCMSEditors(
-                iframe.contentDocument!,
-                searchPattern,
-                replaceTerm,
-                flags,
-                visibleOnly
-            )
+            replaced = await replaceInCMSEditors(iframe.contentDocument!, searchPattern, replaceTerm, flags)
             if (replaceNextOnly(flags) && replaced) {
                 return replaced
             }
