@@ -70,7 +70,7 @@ export enum SelectorType {
 
 export interface Selector {
     type: SelectorType
-    value: string
+    value: string[]
     iframe: boolean
 }
 
