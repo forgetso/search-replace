@@ -20,7 +20,7 @@ View a video of it in action here: http://www.youtube.com/watch?v=tf0D8RUdwkI
 
 ## Issues
 
-Please report issues [here](https://github.com/forgetso/search-replace/issues) and include the following information:
+Please report issues [here](https://github.com/forgetso/search-replace/issues/new/choose) and include the following information:
 
 - Version
 - Web page
