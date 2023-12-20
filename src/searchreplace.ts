@@ -258,11 +258,14 @@ function replaceHTML(
         }
     } else {
         searchReplaceResult = replaceHTMLInIframes(config, document, iframes, searchReplaceResult)
+        console.log('CONTENT: searchReplaceResult after replaceHTMLInIframes', JSON.stringify(searchReplaceResult))
         if (config.visibleOnly) {
             searchReplaceResult = replaceVisibleOnly(config, document, otherElementsArr, searchReplaceResult)
+            console.log('CONTENT: searchReplaceResult after replaceVisibleOnly', JSON.stringify(searchReplaceResult))
         } else {
             // if there are iframes we take a cautious approach TODO - make this properly replace HTML
             searchReplaceResult = replaceHTMLInElements(config, document, otherElementsArr, searchReplaceResult)
+            console.log('CONTENT: searchReplaceResult after replaceHTMLInElements', JSON.stringify(searchReplaceResult))
         }
     }
     return searchReplaceResult
@@ -299,15 +302,26 @@ function replaceHTMLInElements(
 ): SearchReplaceResult {
     // replaces in inner html per element in the document
     const filtered = Array.from(elements).filter((el) => !el.tagName.match(ELEMENT_FILTER))
+    let elementsSearched: HTMLElement[] = []
     for (const element of filtered) {
-        searchReplaceResult = replaceInInnerHTML(config, element, searchReplaceResult)
-        if (element.tagName.match(INPUT_TEXTAREA_FILTER)) {
-            const ko = usesKnockout(document)
-            searchReplaceResult = replaceInInput(config, document, element as HTMLInputElement, ko, searchReplaceResult)
-        }
-        //Replace Next should only match once
-        if (config.replaceNext && searchReplaceResult.replaced) {
-            config.replace = false
+        if (element.parentElement && !elementsSearched.includes(element.parentElement)) {
+            const result = replaceInInnerHTML(config, element, searchReplaceResult)
+            elementsSearched = result.elementsSearched
+            searchReplaceResult = result.searchReplaceResult
+            if (element.tagName.match(INPUT_TEXTAREA_FILTER)) {
+                const ko = usesKnockout(document)
+                searchReplaceResult = replaceInInput(
+                    config,
+                    document,
+                    element as HTMLInputElement,
+                    ko,
+                    searchReplaceResult
+                )
+            }
+            //Replace Next should only match once
+            if (config.replaceNext && searchReplaceResult.replaced) {
+                config.replace = false
+            }
         }
     }
     return searchReplaceResult
@@ -408,7 +422,8 @@ async function replaceInEditors(
     searchReplaceResult: SearchReplaceResult
 ): Promise<SearchReplaceResult> {
     for (const editor of editors) {
-        searchReplaceResult = replaceInInnerHTML(config, editor as HTMLElement, searchReplaceResult)
+        const result = replaceInInnerHTML(config, editor as HTMLElement, searchReplaceResult)
+        searchReplaceResult = result.searchReplaceResult
         if (config.replaceNext && searchReplaceResult.replaced) {
             config.replace = false
         }
@@ -419,10 +434,12 @@ async function replaceInEditors(
 function replaceInInnerHTML(
     config: SearchReplaceConfig,
     element: HTMLElement | Element,
-    searchReplaceResult: SearchReplaceResult
-): SearchReplaceResult {
+    searchReplaceResult: SearchReplaceResult,
+    elementsSearched: HTMLElement[] = []
+): { searchReplaceResult: SearchReplaceResult; elementsSearched: HTMLElement[] } {
     let oldValue = element.innerHTML
     const occurrences = oldValue.match(config.searchPattern)
+    elementsSearched.push(element as HTMLElement)
     if (occurrences) {
         searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
         // select the content editable area
@@ -434,7 +451,7 @@ function replaceInInnerHTML(
             newValue = oldValue
             selector = 'textContent'
         }
-        newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
+        newValue = newValue.replace(config.searchPattern, config.replaceTerm)
         if (config.replace) {
             element[selector] = newValue
         }
@@ -445,7 +462,7 @@ function replaceInInnerHTML(
             searchReplaceResult.replaced = true
         }
     }
-    return searchReplaceResult
+    return { searchReplaceResult, elementsSearched }
 }
 
 function getTextContent(element: HTMLElement | Element): string {
@@ -578,9 +595,8 @@ export async function searchReplace(
     return searchReplaceResult
 }
 
-const port = tabConnect()
-
 if (chrome && chrome.runtime && chrome.runtime.onMessage) {
+    const port = tabConnect()
     chrome.runtime.onMessage.addListener(function (msg: SearchReplaceContentMessage, sender, sendResponse) {
         console.log('CONTENT: received message with action', msg.action)
         const instance = msg.instance

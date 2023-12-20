@@ -1,6 +1,6 @@
 {
   "name": "search_and_replace",
-  "version":"1.8.0",
+  "version": "1.8.0",
   "resolutions": {
     "author": "Chris Taylor <cjtaylor38@gmail.com>"
   },
@@ -25,7 +25,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "copy-webpack-plugin": "^9.0.1",
-    "cypress": "^13.0.0",
+    "cypress": "^13.6.1",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-absolute-imports-only": "^1.0.1",

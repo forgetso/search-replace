@@ -1,7 +1,7 @@
 import { RichTextEditor, SelectorType } from './types'
 
-export const ELEMENT_FILTER = new RegExp('(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)')
-export const INPUT_TEXTAREA_FILTER = new RegExp('(INPUT|TEXTAREA)')
+export const ELEMENT_FILTER = /(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)/
+export const INPUT_TEXTAREA_FILTER = /(INPUT|TEXTAREA)/
 export const GMAIL_APPLICATION_NAME = 'Gmail'
 export const GOOGLE_MAIL_DOMAIN = 'mail.google.com'
 export const WORDPRESS_ADMIN_CLASS = 'wp-admin'

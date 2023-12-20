@@ -1,8 +1,4 @@
-import {
-    LangFile,
-    LangList, SearchReplaceInstance,
-    TranslationProxy,
-} from './types'
+import { LangFile, LangList, SearchReplaceInstance, TranslationProxy } from './types'
 
 export const cyrb53 = (str, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -44,67 +40,6 @@ export function getInputElements(
 
 export function getIframeElements(document: Document): HTMLIFrameElement[] {
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe'))
-}
-
-export function getSearchOccurrences(
-    document: Document,
-    searchPattern: RegExp,
-    visibleOnly: boolean,
-    inputFieldsOnly?: boolean,
-    iframe?: boolean
-): number {
-    let matches
-    let iframeMatches = 0
-    if (visibleOnly && !inputFieldsOnly) {
-        // Get visible matches only, anywhere on the page
-        matches = document.body.innerText.match(searchPattern) || []
-        const inputs = getInputElements(document, visibleOnly)
-        const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
-
-        // combine the matches from the body and the inputs and remove empty matches
-        matches = [...matches, ...inputMatches].filter((match) => match.length > 0).flat()
-    } else if (inputFieldsOnly) {
-        // Get matches in input fields only, visible or hidden, depending on `visibleOnly`
-        const inputs = getInputElements(document, visibleOnly)
-        const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
-        matches = inputMatches.filter((match) => match.length > 0).flat()
-    } else {
-        // Get matches anywhere in the page, visible or not
-        matches = Array.from(document.body.innerHTML.match(searchPattern) || [])
-    }
-
-    // Now check in any iframes by calling this function again, summing the total number of matches from each iframe
-    const iframes = getIframeElements(document)
-    if (!iframe) {
-        console.log('not in iframe')
-        iframeMatches = iframes
-            .map((iframe) => {
-                try {
-                    return getSearchOccurrences(
-                        iframe.contentDocument!,
-                        searchPattern,
-                        visibleOnly,
-                        inputFieldsOnly,
-                        true
-                    )
-                } catch (e) {
-                    return 0
-                }
-            })
-            .reduce((a, b) => a + b, 0)
-    } else {
-        console.log('in iframe')
-    }
-
-    let occurences = 0
-    if (matches) {
-        console.debug(
-            `Matches ${matches.length}, Iframe matches: ${iframeMatches}, Total: ${matches.length + iframeMatches}`
-        )
-        occurences = matches.length + iframeMatches
-    }
-
-    return occurences
 }
 
 export function elementIsVisible(element: HTMLElement): boolean {
