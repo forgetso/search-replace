@@ -7,14 +7,12 @@ import {
     SearchReplaceCommonActions,
     SearchReplaceConfig,
     SearchReplaceContentMessage,
-    SearchReplaceLocalStorageResultKey,
     SearchReplaceResponse,
     SearchReplaceResult,
 } from './types/index'
 import { elementIsVisible, getIframeElements, getInputElements, inIframe, tabConnect } from './util'
 import { getFlags, getSearchPattern } from './regex'
 import { getHints } from './hints'
-import { removeLocalStorage } from './localStorage'
 
 // are we in an iframe?
 const isIframe = inIframe()
@@ -588,8 +586,6 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
         const instance = msg.instance
         const replaceAll = msg.action === 'count' ? true : instance.options.replaceAll
         const action = msg.action
-        const localStorageKey: SearchReplaceLocalStorageResultKey = `searchReplace-${window.location.host}`
-        removeLocalStorage(localStorageKey)
         //Setup event listeners to communicate between iframes and parent
         searchReplace(
             action,
