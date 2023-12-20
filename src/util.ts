@@ -1,13 +1,8 @@
 import {
     LangFile,
-    LangList,
-    RegexFlags,
-    SavedSearchReplaceInstance,
-    SearchReplaceStorageMessage,
+    LangList, SearchReplaceInstance,
     TranslationProxy,
 } from './types'
-import { Simulate } from 'react-dom/test-utils'
-import input = Simulate.input
 
 export const cyrb53 = (str, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -25,22 +20,18 @@ export const cyrb53 = (str, seed = 0) => {
     return 4294967296 * (2097151 & h2) + (h1 >>> 0)
 }
 
-export function getSavedInstanceId(instance: SavedSearchReplaceInstance) {
-    return cyrb53(`${instance.url}${instance.searchTerm}${instance.replaceTerm}${JSON.stringify(instance.options)}`)
+export function getInstanceId(instance: SearchReplaceInstance, useUrl: boolean) {
+    return cyrb53(
+        `${useUrl && instance.url ? instance.url : ''}${instance.searchTerm}${instance.replaceTerm}${JSON.stringify(
+            instance.options
+        )}`
+    )
 }
 
 export function tabConnect() {
     return chrome.runtime.connect(null!, {
         name: 'Search and Replace',
     })
-}
-
-export const recoverMessage: SearchReplaceStorageMessage = {
-    actions: { recover: true },
-}
-
-export const clearHistoryMessage: SearchReplaceStorageMessage = {
-    actions: { clearHistory: true },
 }
 
 export function getInputElements(
@@ -85,6 +76,7 @@ export function getSearchOccurrences(
     // Now check in any iframes by calling this function again, summing the total number of matches from each iframe
     const iframes = getIframeElements(document)
     if (!iframe) {
+        console.log('not in iframe')
         iframeMatches = iframes
             .map((iframe) => {
                 try {
@@ -100,6 +92,8 @@ export function getSearchOccurrences(
                 }
             })
             .reduce((a, b) => a + b, 0)
+    } else {
+        console.log('in iframe')
     }
 
     let occurences = 0
@@ -185,7 +179,7 @@ export function localizeElements(translationData: LangFile) {
         const localeKey = element.getAttribute('data-locale')
 
         if (localeKey) {
-            let innerString
+            let innerString: string
             if (translationData.data[localeKey]) {
                 innerString = translationData.data[localeKey].message
             } else if (translationData.dataFallback[localeKey]) {

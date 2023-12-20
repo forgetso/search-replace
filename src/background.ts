@@ -2,25 +2,23 @@
 import {
     LangList,
     SavedInstances,
+    SavedSearchReplaceInstance,
+    SearchReplaceBackgroundMessage,
+    SearchReplaceContentMessage,
     SearchReplaceInstance,
-    SearchReplaceMessage,
     SearchReplacePopupStorage,
+    SearchReplaceResponse, SearchReplaceResult,
     SearchReplaceStorageItems,
-    SearchReplaceStorageMessage,
 } from './types'
-import { getSavedInstanceId } from './util'
+import {getInstanceId} from './util'
+import Port = chrome.runtime.Port;
 
-function clearHistory(storage: SearchReplaceStorageItems, port: chrome.runtime.Port) {
-    storage.history = []
-    const searchReplaceStorage: SearchReplacePopupStorage = {
-        storage,
-    }
-    chrome.storage.local.set(searchReplaceStorage, function () {
-        port.postMessage('History cleared')
-    })
-}
-
-function saveStorage(instance, history, savedInstances, port) {
+function saveStorage(
+    instance: SearchReplaceInstance,
+    history: SearchReplaceInstance[],
+    savedInstances: SavedInstances,
+    port: Port
+) {
     // always store the instance and history
     const newStorage: SearchReplacePopupStorage = {
         storage: {
@@ -34,56 +32,118 @@ function saveStorage(instance, history, savedInstances, port) {
     })
 }
 
-function getNewSavedInstances(
-    msg: SearchReplaceStorageMessage,
-    instance: SearchReplaceInstance,
-    savedInstances: SavedInstances,
-    url: string
+function saveSearchReplaceResponse(
+    response: SearchReplaceResponse
 ) {
-    if (msg.actions.save && instance.options.save) {
-        const instanceId = msg['instanceId']
-        const newInstance = { ...instance, url }
-        const newInstanceId = getSavedInstanceId(newInstance)
-        savedInstances[newInstanceId] = newInstance
-        if (instanceId && instanceId !== newInstanceId) {
-            delete savedInstances[instanceId]
-        }
-    } else if (msg.actions.delete) {
-        const instanceId = msg['instanceId']
-        delete savedInstances[instanceId]
+    const id = (response.instance.instanceId || getInstanceId({...response.instance, url:response.location}, true)).toString()
+    const key = `savedResponse-${id}`
+    chrome.storage.local.set({[key]: JSON.stringify(response)}).then(r => console.log(r))
+}
+
+function getSearchReplaceResponse(instanceId: number): Promise<SearchReplaceResponse> {
+    const key = `savedResponse-${instanceId}`
+    return chrome.storage.local.get(key) as Promise<SearchReplaceResponse>
+
+}
+
+function mergeSearchReplaceResults(a: SearchReplaceResult, b: SearchReplaceResult): SearchReplaceResult {
+    return {
+        count: {
+            original: a.count.original + b.count.original,
+            replaced: a.count.replaced + b.count.replaced,
+        },
+        replaced: a.replaced || b.replaced
+
     }
-    return savedInstances
+}
+
+async function setupStorage(msg: SearchReplaceBackgroundMessage) {
+    // Get the various stored values
+    const { storage } = (await chrome.storage.local.get(['storage'])) as SearchReplacePopupStorage
+    console.log('BACKGROUND: saved storage is', storage)
+
+    const instance: SearchReplaceInstance = msg.storage ? msg.storage.instance : storage.instance
+    console.log('BACKGROUND: instance is: ', instance)
+    // Allows the edit rules page to not have to send back history
+    const history: SearchReplaceInstance[] = msg.storage
+        ? msg.storage.history && msg.storage.history.length
+            ? msg.storage.history
+            : storage.history
+        : storage.history
+    console.log('BACKGROUND: history is: ', history)
+    const url = msg.url
+    const savedInstances: SavedInstances = storage.saved || {}
+    console.log('BACKGROUND: SavedInstances is: ', savedInstances)
+
+    return { instance, history, url, savedInstances, storage }
 }
 
 chrome.runtime.onConnect.addListener(function (port) {
-    port.onMessage.addListener(async function (msg: SearchReplaceStorageMessage) {
-        // Get the various stored values
-        const { storage } =
-            ((await chrome.storage.local.get(['storage'])) as SearchReplacePopupStorage) || getDefaultStorage()
-        const instance: SearchReplaceInstance = msg.storage ? msg.storage.instance : storage.instance
-        // Allows the edit rules page to not have to send back history
-        const history: SearchReplaceInstance[] = msg.storage
-            ? msg.storage.history && msg.storage.history.length
-                ? msg.storage.history
-                : storage.history
-            : storage.history
-        console.log('Background script, history is: ', history)
-        const url = msg.url
-        let savedInstances: SavedInstances = storage.saved || {}
-        console.log('Backgroung script, msg receieved: ', msg)
-        if (msg.actions.recover) {
-            port.postMessage(storage as SearchReplaceStorageItems)
-            // We do not want to save anything when recovering storage
-            return
-        } else if (msg.actions.clearHistory) {
-            clearHistory(storage, port)
-        } else {
-            if (url) {
-                savedInstances = getNewSavedInstances(msg, instance, savedInstances, url)
+    port.onMessage.addListener(async function (msg: SearchReplaceBackgroundMessage) {
+        console.log('BACKGROUND: message received: ', msg)
+        if (msg.action) {
+            const storage = await setupStorage(msg)
+            const {instance, history, url} = storage
+            const savedInstances = storage.savedInstances
+
+            if (msg.action === 'recover') {
+                // Recovering search terms from the storage to display in the popup
+                port.postMessage(storage as SearchReplaceStorageItems)
+                // We do not want to save anything when recovering storage
+                return
+            } else if (msg.action === 'clearHistory') {
+                // Clearing the history in the popup
+                storage.history = []
+                saveStorage(instance, history, savedInstances, port)
+            } else if (msg.action === 'save' && instance.options.save && url) {
+                // Saving a SearchReplaceInstance for use on subsequent page loads
+                const instanceId = msg['instanceId']
+                const newInstance: SavedSearchReplaceInstance = {...instance, url}
+                const newInstanceId = getInstanceId(newInstance, true)
+                savedInstances[newInstanceId] = newInstance
+                if (instanceId && instanceId !== newInstanceId) {
+                    delete savedInstances[instanceId]
+                }
+                saveStorage(instance, history, savedInstances, port)
+            } else if (msg.action === 'delete') {
+                // Deleting a saved SearchReplaceInstance
+                const instanceId = msg['instanceId']
+                if (instanceId) delete savedInstances[instanceId]
+                saveStorage(instance, history, savedInstances, port)
+            } else if (msg.action === 'store') {
+                // Store the instance and history in the storage
+                saveStorage(instance, history, savedInstances, port)
+            } else if (msg.action === 'count') {
+                console.log('BACKGROUND: count action received')
             }
-            saveStorage(instance, history, savedInstances, port)
         }
     })
+    port.onMessage.addListener(async function (msg: SearchReplaceResponse) {
+             if (msg.action === 'searchReplaceResponse') {
+                console.log('BACKGROUND: searchReplaceResponse action received')
+                if(!msg.inIframe && msg.iframes > 0) {
+                    saveSearchReplaceResponse(msg)
+                    await chrome.runtime.sendMessage(msg)
+                } else if(msg.inIframe && msg.instance.instanceId) {
+                    getSearchReplaceResponse(msg.instance.instanceId).then(previousResponse => {
+                        if (previousResponse) {
+
+                            msg.result = mergeSearchReplaceResults(msg.result, previousResponse.result)
+                            msg.iframes = msg.iframes - 1
+                            if (msg.iframes === 0) {
+                                chrome.storage.local.remove(`savedResponse-${msg.instance.instanceId}`)
+
+                            } else {
+                                saveSearchReplaceResponse(msg)
+                            }
+                            chrome.runtime.sendMessage(msg)
+                        }
+                    })
+                }
+
+            }
+        }
+    )
 })
 
 function getDefaultStorage(): SearchReplacePopupStorage {
@@ -129,14 +189,13 @@ chrome.runtime.onInstalled.addListener(function (details) {
         // Get the Chrome UI language and set it as the preferred language in sync storage (default: en)
         chrome.i18n.getAcceptLanguages(function (uiLanguage) {
             getAvailableLanguages().then((langList) => {
-                let initializeLang
-                initializeLang = 'en'
+                let initializeLang = 'en'
                 for (const lang of langList as LangList[]) {
                     if (uiLanguage[0] === lang.languageCode) {
                         initializeLang = lang.languageCode
                     }
                 }
-                console.log('Fist Installation, preferredLanguage:', initializeLang)
+                console.log('BACKGROUND:Fist Installation, preferredLanguage:', initializeLang)
                 chrome.storage.sync.set({ preferredLanguage: initializeLang })
             })
         })
@@ -144,12 +203,12 @@ chrome.runtime.onInstalled.addListener(function (details) {
 })
 
 chrome.tabs.onUpdated.addListener(async function (tabId, info) {
-    console.log('In background script tab load event listener')
+    console.log('BACKGROUND:In background script tab load event listener')
     if (info.status === 'complete') {
-        console.log('Tab load completed')
+        console.log('BACKGROUND:Tab load completed')
         // Get the saved instances
         chrome.storage.local.get(['storage'], async function (result) {
-            console.log('Got saved instances', JSON.stringify(result.storage.saved, null, 4))
+            console.log('BACKGROUND:Got saved instances', JSON.stringify(result.storage.saved, null, 4))
             //Send the saved instances to the content script
             const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
             if (tab && tab.id) {
@@ -176,13 +235,12 @@ chrome.tabs.onUpdated.addListener(async function (tabId, info) {
                 // TODO modify content script to accept multiple saved instances
                 if (orderedSavedInstances.length > 0) {
                     for (const savedInstance of orderedSavedInstances) {
-                        const message: SearchReplaceMessage = {
+                        const message: SearchReplaceContentMessage = {
                             action: 'searchReplace',
                             instance: savedInstance,
-                            history: [],
                             url: tab.url,
                         }
-                        chrome.tabs.sendMessage(tab.id, message)
+                        await chrome.tabs.sendMessage(tab.id, message)
                     }
                 }
             }

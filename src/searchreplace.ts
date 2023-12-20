@@ -1,9 +1,25 @@
 'use strict'
-import { RegexFlags, RichTextEditor, SearchReplaceMessage } from './types/index'
-import { elementIsVisible, getIframeElements, getInputElements, getSearchOccurrences, inIframe } from './util'
-import { getHints } from './hints'
+
 import { ELEMENT_FILTER, INPUT_TEXTAREA_FILTER, RICH_TEXT_EDITORS } from './constants'
+import {
+    RegexFlags,
+    RichTextEditor,
+    SearchReplaceCommonActions,
+    SearchReplaceConfig,
+    SearchReplaceContentMessage,
+    SearchReplaceLocalStorageResultKey,
+    SearchReplaceResponse,
+    SearchReplaceResult,
+} from './types/index'
+import { elementIsVisible, getIframeElements, getInputElements, inIframe, tabConnect } from './util'
 import { getFlags, getSearchPattern } from './regex'
+import { getHints } from './hints'
+import { removeLocalStorage } from './localStorage'
+
+// are we in an iframe?
+const isIframe = inIframe()
+// get all iframes
+const iframes = getIframeElements(window.document)
 
 function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
     const valueFn = Object.getOwnPropertyDescriptor(element, 'value')
@@ -27,80 +43,102 @@ function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: 
 }
 
 function replaceInInput(
+    config: SearchReplaceConfig,
     document: Document,
     input: HTMLInputElement | HTMLTextAreaElement,
-    searchPattern: RegExp,
-    replaceTerm: string,
-    usesKnockout: boolean
-): boolean {
-    if (input.value === undefined) {
-        return false
+    usesKnockout: boolean,
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
+    if (input.value !== undefined) {
+        const oldValue = input.value
+        const occurrences = oldValue.match(config.searchPattern)
+        if (occurrences) {
+            searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+            const newValue = input.value.replace(config.searchPattern, config.replaceTerm)
+
+            if (config.replace && oldValue !== newValue) {
+                input.focus()
+                setNativeValue(input, newValue)
+                searchReplaceResult.count.replaced++
+                searchReplaceResult.replaced = true
+
+                if (usesKnockout) {
+                    const knockoutValueChanger = getKnockoutValueChanger(input.id, newValue)
+                    document.documentElement.setAttribute('onreset', knockoutValueChanger)
+                    document.documentElement.dispatchEvent(new CustomEvent('reset'))
+                    document.documentElement.removeAttribute('onreset')
+                }
+
+                // https://stackoverflow.com/a/53797269/1178971
+                input.dispatchEvent(new Event('input', { bubbles: true }))
+
+                input.blur()
+            }
+        }
     }
-
-    const oldValue = input.value
-    const newValue = input.value.replace(searchPattern, replaceTerm)
-
-    if (oldValue === newValue) {
-        return false
-    }
-
-    input.focus()
-    setNativeValue(input, newValue)
-
-    if (usesKnockout) {
-        const knockoutValueChanger = getKnockoutValueChanger(input.id, newValue)
-        document.documentElement.setAttribute('onreset', knockoutValueChanger)
-        document.documentElement.dispatchEvent(new CustomEvent('reset'))
-        document.documentElement.removeAttribute('onreset')
-    }
-
-    // https://stackoverflow.com/a/53797269/1178971
-    input.dispatchEvent(new Event('input', { bubbles: true }))
-
-    input.blur()
-
-    return true
+    return searchReplaceResult
 }
 
 function replaceInnerText(
+    config: SearchReplaceConfig,
     document: Document,
     elements: HTMLElement[],
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string
-) {
-    let replaced = false
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
+    const elementsCounted: HTMLElement[] = []
     for (const element of elements) {
         if (element.innerText !== undefined) {
-            if (element.innerText.match(searchPattern)) {
-                replaced = replaceInTextNodes(document, element, searchPattern, replaceTerm, flags)
-                if (flags === RegexFlags.CaseInsensitive) {
-                    return replaced
+            const occurrences = element.innerText.match(config.searchPattern)
+
+            if (occurrences) {
+                console.log('CONTENT: occurrences', occurrences, element)
+                elementsCounted.push(element)
+
+                if (element.parentElement && !elementsCounted.includes(element.parentElement)) {
+                    searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+                    if (config.replace) {
+                        searchReplaceResult = replaceInTextNodes(config, document, element, searchReplaceResult)
+                    }
+                    if (config.replaceNext && searchReplaceResult.replaced) {
+                        config.replace = false
+                    }
                 }
             }
         }
     }
-    return replaced
+    return searchReplaceResult
 }
 
 function replaceInTextNodes(
+    config: SearchReplaceConfig,
     document: Document,
     element: HTMLElement,
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string
+    searchReplaceResult: SearchReplaceResult
 ) {
-    let replaced = false
     const textNodes = textNodesUnder(document, element)
+    const nodesReplaced: Node[] = []
     for (const node of textNodes) {
-        const oldValue = node.nodeValue
-        node.nodeValue = node.nodeValue!.replace(searchPattern, replaceTerm)
-        replaced = oldValue !== node.nodeValue
-        if (flags === RegexFlags.CaseInsensitive && replaced) {
-            return replaced
+        if (node.nodeValue) {
+            if (!node.parentNode || (node.parentNode && !nodesReplaced.includes(node.parentNode))) {
+                const oldValue = node.nodeValue
+                const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
+                if (oldValue !== newValue && config.replace) {
+                    node.nodeValue = newValue
+                    searchReplaceResult.count.replaced++
+                    searchReplaceResult.replaced = true
+                    nodesReplaced.push(node)
+                }
+                if (config.replaceNext && searchReplaceResult.replaced) {
+                    break
+                }
+            } else {
+                nodesReplaced.push(node)
+            }
+        } else {
+            nodesReplaced.push(node)
         }
     }
-    return replaced
+    return searchReplaceResult
 }
 
 function textNodesUnder(document: Document, element: Node) {
@@ -108,36 +146,56 @@ function textNodesUnder(document: Document, element: Node) {
     const nodes: Node[] = []
     const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null)
     while ((node = walk.nextNode())) {
-        if (node) {
+        if (node && node.nodeValue && !node.nodeName.match(ELEMENT_FILTER)) {
+            if (node.nextSibling && node.nextSibling.nodeName.match(ELEMENT_FILTER)) {
+                continue
+            }
+
             nodes.push(node)
         }
     }
     return nodes
 }
 
-function replaceHTMLInBody(body: HTMLBodyElement, searchPattern: RegExp, replaceTerm: string): boolean {
-    const searchStr = body.innerHTML
-    const replaced = body.innerHTML.replace(searchPattern, replaceTerm)
-    body.innerHTML = replaced
-    return !(searchStr === replaced)
+function replaceHTMLInBody(
+    config: SearchReplaceConfig,
+    body: HTMLBodyElement,
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
+    if (body) {
+        const oldValue = body.innerHTML
+        const occurrences = body.innerHTML.match(config.searchPattern)
+        console.log('CONTENT: occurrences', occurrences)
+        console.log('CONTENT: config.searchPattern', config.searchPattern)
+        if (occurrences) {
+            searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+
+            const newValue = body.innerHTML.replace(config.searchPattern, config.replaceTerm)
+
+            if (oldValue !== newValue && config.replace) {
+                body.innerHTML = newValue
+                searchReplaceResult.count.replaced++
+                searchReplaceResult.replaced = true
+            }
+        }
+    }
+    return searchReplaceResult
 }
 
 function replaceInInputs(
+    config: SearchReplaceConfig,
     document: Document,
     inputs: (HTMLInputElement | HTMLTextAreaElement)[],
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string
-): boolean {
-    let replaced = false
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
     const ko = usesKnockout(document)
     for (const input of inputs) {
-        replaced = replaceInInput(document, input, searchPattern, replaceTerm, ko)
-        if (flags === RegexFlags.CaseInsensitive && replaced) {
-            return replaced
+        searchReplaceResult = replaceInInput(config, document, input, ko, searchReplaceResult)
+        if (config.replaceNext && searchReplaceResult.replaced) {
+            config.replace = false
         }
     }
-    return replaced
+    return searchReplaceResult
 }
 
 function usesKnockout(document: Document): boolean {
@@ -157,147 +215,160 @@ function getKnockoutValueChanger(id: string, newValue: string): string {
 }
 
 function replaceInputFields(
+    config: SearchReplaceConfig,
     document: Document,
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string,
-    visibleOnly: boolean
-): boolean {
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
     const iframes = getIframeElements(document)
-    const allInputs = getInputElements(document, visibleOnly)
-    const replaced = replaceInInputs(document, allInputs, searchPattern, replaceTerm, flags)
-    if (flags === RegexFlags.CaseInsensitive && replaced) {
-        return replaced
+    const allInputs = getInputElements(document, config.visibleOnly)
+    searchReplaceResult = replaceInInputs(config, document, allInputs, searchReplaceResult)
+    if (config.replaceNext && searchReplaceResult.replaced) {
+        config.replace = false
     }
 
     for (let iframeCount = 0; iframeCount < iframes.length; iframeCount++) {
         const iframe = iframes[0]
         if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
-            const iframeInputs = getInputElements(iframe.contentDocument!, visibleOnly)
-            const replaced = replaceInInputs(document, iframeInputs, searchPattern, replaceTerm, flags)
-            if (replaceNextOnly(flags) && replaced) {
-                return replaced
+            const iframeInputs = getInputElements(iframe.contentDocument!, config.visibleOnly)
+            searchReplaceResult = replaceInInputs(config, document, iframeInputs, searchReplaceResult)
+            if (config.replaceNext && searchReplaceResult.replaced) {
+                config.replace = false
             }
         }
     }
-    return false
+    return searchReplaceResult
 }
 
 function replaceHTML(
+    config: SearchReplaceConfig,
     document: Document,
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string,
-    visibleOnly: boolean
-): boolean {
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
     const iframes: NodeListOf<HTMLIFrameElement> = document.querySelectorAll('iframe')
     const otherElements = document.body.getElementsByTagName('*')
     const otherElementsArr: HTMLElement[] = Array.from(otherElements).filter(
         (el) => !el.tagName.match(ELEMENT_FILTER)
     ) as HTMLElement[]
-
     if (iframes.length === 0) {
-        if (visibleOnly) {
-            return replaceVisibleOnly(document, otherElementsArr, searchPattern, replaceTerm, flags)
+        if (config.visibleOnly) {
+            searchReplaceResult = replaceVisibleOnly(config, document, otherElementsArr, searchReplaceResult)
+            console.log('CONTENT: searchReplaceResult after replaceVisibleOnly', JSON.stringify(searchReplaceResult))
         } else {
             // when there are no iframes we are free to replace html directly in the body
-            return replaceHTMLInBody(document.body as HTMLBodyElement, searchPattern, replaceTerm)
+            searchReplaceResult = replaceHTMLInBody(config, document.body as HTMLBodyElement, searchReplaceResult)
+            console.log('CONTENT: searchReplaceResult after replaceHTMLInBody', JSON.stringify(searchReplaceResult))
         }
     } else {
-        const replaced = replaceHTMLInIframes(document, iframes, searchPattern, replaceTerm, flags, visibleOnly)
-        if (visibleOnly) {
-            return replaced || replaceVisibleOnly(document, otherElementsArr, searchPattern, replaceTerm, flags)
+        searchReplaceResult = replaceHTMLInIframes(config, document, iframes, searchReplaceResult)
+        if (config.visibleOnly) {
+            searchReplaceResult = replaceVisibleOnly(config, document, otherElementsArr, searchReplaceResult)
         } else {
             // if there are iframes we take a cautious approach TODO - make this properly replace HTML
-            return replaceHTMLInElements(document, otherElementsArr, searchPattern, replaceTerm, flags)
+            searchReplaceResult = replaceHTMLInElements(config, document, otherElementsArr, searchReplaceResult)
         }
     }
+    return searchReplaceResult
 }
 
 function replaceHTMLInIframes(
+    config: SearchReplaceConfig,
     document: Document,
     iframes: NodeListOf<HTMLIFrameElement>,
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string,
-    visibleOnly: boolean
-): boolean {
-    let replaced = false
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
     for (const iframe of iframes) {
         if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
             try {
                 const content = iframe.contentDocument?.body as HTMLBodyElement
-                if (visibleOnly) {
-                    replaced = replaceVisibleOnly(document, [content], searchPattern, replaceTerm, flags)
+                if (config.visibleOnly) {
+                    searchReplaceResult = replaceVisibleOnly(config, document, [content], searchReplaceResult)
                 } else {
-                    replaced = replaceHTMLInBody(content, searchPattern, replaceTerm)
+                    searchReplaceResult = replaceHTMLInBody(config, content, searchReplaceResult)
                 }
             } catch (e) {
                 console.error(e)
             }
         }
     }
-    return replaced
+    return searchReplaceResult
 }
 
 function replaceHTMLInElements(
+    config: SearchReplaceConfig,
     document: Document,
     elements: HTMLElement[],
-    searchPattern,
-    replaceTerm,
-    flags
-): boolean {
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
     // replaces in inner html per element in the document
     const filtered = Array.from(elements).filter((el) => !el.tagName.match(ELEMENT_FILTER))
-    let replaced = false
     for (const element of filtered) {
-        replaced = replaceInInnerHTML(element, searchPattern, replaceTerm)
+        searchReplaceResult = replaceInInnerHTML(config, element, searchReplaceResult)
         if (element.tagName.match(INPUT_TEXTAREA_FILTER)) {
             const ko = usesKnockout(document)
-            replaced = replaceInInput(document, element as HTMLInputElement, searchPattern, replaceTerm, ko)
+            searchReplaceResult = replaceInInput(config, document, element as HTMLInputElement, ko, searchReplaceResult)
         }
         //Replace Next should only match once
-        if (replaceNextOnly(flags) && replaced) {
-            return true
+        if (config.replaceNext && searchReplaceResult.replaced) {
+            config.replace = false
         }
     }
-    return replaced
+    return searchReplaceResult
 }
 
 function replaceNextOnly(flags: string): boolean {
     return flags.indexOf(RegexFlags.Global) === -1
 }
 
+function giveElementsUniqueIds(elements: HTMLElement[]) {
+    let incrementingId = 0
+    return function (element) {
+        if (!element.id) {
+            incrementingId++
+            element.id = `search_replace_id_${incrementingId}`
+        }
+        return element.id
+    }
+}
+
+function removeUniqueIds(elements: HTMLElement[]) {
+    return function (element) {
+        if (element.id) {
+            element.removeAttribute('id')
+        }
+        return element
+    }
+}
+
 function replaceVisibleOnly(
+    config: SearchReplaceConfig,
     document: Document,
     elements: HTMLElement[],
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string
-): boolean {
-    //replace inner texts first, dropping out if we have done a replacement and are not working globally
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
+    // replace inner texts first, dropping out if we have done a replacement and are not working globally
     const unhidden: HTMLElement[] = Array.from(elements).filter(elementIsVisible)
-    const replaced = replaceInnerText(document, unhidden, searchPattern, replaceTerm, flags)
-    if (replaceNextOnly(flags) && replaced) {
-        return replaced
+    searchReplaceResult = replaceInnerText(config, document, unhidden, searchReplaceResult)
+    console.log('CONTENT: searchReplaceResult after replaceInnerText', JSON.stringify(searchReplaceResult))
+    if (config.replaceNext && searchReplaceResult.replaced) {
+        config.replace = false
     }
     // then replace inputs
     const inputs: HTMLInputElement[] = unhidden.filter((el) =>
         el.tagName.match(INPUT_TEXTAREA_FILTER)
     ) as HTMLInputElement[]
-    return replaceInInputs(document, inputs, searchPattern, replaceTerm, flags)
+    searchReplaceResult = replaceInInputs(config, document, inputs, searchReplaceResult)
+    console.log('CONTENT: searchReplaceResult after replaceInInputs', JSON.stringify(searchReplaceResult))
+    return searchReplaceResult
 }
 
 // Custom Functions
 
 async function replaceInEditorContainers(
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string,
+    config: SearchReplaceConfig,
     richTextEditor: RichTextEditor,
-    containers: (Element | Document)[]
-): Promise<boolean> {
-    let replaced = false
+    containers: (Element | Document)[],
+    searchReplaceResult: SearchReplaceResult
+): Promise<SearchReplaceResult> {
     try {
         // Loop to select editor elements inside their containers
         for (const containerOuter of containers) {
@@ -320,48 +391,63 @@ async function replaceInEditorContainers(
             }
 
             const editors = Array.from(container.querySelectorAll(richTextEditor.editor.value.join(',')) || [])
-            replaced = await replaceInEditors(searchPattern, replaceTerm, editors, flags)
-            if (replaceNextOnly(flags) && replaced) {
-                return replaced
+            searchReplaceResult = await replaceInEditors(config, editors, searchReplaceResult)
+            if (config.replaceNext && searchReplaceResult) {
+                config.replace = false
             }
         }
     } catch (err) {
         console.error(err)
-        return replaced
+        return searchReplaceResult
     }
 
-    return replaced
+    return searchReplaceResult
 }
 
 async function replaceInEditors(
-    searchPattern: RegExp,
-    replaceTerm: string,
+    config: SearchReplaceConfig,
     editors: Element[],
-    flags: string
-): Promise<boolean> {
-    let replaced = false
+    searchReplaceResult: SearchReplaceResult
+): Promise<SearchReplaceResult> {
     for (const editor of editors) {
-        const newReplaced = replaceInInnerHTML(editor as HTMLElement, searchPattern, replaceTerm)
-        replaced = replaced || newReplaced
-        if (replaceNextOnly(flags) && replaced) {
-            return replaced
+        searchReplaceResult = replaceInInnerHTML(config, editor as HTMLElement, searchReplaceResult)
+        if (config.replaceNext && searchReplaceResult.replaced) {
+            config.replace = false
         }
     }
-    return replaced
+    return searchReplaceResult
 }
 
-function replaceInInnerHTML(element: HTMLElement | Element, searchPattern: RegExp, replaceTerm: string): boolean {
-    // select the content editable area
-    element.dispatchEvent(new FocusEvent('focus', { bubbles: true }))
-    const initialText = getTextContent(element)
-    const initialHTML = element.innerHTML
-    if ('innerText' in element && element.innerText === element.innerHTML) {
-        element.textContent = element.innerText.replace(searchPattern, replaceTerm)
-    } else {
-        element.innerHTML = element.innerHTML.replace(searchPattern, replaceTerm)
+function replaceInInnerHTML(
+    config: SearchReplaceConfig,
+    element: HTMLElement | Element,
+    searchReplaceResult: SearchReplaceResult
+): SearchReplaceResult {
+    let oldValue = element.innerHTML
+    const occurrences = oldValue.match(config.searchPattern)
+    if (occurrences) {
+        searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+        // select the content editable area
+        element.dispatchEvent(new FocusEvent('focus', { bubbles: true }))
+        let newValue = oldValue
+        let selector = 'innerHTML'
+        if ('innerText' in element && element.innerText === element.innerHTML) {
+            oldValue = getTextContent(element)
+            newValue = oldValue
+            selector = 'textContent'
+        }
+        newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
+        if (config.replace) {
+            element[selector] = newValue
+        }
+        element.dispatchEvent(new Event('input', { bubbles: true }))
+        if (oldValue != newValue && config.replace) {
+            element.innerHTML = newValue
+            searchReplaceResult.count.replaced++
+            searchReplaceResult.replaced = true
+        }
     }
-    element.dispatchEvent(new Event('input', { bubbles: true }))
-    return ('innerText' in element && element.innerText !== initialText) || element.innerHTML !== initialHTML
+    return searchReplaceResult
 }
 
 function getTextContent(element: HTMLElement | Element): string {
@@ -374,140 +460,169 @@ function getTextContent(element: HTMLElement | Element): string {
 }
 
 async function replaceInCMSEditors(
+    config: SearchReplaceConfig,
     document: Document,
-    searchPattern: RegExp,
-    replaceTerm: string,
-    flags: string
-): Promise<boolean> {
-    let replaced = false
+    searchReplaceResult: SearchReplaceResult
+): Promise<SearchReplaceResult> {
     // replacement functions for pages with text editors
     for (const richTextEditor of RICH_TEXT_EDITORS) {
         if (richTextEditor.container) {
             const containers = Array.from(document.querySelectorAll(richTextEditor.container.value.join(',')))
             if (containers.length) {
-                replaced = await replaceInEditorContainers(
-                    searchPattern,
-                    replaceTerm,
-                    flags,
+                searchReplaceResult = await replaceInEditorContainers(
+                    config,
                     richTextEditor,
-                    containers
+                    containers,
+                    searchReplaceResult
                 )
-                if (replaceNextOnly(flags) && replaced) {
-                    return replaced
+                if (config.replaceNext && searchReplaceResult.replaced) {
+                    config.replace = false
                 }
             }
         } else {
             const editors = Array.from(document.querySelectorAll(richTextEditor.editor.value.join(',')))
-            replaced = await replaceInEditors(searchPattern, replaceTerm, editors, flags)
+            searchReplaceResult = await replaceInEditors(config, editors, searchReplaceResult)
             document.body.dispatchEvent(new Event('input', { bubbles: true }))
-            if (replaceNextOnly(flags) && replaced) {
-                return replaced
+            if (config.replaceNext && searchReplaceResult.replaced) {
+                config.replace = false
             }
         }
     }
 
-    return replaced
+    return searchReplaceResult
 }
 
 export async function searchReplace(
+    action: SearchReplaceCommonActions,
     window: Window,
     searchTerm: string,
     replaceTerm: string,
-    flags: string,
     inputFieldsOnly: boolean,
     isRegex: boolean,
     visibleOnly: boolean,
-    wholeWord: boolean
-): Promise<boolean> {
+    wholeWord: boolean,
+    matchCase: boolean,
+    replaceAll: boolean
+): Promise<SearchReplaceResult> {
+    let searchReplaceResult: SearchReplaceResult = {
+        count: { original: Number(0), replaced: Number(0) },
+        replaced: false,
+    }
+    console.log('CONTENT: searchReplaceResult initially', JSON.stringify(searchReplaceResult))
+    const flags = getFlags(matchCase, replaceAll)
+    // We only replace if this is true, otherwise we count the number of occurrences
+    const replace = action === 'searchReplace'
+    const replaceNext = replaceNextOnly(flags)
+    if (searchReplaceResult.count.original !== 0) {
+        throw new Error('SearchReplaceResult count.original should be 0')
+    }
     const searchPattern = getSearchPattern(searchTerm, isRegex, flags, wholeWord)
+    const globalFlags = getFlags(matchCase, true)
+    const globalSearchPattern = getSearchPattern(searchTerm, isRegex, globalFlags, wholeWord)
+    const config: SearchReplaceConfig = {
+        action,
+        replace,
+        replaceNext: replaceNext,
+        replaceAll: !replaceNext,
+        searchTerm,
+        replaceTerm,
+        flags,
+        inputFieldsOnly,
+        isRegex,
+        visibleOnly,
+        wholeWord,
+        searchPattern,
+        globalSearchPattern,
+        matchCase,
+    }
+
     const document = window.document
-    let replaced = false
 
     // replacement functions for pages with text editors
-    replaced = await replaceInCMSEditors(document, searchPattern, replaceTerm, flags)
-
-    if (replaceNextOnly(flags) && replaced) {
-        return replaced
+    searchReplaceResult = await replaceInCMSEditors(config, document, searchReplaceResult)
+    console.log('CONTENT: searchReplaceResult after CMS Editors', JSON.stringify(searchReplaceResult))
+    if (config.replaceNext && searchReplaceResult.replaced) {
+        config.replace = false
     }
 
     // TODO loop everything over document and then iframes
     // replacement functions for iframes with rich text editors
     const iframes = getIframeElements(document)
     for (const iframe of iframes) {
-        if (iframe.src.match('^http://' + window.location.host) || !iframe.src.match('^https?')) {
-            replaced = await replaceInCMSEditors(iframe.contentDocument!, searchPattern, replaceTerm, flags)
-            if (replaceNextOnly(flags) && replaced) {
-                return replaced
+        if (iframe.src.match('^http(s)*://' + window.location.host) && iframe.contentDocument) {
+            searchReplaceResult = await replaceInCMSEditors(config, iframe.contentDocument, searchReplaceResult)
+            if (config.replaceNext && searchReplaceResult.replaced) {
+                config.replace = false
             }
         }
     }
-
-    // Check to see if the search term is still present
-    const searchTermPresentAndGlobalSearch =
-        getSearchOccurrences(document, searchPattern, visibleOnly) > 0 && flags.indexOf(RegexFlags.Global) > -1
+    console.log('CONTENT: searchReplaceResult after iframes', JSON.stringify(searchReplaceResult))
 
     // we check other places if text was not replaced in a text editor
-    if (!replaced || searchTermPresentAndGlobalSearch) {
+    if (!searchReplaceResult.replaced) {
         if (inputFieldsOnly) {
-            return replaceInputFields(document, searchPattern, replaceTerm, flags, visibleOnly)
+            searchReplaceResult = replaceInputFields(config, document, searchReplaceResult)
+            if (config.replaceNext && searchReplaceResult.replaced) {
+                config.replace = false
+            }
+            console.log('CONTENT: searchReplaceResult after replaceInputFields', JSON.stringify(searchReplaceResult))
         } else {
-            return replaceHTML(document, searchPattern, replaceTerm, flags, visibleOnly)
+            // reset the original count to avoid double counting
+            // anything that we've already counted in count.original
+            searchReplaceResult.count.original = Number(0)
+            if (searchReplaceResult.count.original !== 0) {
+                throw new Error('SearchReplaceResult count.original should be 0')
+            }
+            searchReplaceResult = replaceHTML(config, document, searchReplaceResult)
+            console.log('CONTENT: searchReplaceResult after replaceHTML', JSON.stringify(searchReplaceResult))
         }
     }
-    return replaced
+    return searchReplaceResult
 }
 
-if (chrome && chrome.runtime && chrome.runtime.onMessage) {
-    chrome.runtime.onMessage.addListener(function (request: SearchReplaceMessage, sender, sendResponse) {
-        const instance = request.instance
-        const replaceAll = instance.options.replaceAll
-        const action = request.action
-        const globalFlags = getFlags(instance.options.matchCase, true)
+const port = tabConnect()
 
-        const globalSearchPattern = getSearchPattern(
+if (chrome && chrome.runtime && chrome.runtime.onMessage) {
+    chrome.runtime.onMessage.addListener(function (msg: SearchReplaceContentMessage, sender, sendResponse) {
+        console.log('CONTENT: received message with action', msg.action)
+        const instance = msg.instance
+        const replaceAll = msg.action === 'count' ? true : instance.options.replaceAll
+        const action = msg.action
+        const localStorageKey: SearchReplaceLocalStorageResultKey = `searchReplace-${window.location.host}`
+        removeLocalStorage(localStorageKey)
+        //Setup event listeners to communicate between iframes and parent
+        searchReplace(
+            action,
+            window,
             instance.searchTerm,
+            instance.replaceTerm,
+            instance.options.inputFieldsOnly,
             instance.options.isRegex,
-            globalFlags,
-            instance.options.wholeWord
-        )
-        if (action === 'searchReplace') {
-            sessionStorage.setItem('searchTerm', instance.searchTerm)
-            sessionStorage.setItem('replaceTerm', instance.replaceTerm)
-            const flags = getFlags(instance.options.matchCase, replaceAll)
-            searchReplace(
-                window,
-                instance.searchTerm,
-                instance.replaceTerm,
-                flags,
-                instance.options.inputFieldsOnly,
-                instance.options.isRegex,
-                instance.options.visibleOnly,
-                instance.options.wholeWord
-            ).then((replaced) => {
-                sendResponse({
-                    searchTermCount: getSearchOccurrences(
-                        document,
-                        globalSearchPattern,
-                        instance.options.visibleOnly,
-                        instance.options.inputFieldsOnly
-                    ),
-                    inIframe: inIframe(),
-                    replaced: replaced,
-                })
-            })
-        } else {
-            const searchTermCount = getSearchOccurrences(
-                document,
-                globalSearchPattern,
-                instance.options.visibleOnly,
-                instance.options.inputFieldsOnly
-            )
-            const response = {
-                searchTermCount: searchTermCount,
+            instance.options.visibleOnly,
+            instance.options.wholeWord,
+            instance.options.matchCase,
+            replaceAll
+        ).then((result) => {
+            const response: SearchReplaceResponse = {
                 inIframe: inIframe(),
+                result: result,
+                location: window.location.toString(),
+                action: 'searchReplaceResponse',
                 hints: getHints(document),
+                iframes: iframes.length,
+                instance: instance,
             }
-            sendResponse(response)
-        }
+
+            if (iframes || isIframe) {
+                console.log('CONTENT: sending response to background', JSON.stringify(response))
+                // Send the response to the background script for processing
+                port.postMessage(response)
+                sendResponse(null)
+            } else {
+                // Send the response straight back to the popup
+                sendResponse(response)
+                console.log('CONTENT: sent response to popup directly', JSON.stringify(response))
+            }
+        })
     })
 }

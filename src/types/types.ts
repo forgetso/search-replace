@@ -22,16 +22,15 @@ export type SearchReplaceOptions = {
     [key in SearchReplaceCheckboxNames]: boolean
 }
 
-export interface SearchReplaceMessage {
-    action: SearchReplaceAction
-    instance: SearchReplaceInstance
-    history: SearchReplaceInstance[]
+export type SearchReplaceInstance = {
+    searchTerm: string
+    replaceTerm: string
+    options: SearchReplaceOptions
     url?: string
+    instanceId?: number
 }
 
-export type SearchReplaceInstance = { searchTerm: string; replaceTerm: string; options: SearchReplaceOptions }
-
-export interface SavedSearchReplaceInstance extends SearchReplaceInstance {
+export interface SavedSearchReplaceInstance extends Omit<SearchReplaceInstance, 'url'> {
     url: string
 }
 
@@ -45,18 +44,43 @@ export type SearchReplaceStorageItems = {
     saved?: SavedInstances
 }
 
-export interface SearchReplaceStorageMessage {
-    actions: { [key in SearchReplaceAction]?: boolean }
-    url?: string
-    save?: boolean
-    storage?: SearchReplaceStorageItems
-}
-
 export type SearchReplacePopupStorage = {
     storage: SearchReplaceStorageItems
 }
 
-export type SearchReplaceAction = 'searchReplace' | 'store' | 'recover' | 'delete' | 'clearHistory' | 'save'
+export type SearchReplaceCommonActions = 'searchReplace' | 'searchReplaceResponse' | 'count'
+
+export type SearchReplaceBackgroundActions =
+    | SearchReplaceCommonActions
+    | 'store'
+    | 'recover'
+    | 'delete'
+    | 'clearHistory'
+    | 'save'
+    | 'getTranslation'
+    | 'getAvailableLanguages'
+
+export interface SearchReplaceBaseMessage {
+    action: SearchReplaceBackgroundActions
+}
+
+export interface SearchReplaceBackgroundMessage extends SearchReplaceBaseMessage {
+    instance?: SearchReplaceInstance
+    history?: SearchReplaceInstance[]
+    url?: string
+    save?: boolean
+    storage?: SearchReplaceStorageItems
+    tabID?: number
+    instanceId?: number
+}
+
+export interface SearchReplaceContentMessage {
+    action: SearchReplaceCommonActions
+    instance: SearchReplaceInstance
+    instanceId?: number
+    history?: SearchReplaceInstance[]
+    url?: string
+}
 
 export enum SelectorType {
     id = 'id',
@@ -104,4 +128,48 @@ export interface LangFile {
     }
 }
 
+export interface SearchReplaceResponse {
+    instance: SearchReplaceInstance
+    inIframe: boolean
+    hints?: string[]
+    location: string
+    result: SearchReplaceResult
+    action: SearchReplaceCommonActions
+    iframes: number
+}
+
 export type TranslationProxy = (key: string) => string
+
+export type SearchReplaceResult = {
+    count: {
+        original: number
+        replaced: number
+    }
+    replaced: boolean
+}
+
+export type SearchReplaceConfig = {
+    action: SearchReplaceBackgroundActions
+    replace: boolean
+    replaceNext: boolean
+    replaceAll: boolean
+    searchTerm: string
+    replaceTerm: string
+    flags: string
+    inputFieldsOnly: boolean
+    isRegex: boolean
+    visibleOnly: boolean
+    wholeWord: boolean
+    searchPattern: RegExp
+    globalSearchPattern: RegExp
+    matchCase: boolean
+}
+
+export type SearchReplaceLocalStorageResultKey = `searchReplace-${string}`
+export type SearchReplaceLocalStorageOriginKey = `searchReplace-origin-${string}`
+
+export type SearchReplaceLocalStorage = {
+    searchTerm: string
+    replaceTerm: string
+    searchReplaceResult: SearchReplaceResult
+}

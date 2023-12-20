@@ -1,6 +1,6 @@
 {
   "name": "search_and_replace",
-  "version": "1.7.4",
+  "version":"1.8.0",
   "resolutions": {
     "author": "Chris Taylor <cjtaylor38@gmail.com>"
   },
@@ -8,22 +8,31 @@
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
+    "build:dev": "webpack --config webpack/webpack.dev.js",
     "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist",
     "start": "light-server -s . -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\"",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^2.0.3",
+    "@html-eslint/eslint-plugin": "^0.22.0",
+    "@html-eslint/parser": "^0.22.0",
     "@types/chrome": "*",
     "@types/jest": "^27.0.2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "copy-webpack-plugin": "^9.0.1",
     "cypress": "^13.0.0",
-    "eslint": "^8.36.0",
+    "eslint": "^8.55.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-absolute-imports-only": "^1.0.1",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-regexp": "^1.15.0",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
     "glob": "^7.1.6",
     "jest": "^27.2.1",
     "light-server": "^2.9.1",
