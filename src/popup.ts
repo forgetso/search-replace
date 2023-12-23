@@ -1,7 +1,13 @@
 import {
+    CHECKBOXES,
+    INPUT_ELEMENTS_AND_EVENTS,
+    MIN_SEARCH_TERM_LENGTH,
+    REPLACE_TERM_INPUT_ID,
+    SEARCH_TERM_INPUT_ID,
+} from './popup/constants'
+import {
+    SearchReplaceActions,
     SearchReplaceBackgroundMessage,
-    SearchReplaceCheckboxNames,
-    SearchReplaceCommonActions,
     SearchReplaceContentMessage,
     SearchReplaceInstance,
     SearchReplaceOptions,
@@ -10,36 +16,22 @@ import {
     SearchReplaceStorageItems,
     TranslationProxy,
 } from './types'
+import { clearHistoryClickHandler, constructSearchReplaceHistory, historyHeaderClickHandler } from './popup/history'
 import { createTranslationProxy, getInstanceId, getTranslation, localizeElements, manifest, tabConnect } from './util'
 
-const { matchCase, inputFieldsOnly, visibleOnly, wholeWord, isRegex, save, replaceAll } = SearchReplaceCheckboxNames
-
-const INPUT_ELEMENTS_AND_EVENTS = {
-    searchTerm: ['change', 'keyup', 'blur'],
-    replaceTerm: ['change', 'keyup', 'blur'],
-    [matchCase]: ['change', 'click'],
-    [inputFieldsOnly]: ['change', 'click'],
-    [visibleOnly]: ['change', 'click'],
-    [wholeWord]: ['change', 'click'],
-    [isRegex]: ['change'],
-    help: ['click'],
-}
-
 function getSearchTermElement() {
-    return <HTMLTextAreaElement>document.getElementById('searchTerm')
+    return <HTMLTextAreaElement>document.getElementById(SEARCH_TERM_INPUT_ID)
 }
 
 function getReplaceTermElement() {
-    return <HTMLTextAreaElement>document.getElementById('replaceTerm')
+    return <HTMLTextAreaElement>document.getElementById(REPLACE_TERM_INPUT_ID)
 }
-
-const CHECKBOXES: SearchReplaceCheckboxNames[] = Object.values(SearchReplaceCheckboxNames)
-const MIN_SEARCH_TERM_LENGTH = 1
+/**
+ * The onload function for the popup page. Sets the elements to their stored values and sets the event handlers
+ */
 window.addEventListener('DOMContentLoaded', async function () {
     const langData = await getTranslation()
     const translationFn = createTranslationProxy(langData)
-
-    // Create a variable for storing the time since last time terms were stored
 
     // Update popup version number and GitHub link dynamically with manifest.version
     const versionNumberElement = document.getElementById('version_number')
@@ -76,9 +68,9 @@ window.addEventListener('DOMContentLoaded', async function () {
             restoreSearchReplaceInstance(recentSearch)
         }
         // Trigger a search term count if there is an existing search term
-        contentScriptCall('count', recentSearch, history, translationFn, contentScriptCallback).then((r) =>
-            console.log(r)
-        )
+        contentScriptCall('count', recentSearch, history).catch((e) => {
+            console.error(e)
+        })
     })
     ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
@@ -101,7 +93,9 @@ window.addEventListener('DOMContentLoaded', async function () {
     })
 
     //Click events for Options Link, Help link, and Clear History
-    ;(<HTMLButtonElement>document.querySelector('#clearHistory')).addEventListener('click', clearHistoryClickHandler)
+    ;(<HTMLButtonElement>document.querySelector('#clearHistory')).addEventListener('click', function () {
+        clearHistoryClickHandler(tabConnect())
+    })
     for (const link of ['help', 'options']) {
         ;(<HTMLAnchorElement>document.getElementById(link)).addEventListener('click', function () {
             openLink(link)
@@ -118,9 +112,11 @@ window.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Handler for auto resizing the textareas
-    for (const elementName of ['searchTerm', 'replaceTerm']) {
-        const element = document.getElementById(elementName)
-        autoGrow(element)
+    for (const elementName of [SEARCH_TERM_INPUT_ID, REPLACE_TERM_INPUT_ID]) {
+        const element = <HTMLTextAreaElement | null>document.getElementById(elementName)
+        if (element) {
+            autoGrow(element)
+        }
         ;(<HTMLTextAreaElement>element).addEventListener('input', function () {
             autoGrow(this)
         })
@@ -143,36 +139,14 @@ window.addEventListener('DOMContentLoaded', async function () {
     localizeElements(langData)
 })
 
-async function storeTermsHandler(e, translationFn: TranslationProxy) {
+async function storeTermsHandler(e: Event, translationFn: TranslationProxy) {
     await storeTerms(e, translationFn, false)
 }
 
 // function to change the height of the textarea to fit the content
-function autoGrow(element) {
+function autoGrow(element: HTMLTextAreaElement) {
     element.style.height = 'auto'
     element.style.height = element.scrollHeight + 'px'
-}
-
-// function to expand or contract the history section
-function historyHeaderClickHandler(e) {
-    e.preventDefault()
-    const historyContent = document.getElementById('historyContent')
-    if (historyContent) {
-        if (historyContent.style.display === 'block') {
-            historyContent.style.display = 'none'
-        } else {
-            historyContent.style.display = 'block'
-        }
-    }
-}
-
-function clearHistoryClickHandler() {
-    const port = tabConnect()
-    port.postMessage({ action: 'clearHistory' })
-    const historyList = document.getElementById('historyList')
-    if (historyList) {
-        historyList.innerHTML = ''
-    }
 }
 
 function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstance) {
@@ -188,7 +162,12 @@ function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstan
     autoGrow(replaceTerm)
 }
 
-function historyItemClickHandler(e, translationFn: TranslationProxy) {
+/** The handler for clicking on a history item
+ * Will take the search term and replace term from the history item and populate the input fields
+ * @param e
+ * @param translationFn
+ */
+export function historyItemClickHandler(e, translationFn: TranslationProxy) {
     const target = <HTMLElement>e.target
 
     if (target.tagName === 'LI') {
@@ -203,11 +182,7 @@ function historyItemClickHandler(e, translationFn: TranslationProxy) {
             options,
         }
         restoreSearchReplaceInstance(searchReplaceInstance)
-        storeTerms(e, translationFn, false)
-            .then((r) => {
-                console.log(r)
-            })
-            .catch((e) => console.error(e))
+        storeTerms(e, translationFn, false).catch((e) => console.error(e))
     }
 }
 
@@ -217,8 +192,8 @@ function historyItemClickHandler(e, translationFn: TranslationProxy) {
  * @param callbackHandler {function}
  * @param replaceAll
  **/
-function formSubmitHandler(
-    action: SearchReplaceCommonActions,
+async function formSubmitHandler(
+    action: SearchReplaceActions,
     translationFn: TranslationProxy,
     callbackHandler: (msg: any, translationFn: TranslationProxy) => void,
     replaceAll: boolean
@@ -232,26 +207,27 @@ function formSubmitHandler(
     // create the new history list items
     createHistoryListItemElements(historyItems)
     // store the new history list items
-    storeTerms({}, translationFn, true)
-        .then((r) => console.log(r))
-        .catch((e) => console.error(e))
+    await storeTerms(new Event('storeTerms'), translationFn, true)
     // do the search replace
-    contentScriptCall(action, searchReplaceInstance, historyItems, translationFn, callbackHandler)
-        .then((r) => console.log(r))
-        .catch((e) => console.error(e))
+    await contentScriptCall(action, searchReplaceInstance, historyItems)
 }
 
-/** Send the search and replace instance to the content script for processing **/
+/** Send the search and replace instance to the content script for processing, clearing any saved responses first.
+ * @param action
+ * @param searchReplaceInstance
+ * @param history
+ * **/
 export async function contentScriptCall(
-    action: SearchReplaceCommonActions,
+    action: SearchReplaceActions,
     searchReplaceInstance: SearchReplaceInstance,
-    history: SearchReplaceInstance[],
-    translationFn: TranslationProxy,
-    callbackHandler: typeof contentScriptCallback
+    history: SearchReplaceInstance[]
 ): Promise<string | undefined> {
+    // must do this before calling the content script
+    await chrome.runtime.sendMessage({ action: 'clearSavedResponses' })
     const query = { active: true, currentWindow: true }
     let url: string | undefined = undefined
     const [tab] = await chrome.tabs.query(query)
+
     if (tab.id != null) {
         const instanceId = getInstanceId({ ...searchReplaceInstance, url: tab.url ? tab.url : '' }, true)
         const message: SearchReplaceContentMessage = {
@@ -262,19 +238,19 @@ export async function contentScriptCall(
             instanceId,
         }
 
-        console.log('POPUP: sending message to tab', message)
-        chrome.tabs.sendMessage(tab.id, message, function (response) {
-            callbackHandler(response, translationFn)
-        })
+        await chrome.tabs.sendMessage(tab.id, message)
         url = tab.url
     }
     return url
 }
 
+/** The callback function for the content script
+ * @param msg {SearchReplaceResponse}
+ * @param translationFn
+ */
 function contentScriptCallback(msg: SearchReplaceResponse, translationFn: TranslationProxy) {
     removeLoader()
-    console.log('POPUP: tabQueryCallback', msg)
-    if (msg.action === 'searchReplaceResponse') {
+    if (msg && msg.action === 'searchReplaceResponseMerged') {
         setCount(msg.result, translationFn)
         setHints(msg.hints)
     }
@@ -295,7 +271,6 @@ function setHints(hints?: string[]) {
     if (hintsElement) {
         hintsElement.innerHTML = ''
         if (hints) {
-            console.log('POPUP: got hints ', hints)
             for (const hint of hints) {
                 const hintElement = document.createElement('div')
                 hintElement.innerText = hint
@@ -314,25 +289,24 @@ function removeLoader() {
 }
 
 /** Stores the terms from the popup and performs a count of the terms on the page **/
-async function storeTerms(e, translationFn: TranslationProxy, save?: boolean, ignoreLength?: boolean) {
+async function storeTerms(
+    event: Event | KeyboardEvent,
+    translationFn: TranslationProxy,
+    save?: boolean,
+    ignoreLength?: boolean
+) {
     console.debug('storing terms')
-    e = e || window.event
-    if (e.keyCode === 13) {
+    event = event || new Event('storeTerms')
+    if (event instanceof KeyboardEvent && event.code === 'Enter') {
         //if the user presses enter we want to trigger the search replace
-        formSubmitHandler('searchReplace', translationFn, contentScriptCallback, false)
+        await formSubmitHandler('searchReplace', translationFn, contentScriptCallback, false)
     } else {
         const searchReplaceInput = getInputValues(false)
         const history = constructSearchReplaceHistory()
 
         if (searchReplaceInput.searchTerm.length >= MIN_SEARCH_TERM_LENGTH || ignoreLength) {
             // This counts the terms on the page
-            const url = await contentScriptCall(
-                'count',
-                searchReplaceInput,
-                history,
-                translationFn,
-                contentScriptCallback
-            )
+            const url = await contentScriptCall('count', searchReplaceInput, history)
             // This sends the search replace terms to the background page and stores them
             sendToStorage(searchReplaceInput, history, url, save)
         }
@@ -367,8 +341,7 @@ function sendToStorage(
 }
 
 chrome.runtime.onMessage.addListener(function (msg: SearchReplaceResponse) {
-    console.log('POPUP: Message received: ' + JSON.stringify(msg))
-    if (msg.action === 'searchReplaceResponse') {
+    if (msg && (msg.action === 'searchReplaceResponse' || msg.action === 'searchReplaceResponseMerged')) {
         getTranslation().then((langData) => {
             const translationFn = createTranslationProxy(langData)
             contentScriptCallback(msg, translationFn)
@@ -384,8 +357,8 @@ function createHistoryListItemElements(history: SearchReplaceInstance[]) {
 
             for (const [index, item] of history.entries()) {
                 const li = document.createElement('li')
-                li.setAttribute(`data-searchTerm`, item['searchTerm'])
-                li.setAttribute(`data-replaceTerm`, item['replaceTerm'])
+                li.setAttribute(`data-searchTerm`, item[SEARCH_TERM_INPUT_ID])
+                li.setAttribute(`data-replaceTerm`, item[REPLACE_TERM_INPUT_ID])
                 for (const checkbox of CHECKBOXES) {
                     const checked = checkbox in item.options ? item.options[checkbox] : false
                     li.setAttribute(`data-${checkbox}`, String(checked))
@@ -399,53 +372,11 @@ function createHistoryListItemElements(history: SearchReplaceInstance[]) {
     }
 }
 
-function constructSearchReplaceHistory(searchReplaceInstance?: SearchReplaceInstance): SearchReplaceInstance[] {
-    const history = document.getElementById('historyContent')
-    let historyItems: SearchReplaceInstance[] = []
-    if (history) {
-        // scrape the history list from the UI list elements
-        historyItems = getHistoryItemsFromListItemsElements(history)
-        if (searchReplaceInstance) {
-            // place the most recent item at the top of the list
-            historyItems.unshift(searchReplaceInstance)
-            // never store more than 10 history items
-            historyItems = historyItems.slice(0, 10)
-            // get unique items in list of objects
-            historyItems = getUniqueHistoryItems(historyItems)
-        }
-        return historyItems
-    }
-
-    return historyItems
-}
-
 function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement, translationFn: TranslationProxy) {
     const sourceText = source.value
     source.value = target.value
     target.value = sourceText
-    storeTerms({}, translationFn, true, true)
-        .then((r) => console.log(`swapTerms response: ${r}`))
-        .catch((e) => console.error(e))
-}
-
-function getHistoryItemsFromListItemsElements(history: HTMLElement): SearchReplaceInstance[] {
-    return Array.from(history.getElementsByTagName('li')).map((item) => ({
-        searchTerm: item.getAttribute('data-searchTerm') || '',
-        replaceTerm: item.getAttribute('data-replaceTerm') || '',
-        instanceId: Number(item.getAttribute('data-instanceId') || ''),
-        options: CHECKBOXES.reduce((result, checkboxName) => {
-            result[checkboxName] = item.getAttribute(`data-${checkboxName}`) === 'true'
-            return result
-        }, {}) as SearchReplaceOptions,
-    }))
-}
-
-function getUniqueHistoryItems(historyItems: SearchReplaceInstance[]) {
-    return historyItems.filter(
-        (item1, index, self) =>
-            index ===
-            self.findIndex((item2) => item2.searchTerm === item1.searchTerm && item2.replaceTerm === item1.replaceTerm)
-    )
+    storeTerms(new Event('storeTerms'), translationFn, true, true).catch((e) => console.error(e))
 }
 
 function getInputValues(replaceAll: boolean): SearchReplaceInstance {

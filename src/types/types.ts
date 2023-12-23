@@ -48,10 +48,16 @@ export type SearchReplacePopupStorage = {
     storage: SearchReplaceStorageItems
 }
 
-export type SearchReplaceCommonActions = 'searchReplace' | 'searchReplaceResponse' | 'count'
+export type SearchReplaceActions =
+    | 'searchReplace'
+    | 'searchReplaceResponse'
+    | 'count'
+    | 'searchReplaceResponseMerged'
+    | 'searchReplaceResponseBackground'
+    | 'clearSavedResponses'
 
 export type SearchReplaceBackgroundActions =
-    | SearchReplaceCommonActions
+    | SearchReplaceActions
     | 'store'
     | 'recover'
     | 'delete'
@@ -75,7 +81,7 @@ export interface SearchReplaceBackgroundMessage extends SearchReplaceBaseMessage
 }
 
 export interface SearchReplaceContentMessage {
-    action: SearchReplaceCommonActions
+    action: SearchReplaceActions
     instance: SearchReplaceInstance
     instanceId?: number
     history?: SearchReplaceInstance[]
@@ -134,8 +140,11 @@ export interface SearchReplaceResponse {
     hints?: string[]
     location: string
     result: SearchReplaceResult
-    action: SearchReplaceCommonActions
+    action: SearchReplaceActions
     iframes: number
+    backgroundReceived: number
+    host: string
+    checkIframes: boolean
 }
 
 export type TranslationProxy = (key: string) => string

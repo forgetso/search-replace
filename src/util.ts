@@ -1,4 +1,4 @@
-import { LangFile, LangList, SearchReplaceInstance, TranslationProxy } from './types'
+import { LangFile, LangList, SearchReplaceInstance, SearchReplaceResult, TranslationProxy } from './types'
 
 export const cyrb53 = (str, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -39,7 +39,9 @@ export function getInputElements(
 }
 
 export function getIframeElements(document: Document): HTMLIFrameElement[] {
-    return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe'))
+    return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter(
+        (iframe) => iframe.src.length
+    )
 }
 
 export function elementIsVisible(element: HTMLElement): boolean {
@@ -66,10 +68,24 @@ if (chrome && chrome.runtime) {
 }
 export const manifest = manifestJSON
 
+// Function to clear any saved responses
+export function clearSavedResponses(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        try {
+            chrome.runtime.sendMessage({ action: 'clearSavedResponses' }, (result) => {
+                resolve(result)
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 // Function to retrieve the translation data
 export function getTranslation(): Promise<LangFile> {
     return new Promise((resolve) => {
         chrome.runtime.sendMessage({ action: 'getTranslation' }, (translation) => {
+            console.log('UTIL: getTranslation', translation)
             resolve(translation)
         })
     })
@@ -108,7 +124,7 @@ export function localizeElements(translationData: LangFile) {
             location.reload()
         }
     })
-
+    console.log('UTIL: localizeElements, translationData', translationData)
     document.querySelectorAll('[data-locale]').forEach((elem) => {
         const element = elem as HTMLElement
         const localeKey = element.getAttribute('data-locale')
@@ -125,4 +141,22 @@ export function localizeElements(translationData: LangFile) {
             element.innerHTML = innerString // Use innerHTML to render HTML content
         }
     })
+}
+
+export function getExtensionStorage<T>(key: string): Promise<T | undefined> {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(key, (data: { [key: string]: T }) => {
+            resolve(data[key])
+        })
+    })
+}
+
+export function mergeSearchReplaceResults(a: SearchReplaceResult, b: SearchReplaceResult): SearchReplaceResult {
+    return {
+        count: {
+            original: a.count.original + b.count.original,
+            replaced: a.count.replaced + b.count.replaced,
+        },
+        replaced: a.replaced || b.replaced,
+    }
 }

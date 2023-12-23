@@ -22,6 +22,7 @@ describe('Search Replace ', () => {
 
     it('counts the correct number of occurrences', () => {
         cy.window().then((window) => {
+            console.log(window.location.host)
             cy.wrap(
                 searchReplace('count', window, SEARCHTERM, REPLACETERM, false, false, false, false, false, true).then(
                     (result) => {

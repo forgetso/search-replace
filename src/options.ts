@@ -1,12 +1,4 @@
 import {
-    createTranslationProxy,
-    getAvailableLanguages,
-    getTranslation,
-    localizeElements,
-    manifest,
-    tabConnect,
-} from './util'
-import {
     SavedInstances,
     SavedSearchReplaceInstance,
     SearchReplaceBackgroundActions,
@@ -16,6 +8,14 @@ import {
     SearchReplaceOptions,
     SearchReplaceStorageItems,
 } from './types'
+import {
+    createTranslationProxy,
+    getAvailableLanguages,
+    getTranslation,
+    localizeElements,
+    manifest,
+    tabConnect,
+} from './util'
 
 window.addEventListener('DOMContentLoaded', async function () {
     const languages = await getAvailableLanguages()
