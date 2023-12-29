@@ -25,7 +25,7 @@
     "node_modules",
     "build",
     "tests",
-    "cypress",
+    "src/cypress",
     "cypress.config.ts"
   ],
 

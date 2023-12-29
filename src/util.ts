@@ -160,3 +160,17 @@ export function mergeSearchReplaceResults(a: SearchReplaceResult, b: SearchRepla
         replaced: a.replaced || b.replaced,
     }
 }
+
+export function checkIframeHosts(iframes: HTMLIFrameElement[]) {
+    // extract the host from the iframe src to avoid cross-domain scripting error
+    const hosts = iframes.map((iframe) => {
+        const url = new URL(iframe.src)
+        return url.host
+    })
+    console.log('CONTENT: hosts', hosts, window.location.host)
+    return hosts.some((host) => host !== window.location.host)
+}
+
+export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+    return value !== null && value !== undefined
+}

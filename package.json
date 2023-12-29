@@ -11,8 +11,8 @@
     "build:dev": "webpack --config webpack/webpack.dev.js",
     "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist",
     "start": "light-server -s . -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\"",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:open": "npx cypress open --project src",
+    "cypress:run": "npx cypress run --project src"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^2.0.3",

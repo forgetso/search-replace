@@ -1,6 +1,5 @@
 import { RichTextEditor, SelectorType } from './types'
-
-export const ELEMENT_FILTER = /(HTML|HEAD|SCRIPT|BODY|STYLE|IFRAME)/
+export const ELEMENT_FILTER = /(HTML|HEAD|SCRIPT|STYLE)/
 export const INPUT_TEXTAREA_FILTER = /(INPUT|TEXTAREA)/
 export const GMAIL_APPLICATION_NAME = 'Gmail'
 export const GOOGLE_MAIL_DOMAIN = 'mail.google.com'

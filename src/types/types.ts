@@ -172,6 +172,11 @@ export type SearchReplaceConfig = {
     searchPattern: RegExp
     globalSearchPattern: RegExp
     matchCase: boolean
+    isIframe: boolean
+    iframes: HTMLIFrameElement[]
+    iframesOnDifferentHosts: boolean
+    elementFilter: RegExp
+    usesKnockout: boolean
 }
 
 export type SearchReplaceLocalStorageResultKey = `searchReplace-${string}`
