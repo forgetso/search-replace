@@ -77,19 +77,24 @@ function replaceInnerText(
     elements: HTMLElement[],
     searchReplaceResult: SearchReplaceResult
 ): SearchReplaceResult {
-    const elementsCounted: HTMLElement[] = []
+    const elementsChecked = new Map<Element, Element>
     for (const element of elements) {
         if (element.innerText !== undefined) {
-            const occurrences = element.innerText.match(config.searchPattern)
 
+            const occurrences = element.innerText.match(config.globalSearchPattern)
+            //console.log("CONTENT: occurrences", occurrences, config.globalSearchPattern, config.searchPattern)
             if (occurrences) {
-                elementsCounted.push(element)
+                elementsChecked.set(element, element)
 
-                if (element.parentElement && !elementsCounted.includes(element.parentElement)) {
+                if (element.parentElement && !elementsChecked.has(element.parentElement)) {
+                    console.log("CONTENT: checking element", element)
                     searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
                     if (config.replace) {
                         console.log('CONTENT: continuing replace as replace set')
-                        searchReplaceResult = replaceInTextNodes(config, document, element, searchReplaceResult)
+
+                        const textNodesResult = replaceInTextNodes(config, document, element, searchReplaceResult, elementsChecked)
+                        searchReplaceResult = textNodesResult.searchReplaceResult
+
                     }
                     if (config.replaceNext && searchReplaceResult.replaced) {
                         console.log("CONTENT: stopping replace as replaceNext set and we've already replaced")
@@ -106,32 +111,38 @@ function replaceInTextNodes(
     config: SearchReplaceConfig,
     document: Document,
     element: HTMLElement,
-    searchReplaceResult: SearchReplaceResult
-) {
+    searchReplaceResult: SearchReplaceResult,
+    elementsChecked: Map<Element, Element>
+): {searchReplaceResult: SearchReplaceResult, elementsChecked: Map<Element, Element>} {
     const textNodes = textNodesUnder(document, element, config.elementFilter)
-    const nodesReplaced: Node[] = []
+    console.log("textNodes", textNodes)
+
     for (const node of textNodes) {
-        if (node.nodeValue) {
-            if (!node.parentNode || (node.parentNode && !nodesReplaced.includes(node.parentNode))) {
+
+        if (node.nodeValue && node.parentElement) {
+            elementsChecked.set(element, element)
+            if (!node.parentNode || (node.parentNode && !elementsChecked.has(node.parentElement))) {
                 const oldValue = node.nodeValue
-                const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
-                if (oldValue !== newValue && config.replace) {
-                    node.nodeValue = newValue
-                    searchReplaceResult.count.replaced++
-                    searchReplaceResult.replaced = true
-                    nodesReplaced.push(node)
+                if(oldValue.match(config.searchPattern)) {
+                    const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
+                    console.log("oldValue", oldValue, "newValue", newValue, "replace", config.replace)
+                    if (oldValue !== newValue && config.replace) {
+                        console.log("CONTENT: adding to replaced for", node, element)
+                        node.nodeValue = newValue
+                        searchReplaceResult.count.replaced++
+                        searchReplaceResult.replaced = true
+
+                    }
                 }
                 if (config.replaceNext && searchReplaceResult.replaced) {
                     break
                 }
             } else {
-                nodesReplaced.push(node)
+                console.log("CONTENT: Not replacing in text node as element is contained in searched map")
             }
-        } else {
-            nodesReplaced.push(node)
         }
     }
-    return searchReplaceResult
+    return {searchReplaceResult, elementsChecked}
 }
 
 function textNodesUnder(document: Document, element: Node, elementFilter: RegExp) {
@@ -150,28 +161,6 @@ function textNodesUnder(document: Document, element: Node, elementFilter: RegExp
     return nodes
 }
 
-function replaceHTMLInBody(
-    config: SearchReplaceConfig,
-    body: HTMLBodyElement,
-    searchReplaceResult: SearchReplaceResult
-): SearchReplaceResult {
-    if (body) {
-        const oldValue = body.innerHTML
-        const occurrences = body.innerHTML.match(config.searchPattern)
-        if (occurrences) {
-            searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
-
-            const newValue = body.innerHTML.replace(config.searchPattern, config.replaceTerm)
-
-            if (oldValue !== newValue && config.replace) {
-                body.innerHTML = newValue
-                searchReplaceResult.count.replaced++
-                searchReplaceResult.replaced = true
-            }
-        }
-    }
-    return searchReplaceResult
-}
 
 function replaceInInputs(
     config: SearchReplaceConfig,
@@ -234,7 +223,6 @@ function replaceHTML(
     searchReplaceResult: SearchReplaceResult
 ): SearchReplaceResult {
     const otherElementsArr = getFilteredElements(document, config.elementFilter)
-    console.log('CONTENT: searchReplaceResult after replaceHTMLInIframes', JSON.stringify(searchReplaceResult))
     if (config.visibleOnly) {
         searchReplaceResult = replaceVisibleOnly(config, document, otherElementsArr, searchReplaceResult)
         console.log('CONTENT: searchReplaceResult after replaceVisibleOnly', JSON.stringify(searchReplaceResult))
@@ -290,17 +278,6 @@ function replaceHTMLInElements(
 
 function replaceNextOnly(flags: string): boolean {
     return flags.indexOf(RegexFlags.Global) === -1
-}
-
-function giveElementsUniqueIds(elements: HTMLElement[]) {
-    let incrementingId = 0
-    return function (element) {
-        if (!element.id) {
-            incrementingId++
-            element.id = `search_replace_id_${incrementingId}`
-        }
-        return element.id
-    }
 }
 
 function replaceVisibleOnly(
