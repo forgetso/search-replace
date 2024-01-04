@@ -262,11 +262,13 @@ function replaceHTMLInElements(
         // Check if the child is not a script or style tag etc.
         if (!element.tagName.match(config.elementFilter)) {
             elementsChecked.set(element, element)
+            const isInput = element.tagName.match(INPUT_TEXTAREA_FILTER)
             // If the element's parent has already been searched, skip it
-            if (element.parentElement && !elementsChecked.has(element.parentElement)) {
+            // TODO make input elements properly update their value
+            if (element.parentElement && !elementsChecked.has(element.parentElement) && !isInput) {
                 console.log("CONTENT: checking element", element)
 
-                if (element.tagName.match(INPUT_TEXTAREA_FILTER)) {
+                if (isInput) {
                     console.log("CONTENT: replacing in input")
                     searchReplaceResult = replaceInInput(
                         config,
