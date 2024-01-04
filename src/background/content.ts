@@ -7,7 +7,7 @@ async function saveSearchReplaceResponse(response: SearchReplaceResponse) {
         response.instance.instanceId || getInstanceId({ ...response.instance, url: response.location }, true)
     ).toString()
     const key = `savedResponse-${id}`
-    const r = await chrome.storage.local.set({ [key]: response })
+    await chrome.storage.local.set({ [key]: response });
     return
 }
 
@@ -34,22 +34,16 @@ export async function removeSearchReplaceResponses() {
 
 export async function listenerContentResponse(msg: SearchReplaceResponse) {
     msg.action = 'searchReplaceResponseMerged'
-    if (!msg.inIframe && (!msg.checkIframes || msg.iframes === 0)) {
+    if (!msg.inIframe && msg.iframes === 0) {
         console.log('BACKGROUND: Sending msg to popup immediately', JSON.stringify(msg, null, 4))
         await chrome.runtime.sendMessage(msg)
     } else if (msg.instance.instanceId) {
         const previousResponse = await getSearchReplaceResponse(msg.instance.instanceId)
         console.log('BACKGROUND: Got content response', JSON.stringify(msg, null, 4))
-        // get the previous response whether its an iframe or the parent, we don't care
+        // get the previous response whether it's an iframe or the parent, we don't care
         if (previousResponse) {
             console.log('BACKGROUND: Found previous response', JSON.stringify(previousResponse, null, 4))
-            if (previousResponse.host === msg.host && msg.location !== previousResponse.location) {
-                // Main search has already searched iframe
 
-                const result = previousResponse.inIframe ? msg : previousResponse
-                console.log('BACKGROUND: Main search has already searched iframe. Sending result:', result)
-                await chrome.runtime.sendMessage(result)
-            } else {
                 msg.result = mergeSearchReplaceResults(msg.result, previousResponse.result)
                 msg.hints = Array.from(new Set([...(msg.hints || []), ...(previousResponse.hints || [])]))
 
@@ -69,7 +63,6 @@ export async function listenerContentResponse(msg: SearchReplaceResponse) {
                     console.log('BACKGROUND: Not sending response, storing as WIP', msg)
                     await saveSearchReplaceResponse(msg)
                 }
-            }
         } else {
             console.log('BACKGROUND: Not sending response, storing as WIP', msg)
             msg.backgroundReceived += 1

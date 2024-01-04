@@ -32,10 +32,14 @@ export function tabConnect() {
 
 export function getInputElements(
     document: Document,
-    visibleOnly?: boolean
+    visibleOnly?: boolean,
+    elementFilter: Map<Element, Element> = new Map<Element, Element>()
 ): (HTMLInputElement | HTMLTextAreaElement)[] {
     const inputs = Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea'))
-    return visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
+    const visibleElements =  visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
+    console.log("UTIL: visibleElements", visibleElements)
+    console.log("UTIL: elementFilter", elementFilter)
+    return visibleElements.filter((input) => !elementFilter.has(input))
 }
 
 export function getIframeElements(document: Document): HTMLIFrameElement[] {
@@ -164,6 +168,7 @@ export function mergeSearchReplaceResults(a: SearchReplaceResult, b: SearchRepla
 export function checkIframeHosts(iframes: HTMLIFrameElement[]) {
     // extract the host from the iframe src to avoid cross-domain scripting error
     const hosts = iframes.map((iframe) => {
+        console.log("UTIL: Checking iframe.src")
         const url = new URL(iframe.src)
         return url.host
     })

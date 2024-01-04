@@ -144,7 +144,6 @@ export interface SearchReplaceResponse {
     iframes: number
     backgroundReceived: number
     host: string
-    checkIframes: boolean
 }
 
 export type TranslationProxy = (key: string) => string
@@ -187,3 +186,5 @@ export type SearchReplaceLocalStorage = {
     replaceTerm: string
     searchReplaceResult: SearchReplaceResult
 }
+
+export type ReplaceFunctionReturnType = { searchReplaceResult: SearchReplaceResult, elementsChecked: Map<Element, Element> }
