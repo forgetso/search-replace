@@ -138,6 +138,11 @@ function replaceInTextNodes(
                     searchReplaceResult.count.replaced += replacementCount // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
                     searchReplaceResult.replaced = true
                     textNode.dispatchEvent(new Event('input', {bubbles: true}))
+                    console.log("config", config)
+                    if (config.replaceNext) {
+                        console.log("CONTENT: stopping replace as replaceNext set and we've already replaced")
+                        config.replace = false
+                    }
                 }
             }
         }

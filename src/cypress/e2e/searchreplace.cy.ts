@@ -44,7 +44,7 @@ describe('Search Replace ', () => {
                     ELEMENT_FILTER
                 ).then((result) => {
                     console.log(`result`, result)
-                    expect(result.count.original).to.equal(8)
+                    expect(result.count.original).to.equal(6)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -73,7 +73,7 @@ describe('Search Replace ', () => {
                     false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original).to.equal(7)
+                    expect(result.count.original).to.equal(5)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -131,7 +131,7 @@ describe('Search Replace ', () => {
                     false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original).to.equal(5)
+                    expect(result.count.original).to.equal(4)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -160,7 +160,7 @@ describe('Search Replace ', () => {
                     false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original).to.equal(4)
+                    expect(result.count.original).to.equal(3)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -168,7 +168,7 @@ describe('Search Replace ', () => {
         })
     })
 
-    it.only('replaces the search term with the replace term', () => {
+    it('replaces the search term with the replace term', () => {
         cy.window().then((window) => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
@@ -189,7 +189,7 @@ describe('Search Replace ', () => {
                     false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original - result.count.replaced).to.equal(6)
+                    expect(result.count.original - result.count.replaced).to.equal(0)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -218,7 +218,7 @@ describe('Search Replace ', () => {
                     false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original - result.count.replaced).to.equal(7)
+                    expect(result.count.original - result.count.replaced).to.equal(5)
                 })
             ).then(() => {
                 console.log(`after wrap`)
