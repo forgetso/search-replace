@@ -7,7 +7,7 @@ async function saveSearchReplaceResponse(response: SearchReplaceResponse) {
         response.instance.instanceId || getInstanceId({ ...response.instance, url: response.location }, true)
     ).toString()
     const key = `savedResponse-${id}`
-    await chrome.storage.local.set({ [key]: response });
+    await chrome.storage.local.set({ [key]: response })
     return
 }
 
@@ -44,25 +44,25 @@ export async function listenerContentResponse(msg: SearchReplaceResponse) {
         if (previousResponse) {
             console.log('BACKGROUND: Found previous response', JSON.stringify(previousResponse, null, 4))
 
-                msg.result = mergeSearchReplaceResults(msg.result, previousResponse.result)
-                msg.hints = Array.from(new Set([...(msg.hints || []), ...(previousResponse.hints || [])]))
+            msg.result = mergeSearchReplaceResults(msg.result, previousResponse.result)
+            msg.hints = Array.from(new Set([...(msg.hints || []), ...(previousResponse.hints || [])]))
 
-                console.log('BACKGROUND: checking if mergeSearchReplaceResults is complete', msg)
-                console.log(msg.backgroundReceived + previousResponse.backgroundReceived)
-                console.log(msg.iframes + previousResponse.iframes)
-                if (
-                    msg.backgroundReceived + previousResponse.backgroundReceived ===
-                    msg.iframes + previousResponse.iframes
-                ) {
-                    console.log('BACKGROUND: Total frames searched = iframes count, sending msg:', msg)
-                    await removeSearchReplaceResponses()
-                    await chrome.runtime.sendMessage(msg)
-                } else {
-                    msg.backgroundReceived += 1
-                    // save the response as a WIP
-                    console.log('BACKGROUND: Not sending response, storing as WIP', msg)
-                    await saveSearchReplaceResponse(msg)
-                }
+            console.log('BACKGROUND: checking if mergeSearchReplaceResults is complete', msg)
+            console.log(msg.backgroundReceived + previousResponse.backgroundReceived)
+            console.log(msg.iframes + previousResponse.iframes)
+            if (
+                msg.backgroundReceived + previousResponse.backgroundReceived ===
+                msg.iframes + previousResponse.iframes
+            ) {
+                console.log('BACKGROUND: Total frames searched = iframes count, sending msg:', msg)
+                await removeSearchReplaceResponses()
+                await chrome.runtime.sendMessage(msg)
+            } else {
+                msg.backgroundReceived += 1
+                // save the response as a WIP
+                console.log('BACKGROUND: Not sending response, storing as WIP', msg)
+                await saveSearchReplaceResponse(msg)
+            }
         } else {
             console.log('BACKGROUND: Not sending response, storing as WIP', msg)
             msg.backgroundReceived += 1
