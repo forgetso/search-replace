@@ -44,7 +44,7 @@ export function getInputElements(
 
 export function getIframeElements(document: Document): HTMLIFrameElement[] {
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter(
-        (iframe) => iframe.src.length
+        (iframe) => iframe.src.length && !iframe.src.startsWith('blob:')
     )
 }
 

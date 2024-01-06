@@ -225,9 +225,8 @@ function getFilteredElements(document: Document, elementFilter: RegExp) {
     const otherElementsArr: HTMLElement[] = Array.from(otherElements).filter(
         (el) => !el.tagName.match(elementFilter)
     ) as HTMLElement[]
-    console.log(elementFilter)
-    console.log(otherElementsArr)
-    return otherElementsArr
+    // remove iframes that are not blobs
+    return otherElementsArr.filter((el) => el.tagName !== 'IFRAME' || (el.tagName === 'IFRAME' && 'src' in el && typeof el.src === 'string' && el.src.startsWith('blob:')))
 }
 
 function replaceHTML(
@@ -533,6 +532,8 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
         const iframes = getIframeElements(window.document)
         // are the iframes on different hosts?
         const iframeOnDifferentHosts = checkIframeHosts(iframes)
+        // get the element filter. If there are blob iframes then we need to include them in the search
+
         // Setup event listeners to communicate between iframes and parent
         searchReplace(
             action,
