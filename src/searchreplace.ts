@@ -10,7 +10,7 @@ import {
     SearchReplaceResponse,
     SearchReplaceResult,
 } from './types/index'
-import { checkIframeHosts, elementIsVisible, getIframeElements, getInputElements, inIframe } from './util'
+import {checkIframeHosts, elementIsVisible, getIframeElements, getInputElements, inIframe} from './util'
 import { getFlags, getSearchPattern } from './regex'
 import { getHints } from './hints'
 
@@ -231,72 +231,22 @@ function replaceHTML(
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, Element> = new Map<Element, Element>()
 ): ReplaceFunctionReturnType {
-    const otherElementsArr = getFilteredElements(document, config.elementFilter)
+    let otherElementsArr = getFilteredElements(document, config.elementFilter).filter((el) => !elementsChecked.has(el))
     if (config.visibleOnly) {
-        const visibleOnlyResult = replaceVisibleOnly(config, document, otherElementsArr, searchReplaceResult, elementsChecked)
-        searchReplaceResult = visibleOnlyResult.searchReplaceResult
-        elementsChecked = visibleOnlyResult.elementsChecked
-        console.log('CONTENT: searchReplaceResult after replaceVisibleOnly', JSON.stringify(searchReplaceResult))
-    } else {
-        // if there are iframes we take a cautious approach TODO - make this properly replace HTML
-        const htmlInElementsResult = replaceHTMLInElements(config, document, searchReplaceResult)
-        searchReplaceResult = htmlInElementsResult.searchReplaceResult
-        elementsChecked = htmlInElementsResult.elementsChecked
-        console.log('CONTENT: searchReplaceResult after replaceHTMLInElements', JSON.stringify(searchReplaceResult))
+        otherElementsArr = otherElementsArr.filter(elementIsVisible)
     }
+    const visibleOnlyResult = replaceInElements(config, document, otherElementsArr, searchReplaceResult, elementsChecked)
+    searchReplaceResult = visibleOnlyResult.searchReplaceResult
+    elementsChecked = visibleOnlyResult.elementsChecked
+    console.log('CONTENT: searchReplaceResult after replaceVisibleOnly', JSON.stringify(searchReplaceResult))
 
     return {searchReplaceResult, elementsChecked}
 }
-
-function replaceHTMLInElements(
-    config: SearchReplaceConfig,
-    document: Document,
-    searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, Element> = new Map<Element, Element>()
-): ReplaceFunctionReturnType {
-    // start at the root of the document
-    const currentElement = document.getElementsByTagName('BODY')[0]
-    console.log('CONTENT: current element', currentElement)
-    // replaces in inner html per element in the document
-    for (const element of currentElement.children) {
-        // Check if the child is not a script or style tag etc.
-        if (!element.tagName.match(config.elementFilter)) {
-            elementsChecked.set(element, element)
-            const isInput = element.tagName.match(INPUT_TEXTAREA_FILTER)
-            // If the element's parent has already been searched, skip it
-            // TODO make input elements properly update their value
-            if (element.parentElement && !elementsChecked.has(element.parentElement) && !isInput) {
-                console.log("CONTENT: checking element", element)
-
-                if (isInput) {
-                    console.log("CONTENT: replacing in input")
-                    searchReplaceResult = replaceInInput(
-                        config,
-                        document,
-                        element as HTMLInputElement,
-                        searchReplaceResult
-                    )
-                } else {
-                    console.log("CONTENT: replacing in inner HTML")
-                    searchReplaceResult = replaceInInnerHTML(config, element, searchReplaceResult)
-                }
-                //Replace Next should only match once
-                if (config.replaceNext && searchReplaceResult.replaced) {
-                    console.log("CONTENT: stopping replace as replaceNext set and we've already replaced")
-                    config.replace = false
-                }
-            }
-        }
-    }
-
-    return {searchReplaceResult, elementsChecked}
-}
-
 function replaceNextOnly(flags: string): boolean {
     return flags.indexOf(RegexFlags.Global) === -1
 }
 
-function replaceVisibleOnly(
+function replaceInElements(
     config: SearchReplaceConfig,
     document: Document,
     elements: HTMLElement[],
@@ -304,10 +254,9 @@ function replaceVisibleOnly(
     elementsChecked: Map<Element, Element>
 ): ReplaceFunctionReturnType {
     // get unhidden, unchecked elements
-    const unhidden: HTMLElement[] = Array.from(elements).filter(elementIsVisible).filter((el) => !elementsChecked.has(el))
-    console.log('CONTENT: unhidden elements', unhidden)
+    console.log('CONTENT: unhidden elements', elements)
     // replace inner texts first, dropping out if we have done a replacement and are not working globally
-    const innerTextResult = replaceInnerText(config, document, unhidden, searchReplaceResult, elementsChecked)
+    const innerTextResult = replaceInnerText(config, document, elements, searchReplaceResult, elementsChecked)
     searchReplaceResult = innerTextResult.searchReplaceResult
     elementsChecked = innerTextResult.elementsChecked
     console.log('CONTENT: searchReplaceResult after replaceInnerText', JSON.stringify(searchReplaceResult))
@@ -315,13 +264,14 @@ function replaceVisibleOnly(
         config.replace = false
     }
     // then replace inputs
-    const inputs: HTMLInputElement[] = unhidden.filter((el) =>
+    const inputs: HTMLInputElement[] = elements.filter((el) =>
         el.tagName.match(INPUT_TEXTAREA_FILTER)
     ) as HTMLInputElement[]
     // remove checked elements from inputs
     console.log("CONTENT: inputs", inputs)
     console.log("CONTENT: elementsChecked", elementsChecked)
     const inputsToCheck = inputs.filter((input) => !elementsChecked.has(input))
+    inputsToCheck.map((input) => elementsChecked.set(input, input))
     searchReplaceResult = replaceInInputs(config, document, inputsToCheck, searchReplaceResult)
     console.log('CONTENT: searchReplaceResult after replaceInInputs', JSON.stringify(searchReplaceResult))
     return {searchReplaceResult, elementsChecked}
