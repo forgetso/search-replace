@@ -88,18 +88,37 @@ function replaceInnerText(
             if (occurrences) {
                 elementsChecked.set(element, element)
 
-                if (element.parentElement && !elementsChecked.has(element.parentElement)) {
+                if (element.parentElement && !elementsChecked.has(element.parentElement) && element.nodeValue) {
                     console.log('CONTENT: checking element', element)
 
-                    const textNodesResult = replaceInTextNodes(
-                        config,
-                        document,
-                        element,
-                        searchReplaceResult,
-                        elementsChecked
-                    )
-                    searchReplaceResult = textNodesResult.searchReplaceResult
-                    elementsChecked = textNodesResult.elementsChecked
+                    // const textNodesResult = replaceInTextNodes(
+                    //     config,
+                    //     document,
+                    //     element,
+                    //     searchReplaceResult,
+                    //     elementsChecked
+                    // )
+                    searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+                    const oldValue = element.nodeValue
+                    const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
+
+                    if (config.replace && oldValue !== newValue) {
+                        element.nodeValue = newValue
+                        console.log('oldValue', oldValue, 'newValue', newValue)
+                        const replacementCount = config.replaceAll ? occurrences.length : 1
+                        console.log('CONTENT: adding', replacementCount, 'to replaced count')
+                        searchReplaceResult.count.replaced += replacementCount // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
+                        searchReplaceResult.replaced = true
+                        element.dispatchEvent(new Event('input', { bubbles: true }))
+                        console.log('config', config)
+                        if (config.replaceNext) {
+                            console.log("CONTENT: stopping replace as replaceNext set and we've already replaced")
+                            config.replace = false
+                        }
+                    }
+
+                    // searchReplaceResult = textNodesResult.searchReplaceResult
+                    // elementsChecked = textNodesResult.elementsChecked
                     if (config.replaceNext && searchReplaceResult.replaced) {
                         console.log("CONTENT: stopping replace as replaceNext set and we've already replaced")
                         config.replace = false
@@ -244,8 +263,11 @@ function replaceHTML(
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, Element> = new Map<Element, Element>()
 ): ReplaceFunctionReturnType {
+    console.log('CONTENT: elements checked', elementsChecked)
     let otherElementsArr = getFilteredElements(document, config.elementFilter).filter((el) => !elementsChecked.has(el))
+    console.log('CONTENT: checking other elementsArr', otherElementsArr)
     if (config.visibleOnly) {
+        //TODO check visibility of elements based on their parents and not just their own style tags
         otherElementsArr = otherElementsArr.filter(elementIsVisible)
     }
     const visibleOnlyResult = replaceInElements(
@@ -276,6 +298,7 @@ function replaceInElements(
     console.log('CONTENT: unhidden elements', elements)
     // replace inner texts first, dropping out if we have done a replacement and are not working globally
     const innerTextResult = replaceInnerText(config, document, elements, searchReplaceResult, elementsChecked)
+    console.log('CONTENT: elements checked', elementsChecked)
     searchReplaceResult = innerTextResult.searchReplaceResult
     elementsChecked = innerTextResult.elementsChecked
     console.log('CONTENT: searchReplaceResult after replaceInnerText', JSON.stringify(searchReplaceResult))

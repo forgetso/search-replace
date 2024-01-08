@@ -52,6 +52,9 @@ describe('Search Replace ', () => {
         })
     })
 
+    // TODO add visibilty test for divs contained within hidden parent divs that are multiple levels deep
+    // it('counts the correct number of visible occurrences for nested hidden items', () => {
+
     it('counts the correct number of visible occurrences', () => {
         cy.window().then((window) => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
