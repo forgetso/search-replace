@@ -187,4 +187,7 @@ export type SearchReplaceLocalStorage = {
     searchReplaceResult: SearchReplaceResult
 }
 
-export type ReplaceFunctionReturnType = { searchReplaceResult: SearchReplaceResult, elementsChecked: Map<Element, Element> }
+export type ReplaceFunctionReturnType = {
+    searchReplaceResult: SearchReplaceResult
+    elementsChecked: Map<Element, SearchReplaceResult>
+}
