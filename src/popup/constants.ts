@@ -1,6 +1,7 @@
 import { SearchReplaceCheckboxNames } from '../types'
 
-const { matchCase, inputFieldsOnly, visibleOnly, wholeWord, isRegex, save, replaceAll } = SearchReplaceCheckboxNames
+const { matchCase, inputFieldsOnly, visibleOnly, wholeWord, isRegex, replaceHTML, save, replaceAll } =
+    SearchReplaceCheckboxNames
 
 export const INPUT_ELEMENTS_AND_EVENTS = {
     searchTerm: ['change', 'keyup', 'blur'],
@@ -10,6 +11,7 @@ export const INPUT_ELEMENTS_AND_EVENTS = {
     [visibleOnly]: ['change', 'click'],
     [wholeWord]: ['change', 'click'],
     [isRegex]: ['change'],
+    [replaceHTML]: ['change'],
     help: ['click'],
 }
 

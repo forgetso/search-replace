@@ -19,6 +19,8 @@ import {
 import { clearHistoryClickHandler, constructSearchReplaceHistory, historyHeaderClickHandler } from './popup/history'
 import { createTranslationProxy, getInstanceId, getTranslation, localizeElements, manifest, tabConnect } from './util'
 
+const RELEASE_NOTES_URL = 'https://github.com/forgetso/search-replace/releases/tag'
+
 function getSearchTermElement() {
     return <HTMLTextAreaElement>document.getElementById(SEARCH_TERM_INPUT_ID)
 }
@@ -40,7 +42,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     }
     const githubVersionElement = document.getElementById('github_version') as HTMLAnchorElement
     if (githubVersionElement) {
-        githubVersionElement.href = `https://github.com/forgetso/search-replace/releases/tag/${manifest.version}`
+        githubVersionElement.href = `${RELEASE_NOTES_URL}/${manifest.version}`
     }
 
     // Set the onchange and onkeydown functions for the input fields

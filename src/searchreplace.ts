@@ -120,6 +120,7 @@ function replaceInnerHTML(
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
+    console.log('elements', elements)
     for (const element of elements) {
         const innerResult = replaceInInnerHTML(config, element, searchReplaceResult, elementsChecked)
         searchReplaceResult = innerResult.searchReplaceResult
@@ -336,6 +337,11 @@ function replaceInInnerHTML(
     if (elementsChecked.has(element)) {
         return { searchReplaceResult, elementsChecked }
     }
+    const ancestorChecked = containsAncestor(element, elementsChecked)
+    if (ancestorChecked) {
+        return { searchReplaceResult, elementsChecked }
+    }
+
     // take a copy of the element except with iframes removed from within
     const elementCopy = element.cloneNode(true) as HTMLElement
     const iframes = Array.from(elementCopy.getElementsByTagName('iframe'))
