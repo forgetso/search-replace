@@ -37,14 +37,14 @@ describe('Search Replace ', () => {
                     false,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     iframes,
-                    false,
                     ELEMENT_FILTER
                 ).then((result) => {
                     console.log(`result`, result)
-                    expect(result.count.original).to.equal(7)
+                    expect(result.searchReplaceResult.count.original).to.equal(7)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -70,13 +70,13 @@ describe('Search Replace ', () => {
                     true,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     iframes,
-                    false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original).to.equal(5)
+                    expect(result.searchReplaceResult.count.original).to.equal(5)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -99,13 +99,13 @@ describe('Search Replace ', () => {
                     false,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     iframes,
-                    false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original).to.equal(0)
+                    expect(result.searchReplaceResult.count.original).to.equal(0)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -128,13 +128,13 @@ describe('Search Replace ', () => {
                     false,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     iframes,
-                    false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original).to.equal(4)
+                    expect(result.searchReplaceResult.count.original).to.equal(4)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -157,13 +157,13 @@ describe('Search Replace ', () => {
                     true,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     iframes,
-                    false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original).to.equal(3)
+                    expect(result.searchReplaceResult.count.original).to.equal(3)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -186,13 +186,15 @@ describe('Search Replace ', () => {
                     false,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     iframes,
-                    false,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original - result.count.replaced).to.equal(0)
+                    expect(
+                        result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
+                    ).to.equal(0)
                 })
             ).then(() => {
                 console.log(`after wrap`)
@@ -217,11 +219,13 @@ describe('Search Replace ', () => {
                     false,
                     false,
                     false,
-                    iframes,
                     false,
+                    iframes,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.count.original - result.count.replaced).to.equal(6)
+                    expect(
+                        result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
+                    ).to.equal(6)
                 })
             ).then(() => {
                 console.log(`after wrap`)

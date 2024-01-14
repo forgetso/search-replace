@@ -75,6 +75,10 @@
         "message": "Expresión Regular",
         "description": "checkbox isRegex"
     },
+    "replaceHTML": {
+        "message": "Replace HTML",
+        "description": "checkbox replaceHTML"
+    },
     "replaceAll": {
         "message": "Reemplazar Todo",
         "description": "checkbox replaceAll"

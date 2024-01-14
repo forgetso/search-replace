@@ -75,6 +75,10 @@
     "message": "正規表現",
     "description": "チェックボックス 正規表現"
   },
+  "replaceHTML": {
+    "message": "Replace HTML",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "すべて置換",
     "description": "チェックボックス すべて置換"

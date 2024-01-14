@@ -4,18 +4,9 @@ export enum SearchReplaceCheckboxNames {
     visibleOnly = 'visibleOnly',
     wholeWord = 'wholeWord',
     isRegex = 'isRegex',
+    replaceHTML = 'replaceHTML',
     replaceAll = 'replaceAll',
     save = 'save',
-}
-
-export enum SearchReplaceCheckboxLabels {
-    matchCase = 'Match case',
-    inputFieldsOnly = 'Input fields only',
-    visibleOnly = 'Visible content only',
-    wholeWord = 'Match whole word',
-    isRegex = 'Regular expression',
-    replaceAll = 'Replace all',
-    save = 'Save and apply on page reload',
 }
 
 export type SearchReplaceOptions = {
@@ -166,6 +157,7 @@ export type SearchReplaceConfig = {
     flags: string
     inputFieldsOnly: boolean
     isRegex: boolean
+    replaceHTML: boolean
     visibleOnly: boolean
     wholeWord: boolean
     searchPattern: RegExp
@@ -173,21 +165,13 @@ export type SearchReplaceConfig = {
     matchCase: boolean
     isIframe: boolean
     iframes: HTMLIFrameElement[]
-    iframesOnDifferentHosts: boolean
     elementFilter: RegExp
     usesKnockout: boolean
-}
-
-export type SearchReplaceLocalStorageResultKey = `searchReplace-${string}`
-export type SearchReplaceLocalStorageOriginKey = `searchReplace-origin-${string}`
-
-export type SearchReplaceLocalStorage = {
-    searchTerm: string
-    replaceTerm: string
-    searchReplaceResult: SearchReplaceResult
 }
 
 export type ReplaceFunctionReturnType = {
     searchReplaceResult: SearchReplaceResult
     elementsChecked: Map<Element, SearchReplaceResult>
 }
+
+export type PartitionResult = [(HTMLInputElement | HTMLTextAreaElement)[], HTMLElement[]]

@@ -37,8 +37,6 @@ export function getInputElements(
 ): (HTMLInputElement | HTMLTextAreaElement)[] {
     const inputs = Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea'))
     const visibleElements = visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
-    console.log('UTIL: visibleElements', visibleElements)
-    console.log('UTIL: elementFilter', elementFilter)
     return visibleElements.filter((input) => !elementFilter.has(input))
 }
 

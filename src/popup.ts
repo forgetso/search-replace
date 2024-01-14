@@ -387,6 +387,7 @@ function getInputValues(replaceAll: boolean): SearchReplaceInstance {
     const visibleOnly = (<HTMLInputElement>document.getElementById('visibleOnly')).checked
     const wholeWord = (<HTMLInputElement>document.getElementById('wholeWord')).checked
     const isRegex = (<HTMLInputElement>document.getElementById('isRegex')).checked
+    const replaceHTML = (<HTMLInputElement>document.getElementById('replaceHTML')).checked
     const save = (<HTMLInputElement>document.getElementById('save')).checked
     const instance: SearchReplaceInstance = {
         searchTerm,
@@ -397,6 +398,7 @@ function getInputValues(replaceAll: boolean): SearchReplaceInstance {
             visibleOnly,
             wholeWord,
             isRegex,
+            replaceHTML,
             replaceAll,
             save,
         },

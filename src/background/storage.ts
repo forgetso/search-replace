@@ -10,6 +10,7 @@ export function getDefaultStorage(): SearchReplacePopupStorage {
             visibleOnly: true,
             wholeWord: false,
             isRegex: false,
+            replaceHTML: false,
             replaceAll: true,
             save: false,
         },

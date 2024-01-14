@@ -75,6 +75,10 @@
     "message": "تعبير منتظم (التعبيرات العادية)",
     "description": "checkbox isRegex"
   },
+  "replaceHTML": {
+    "message": "Replace HTML",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "استبدال الكل",
     "description": "checkbox replaceAll"

@@ -75,6 +75,10 @@
     "message": "Регулярное выражение",
     "description": "checkbox isRegex"
   },
+  "replaceHTML": {
+    "message": "Replace HTML",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "Заменить все",
     "description": "checkbox replaceAll"

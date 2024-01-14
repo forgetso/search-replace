@@ -75,6 +75,10 @@
     "message": "正则表达式",
     "description": "复选框 正则表达式"
   },
+  "replaceHTML": {
+    "message": "Replace HTML",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "替换所有",
     "description": "复选框 替换所有"
