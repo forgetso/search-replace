@@ -1,10 +1,10 @@
 import { LangFile, SearchReplaceBackgroundMessage } from '../types'
-import { getStorage } from './storage'
+import { getStorageSync } from './storage'
 
 export function getAvailableLanguages() {
     return new Promise((resolve, reject) => {
         const localePath = '_locales/list.json'
-
+        console.log('TRANSLATIONS: Getting available languages from localePath', localePath)
         // Load the langlist content
         fetch(chrome.runtime.getURL(localePath))
             .then((response) => response.json())
@@ -20,7 +20,7 @@ export function getAvailableLanguages() {
 export function loadLocalizedContent(lng: string) {
     return new Promise((resolve, reject) => {
         const localePath = '_locales/' + lng + '/messages.json'
-
+        console.log('TRANSLATIONS: Loading localized content from localePath', localePath)
         // Load the localized content
         fetch(chrome.runtime.getURL(localePath))
             .then((response) => response.json())
@@ -35,10 +35,10 @@ export function loadLocalizedContent(lng: string) {
 
 function getTranslation() {
     return new Promise((resolve, reject) => {
-        getStorage<{ preferredLanguage: string }>('preferredLanguage')
+        getStorageSync<string>('preferredLanguage')
             .then((result) => {
                 console.log('TRANSLATIONS: Language translation storage', result)
-                const lng = result ? result.preferredLanguage : 'en'
+                const lng = result || 'en'
                 const lngFallback = 'en'
                 Promise.all([loadLocalizedContent(lng), loadLocalizedContent(lngFallback)]).then((data) => {
                     resolve(data)

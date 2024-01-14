@@ -16,6 +16,5 @@ export const RICH_TEXT_EDITOR_GUTENBERG_DOCUMENT: RichTextEditor = {
 export const RICH_TEXT_EDITORS: RichTextEditor[] = [RICH_TEXT_EDITOR_TINY_MCE, RICH_TEXT_EDITOR_GUTENBERG_DOCUMENT]
 
 export const HINTS = {
-    wordpress6: 'Hint: WordPress 6+ detected. Check "Visible content only?" when editing posts.',
     gmail: 'Hint: Gmail detected. Check "Visible content only?" when editing draft emails.',
 }

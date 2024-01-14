@@ -42,9 +42,13 @@ export function getInputElements(
     return visibleElements.filter((input) => !elementFilter.has(input))
 }
 
+export function isBlobIframe(el: Element) {
+    return el.tagName === 'IFRAME' && 'src' in el && typeof el.src === 'string' && el.src.startsWith('blob:')
+}
+
 export function getIframeElements(document: Document): HTMLIFrameElement[] {
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter(
-        (iframe) => iframe.src.length && !iframe.src.startsWith('blob:')
+        (iframe) => iframe.src.length && !isBlobIframe(iframe)
     )
 }
 
