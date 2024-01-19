@@ -1,4 +1,13 @@
-import { LangFile, LangList, SearchReplaceInstance, SearchReplaceResult, TranslationProxy } from './types'
+// Shared utils between the background and content scripts
+
+import {
+    LangFile,
+    LangList,
+    SearchReplaceInstance,
+    SearchReplaceResponse,
+    SearchReplaceResult,
+    TranslationProxy,
+} from './types'
 
 export const cyrb53 = (str, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -30,42 +39,6 @@ export function tabConnect() {
     })
 }
 
-export function getInputElements(
-    document: Document,
-    elementFilter: Map<Element, SearchReplaceResult>,
-    visibleOnly?: boolean
-): (HTMLInputElement | HTMLTextAreaElement)[] {
-    const inputs = Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea'))
-    const visibleElements = visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
-    return visibleElements.filter((input) => !elementFilter.has(input))
-}
-
-export function isBlobIframe(el: Element) {
-    return el.tagName === 'IFRAME' && 'src' in el && typeof el.src === 'string' && el.src.startsWith('blob:')
-}
-
-export function getIframeElements(document: Document): HTMLIFrameElement[] {
-    return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter(
-        (iframe) => iframe.src.length && !isBlobIframe(iframe)
-    )
-}
-
-export function elementIsVisible(element: HTMLElement): boolean {
-    if (element && 'style' in element) {
-        const styleVisible = element.style.display !== 'none'
-        if (element.nodeName === 'INPUT') {
-            const inputElement = element as HTMLInputElement
-            return inputElement.type !== 'hidden' && styleVisible
-        } else {
-            return styleVisible
-        }
-    }
-    return false
-}
-
-export function inIframe() {
-    return window !== window.top
-}
 let manifestJSON = {
     version: 'test',
 }
@@ -157,6 +130,20 @@ export function getExtensionStorage<T>(key: string): Promise<T | undefined> {
     })
 }
 
+export function mergeSearchReplaceResponse(a: SearchReplaceResponse, b: SearchReplaceResponse): SearchReplaceResponse {
+    return {
+        instance: a.instance,
+        inIframe: a.inIframe,
+        hints: Array.from(new Set([...(a.hints || []), ...(b.hints || [])])),
+        location: a.location,
+        result: mergeSearchReplaceResults(a.result, b.result),
+        action: a.action,
+        iframes: a.iframes,
+        backgroundReceived: a.backgroundReceived + b.backgroundReceived,
+        host: a.host,
+    }
+}
+
 export function mergeSearchReplaceResults(a: SearchReplaceResult, b: SearchReplaceResult): SearchReplaceResult {
     return {
         count: {
@@ -165,19 +152,4 @@ export function mergeSearchReplaceResults(a: SearchReplaceResult, b: SearchRepla
         },
         replaced: a.replaced || b.replaced,
     }
-}
-
-export function checkIframeHosts(iframes: HTMLIFrameElement[]) {
-    // extract the host from the iframe src to avoid cross-domain scripting error
-    const hosts = iframes.map((iframe) => {
-        console.log('UTIL: Checking iframe.src')
-        const url = new URL(iframe.src)
-        return url.host
-    })
-    console.log('CONTENT: hosts', hosts, window.location.host)
-    return hosts.some((host) => host !== window.location.host)
-}
-
-export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
-    return value !== null && value !== undefined
 }

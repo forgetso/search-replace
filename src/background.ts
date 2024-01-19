@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener(function (msg: SearchReplaceResponse, sende
     }
     if (msg.action === 'clearSavedResponses') {
         ;(async () => {
-            await removeSearchReplaceResponses()
+            await removeSearchReplaceResponses(`savedResponse-${msg.instance.instanceId}`)
 
             sendResponse()
         })()
@@ -53,6 +53,25 @@ chrome.runtime.onInstalled.addListener(function (details) {
 // Listen for tab updates and apply any saved instances
 chrome.tabs.onUpdated.addListener(function (tabId, info) {
     listenerApplySavedInstances(info)
+})
+
+// Listen for storage changes
+// chrome.storage.onChanged.addListener(function (changes, areaName) {
+//     console.log('BACKGROUND: Storage changes', changes, areaName)
+//     ;(async () => {
+//         await listenerApplyStoredResponse(changes)
+//     })()
+//     return true
+// })
+
+// Run when popup closes
+chrome.runtime.onConnect.addListener(function (externalPort) {
+    externalPort.onDisconnect.addListener(function () {
+        console.log('onDisconnect')
+        removeSearchReplaceResponses().then(() => {
+            console.log('Removed saved responses')
+        })
+    })
 })
 
 export {}

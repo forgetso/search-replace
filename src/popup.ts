@@ -225,7 +225,7 @@ export async function contentScriptCall(
     history: SearchReplaceInstance[]
 ): Promise<string | undefined> {
     // must do this before calling the content script
-    await chrome.runtime.sendMessage({ action: 'clearSavedResponses' })
+    await chrome.runtime.sendMessage({ action: 'clearSavedResponses', instance: searchReplaceInstance })
     const query = { active: true, currentWindow: true }
     let url: string | undefined = undefined
     const [tab] = await chrome.tabs.query(query)

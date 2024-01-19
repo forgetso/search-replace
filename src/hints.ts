@@ -1,5 +1,5 @@
 import { GMAIL_APPLICATION_NAME, GOOGLE_MAIL_DOMAIN, HINTS } from './constants'
-import { inIframe } from './util'
+import { inIframe } from './elements'
 
 export function getHints(document: Document): string[] {
     const hints: string[] = []

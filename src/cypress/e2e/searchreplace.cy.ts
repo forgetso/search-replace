@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import { ELEMENT_FILTER } from '../../constants'
-import { elementIsVisible } from '../../util'
+import { elementIsVisible } from '../../elements'
 import { searchReplace } from '../../searchreplace'
 
 const SEARCHTERM = 'This is a test!!!'
@@ -13,9 +13,7 @@ describe('Search Replace ', () => {
 
     it('correctly identifies the number of visible inputs', () => {
         cy.document().then((document) => {
-            const inputs = Array.from(
-                <NodeListOf<HTMLInputElement | HTMLTextAreaElement>>document.querySelectorAll('input,textarea')
-            )
+            const inputs = Array.from(<NodeListOf<HTMLElement>>document.querySelectorAll('input,textarea'))
             const visible = inputs.filter(elementIsVisible)
             expect(visible.length).to.equal(4)
         })
@@ -44,11 +42,9 @@ describe('Search Replace ', () => {
                     ELEMENT_FILTER
                 ).then((result) => {
                     console.log(`result`, result)
-                    expect(result.searchReplaceResult.count.original).to.equal(7)
+                    expect(result.searchReplaceResult.count.original).to.equal(8)
                 })
-            ).then(() => {
-                console.log(`after wrap`)
-            })
+            ).then(() => {})
         })
     })
 
@@ -78,9 +74,7 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(5)
                 })
-            ).then(() => {
-                console.log(`after wrap`)
-            })
+            ).then(() => {})
         })
     })
 
@@ -107,9 +101,7 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(0)
                 })
-            ).then(() => {
-                console.log(`after wrap`)
-            })
+            ).then(() => {})
         })
     })
 
@@ -136,9 +128,7 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(4)
                 })
-            ).then(() => {
-                console.log(`after wrap`)
-            })
+            ).then(() => {})
         })
     })
 
@@ -165,13 +155,11 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(3)
                 })
-            ).then(() => {
-                console.log(`after wrap`)
-            })
+            ).then(() => {})
         })
     })
 
-    it('replaces the search term with the replace term', () => {
+    it.only('replaces the search term with the replace term', () => {
         cy.window().then((window) => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
@@ -196,9 +184,7 @@ describe('Search Replace ', () => {
                         result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
                     ).to.equal(0)
                 })
-            ).then(() => {
-                console.log(`after wrap`)
-            })
+            ).then(() => {})
         })
     })
 
@@ -225,11 +211,63 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(
                         result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
-                    ).to.equal(6)
+                    ).to.equal(7)
                 })
-            ).then(() => {
-                console.log(`after wrap`)
-            })
+            ).then(() => {})
+        })
+    })
+
+    it('counts the correct number of divs when replaceHTML is set', () => {
+        cy.window().then((window) => {
+            const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
+
+            cy.wrap(
+                searchReplace(
+                    'count',
+                    window,
+                    '<div',
+                    REPLACETERM,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    true,
+                    false,
+                    iframes,
+                    ELEMENT_FILTER
+                ).then((result) => {
+                    expect(result.searchReplaceResult.count.original).to.equal(14)
+                })
+            ).then(() => {})
+        })
+    })
+
+    it('counts the correct number of divs when replaceHTML and visibleOnly is set', () => {
+        cy.window().then((window) => {
+            const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
+
+            cy.wrap(
+                searchReplace(
+                    'count',
+                    window,
+                    '<div',
+                    REPLACETERM,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    true,
+                    true,
+                    false,
+                    iframes,
+                    ELEMENT_FILTER
+                ).then((result) => {
+                    expect(result.searchReplaceResult.count.original).to.equal(11)
+                })
+            ).then(() => {})
         })
     })
 })

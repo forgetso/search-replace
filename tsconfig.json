@@ -10,7 +10,10 @@
     "target": "es6",
     "jsx": "react",
     "allowJs": true,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "lib": [
+      "es5", "es6", "dom", "dom.iterable"
+    ],
   },
   "include": [
     "**/*.ts",

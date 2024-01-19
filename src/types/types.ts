@@ -167,6 +167,7 @@ export type SearchReplaceConfig = {
     iframes: HTMLIFrameElement[]
     elementFilter: RegExp
     usesKnockout: boolean
+    searchTarget: 'innerHTML' | 'innerText' | 'value'
 }
 
 export type ReplaceFunctionReturnType = {
