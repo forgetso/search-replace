@@ -14,6 +14,7 @@ import {
     getIframeElements,
     getInputElements,
     inIframe,
+    isBlobIframe,
 } from './elements'
 import { getFlags, getSearchPattern } from './regex'
 import { getHints } from './hints'
@@ -129,13 +130,15 @@ function replaceInElement(node: Element, oldValue: string, config: SearchReplace
     let replacementCount = 0
     let replace = false
     let replaced = false
-    if (occurrences) {
+    if (occurrences.length) {
+        console.log('Occurrences in element', node, oldValue, occurrences.length)
+
         const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
         replace = oldValue != newValue
         if (replace) {
             replacementCount = config.replaceAll ? occurrences.length : 1 // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
             const nodeElement = getElementFromNode(node)
-
+            console.log('Replacing in element', nodeElement, oldValue, newValue)
             if ('value' in nodeElement) {
                 // TODO unify with replaceInInput, taking care not to count occurrences again
                 nodeElement['value'] = newValue
@@ -169,9 +172,9 @@ function getElementFromNode(node: Node): Element {
     return element
 }
 
-function isIgnored(ignoredElements: Set<Element>, node: Node, visibleOnly: boolean): number {
+function isIgnored(ignoredElements: Set<Element>, node: Node, visibleOnly: boolean, elementFilter: RegExp): number {
     const toCheck = getElementFromNode(node)
-    if (toCheck.tagName.match(ELEMENT_FILTER)) {
+    if (toCheck.tagName.match(elementFilter) && !isBlobIframe(toCheck)) {
         return NodeFilter.FILTER_REJECT
     }
 
@@ -205,23 +208,33 @@ function nodesUnder(
     let node: Node | null
     const walk = document.createTreeWalker(element, nodeType, {
         acceptNode: (node) => {
-            return isIgnored(ignoredElements, node, config.visibleOnly)
+            return isIgnored(ignoredElements, node, config.visibleOnly, config.elementFilter)
         },
     })
 
+    // FIXME - are iframes being walked?
     while ((node = walk.nextNode())) {
-        // Don't replace in iframes
-        if (node.nextSibling && node.nextSibling.nodeName.match(ELEMENT_FILTER)) {
-            continue
+        if (getElementFromNode(node).tagName === 'IFRAME' || node.nodeName === 'IFRAME') {
+            console.log('Walking iframe', node)
         }
-        // TODO config.replace won't change as long as we're saving the replacements for later
+
+        // FIXME - is this needed?
+        // Don't replace in iframes unless they're blob iframes
+        // if (
+        //     node.nextSibling &&
+        //     node.nextSibling.nodeName.match(config.elementFilter) &&
+        //     !isBlobIframe(node.nextSibling.parentElement as Element)
+        // ) {
+        //     console.log(`Skipping ${node.nextSibling.nodeName}`, node.nextSibling, getElementFromNode(node))
+        //     continue
+        // }
         if (config.replace) {
             let oldValue = node['innerHTML']
             if (config.searchTarget === 'innerText') {
                 oldValue = node.nodeValue || getElementFromNode(node)['value']
             }
 
-            if (node && oldValue && !node.nodeName.match(ELEMENT_FILTER)) {
+            if (node && oldValue) {
                 // Do the replacement
                 const replaceResult = replaceInElement(node as Element, oldValue, config)
                 elementsChecked = updateResults(
@@ -469,7 +482,15 @@ export async function searchReplace(
         }
     } else {
         const startingElement = document.body || document.querySelector('div')
-        result = replaceInHTML(config, document, [startingElement], searchReplaceResult, elementsChecked)
+        // FIXME - is this needed?
+        //const searchableIframes = getIframeElements(document, true)
+        result = replaceInHTML(
+            config,
+            document,
+            [startingElement], //...searchableIframes],
+            searchReplaceResult,
+            elementsChecked
+        )
     }
 
     return result

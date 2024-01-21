@@ -4,7 +4,7 @@ import { elementIsVisible } from '../../elements'
 import { searchReplace } from '../../searchreplace'
 
 const SEARCHTERM = 'This is a test!!!'
-const REPLACETERM = 'This is not a test!!!'
+const REPLACETERM = 'Something else!!!'
 
 describe('Search Replace ', () => {
     beforeEach(() => {
@@ -284,6 +284,52 @@ describe('Search Replace ', () => {
                     ELEMENT_FILTER
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(11)
+                })
+            ).then(() => {
+                console.log('done')
+            })
+        })
+    })
+
+    it('replaces inline style to make invisible divs visible and then correctly counts visible occurrences of search term', () => {
+        cy.window().then((window) => {
+            const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
+
+            cy.wrap(
+                searchReplace(
+                    'searchReplace',
+                    window,
+                    'display: none;',
+                    'display: block;',
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    true,
+                    true,
+                    false,
+                    iframes,
+                    ELEMENT_FILTER
+                ).then(() => {
+                    searchReplace(
+                        'count',
+                        window,
+                        SEARCHTERM,
+                        '',
+                        false,
+                        false,
+                        true,
+                        false,
+                        false,
+                        false,
+                        true,
+                        false,
+                        iframes,
+                        ELEMENT_FILTER
+                    ).then((countResult) => {
+                        expect(countResult.searchReplaceResult.count.original).to.equal(9)
+                    })
                 })
             ).then(() => {
                 console.log('done')

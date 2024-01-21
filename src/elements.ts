@@ -16,9 +16,9 @@ export function isBlobIframe(el: Element) {
     return el.tagName === 'IFRAME' && 'src' in el && typeof el.src === 'string' && el.src.startsWith('blob:')
 }
 
-export function getIframeElements(document: Document): HTMLIFrameElement[] {
+export function getIframeElements(document: Document, blob = false): HTMLIFrameElement[] {
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter(
-        (iframe) => iframe.src.length && !isBlobIframe(iframe)
+        (iframe) => iframe.src.length && (blob ? isBlobIframe(iframe) : !isBlobIframe(iframe))
     )
 }
 
