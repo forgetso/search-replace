@@ -14,7 +14,9 @@ describe('Search Replace ', () => {
     it('correctly identifies the number of visible inputs', () => {
         cy.document().then((document) => {
             const inputs = Array.from(<NodeListOf<HTMLElement>>document.querySelectorAll('input,textarea'))
-            const visible = inputs.filter(elementIsVisible)
+            const visible = inputs.filter((el) => {
+                return elementIsVisible(el)
+            })
             expect(visible.length).to.equal(4)
         })
     })
@@ -44,7 +46,9 @@ describe('Search Replace ', () => {
                     console.log(`result`, result)
                     expect(result.searchReplaceResult.count.original).to.equal(8)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -74,7 +78,9 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(5)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -101,7 +107,9 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(0)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -128,7 +136,9 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(4)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -155,7 +165,9 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(3)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -184,7 +196,9 @@ describe('Search Replace ', () => {
                         result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
                     ).to.equal(0)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -213,7 +227,9 @@ describe('Search Replace ', () => {
                         result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
                     ).to.equal(7)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -240,7 +256,9 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(14)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 
@@ -267,7 +285,9 @@ describe('Search Replace ', () => {
                 ).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(11)
                 })
-            ).then(() => {})
+            ).then(() => {
+                console.log('done')
+            })
         })
     })
 })

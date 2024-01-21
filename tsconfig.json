@@ -22,14 +22,15 @@
   ],
   "types": [
     "chrome",
-    "cypress"
+    "cypress",
+    "dom"
   ],
   "exclude": [
     "node_modules",
     "build",
     "tests",
     "src/cypress",
-    "cypress.config.ts"
+    "src/cypress.config.ts"
   ],
 
 }
