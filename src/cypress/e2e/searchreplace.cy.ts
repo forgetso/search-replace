@@ -159,7 +159,7 @@ describe('Search Replace ', () => {
         })
     })
 
-    it.only('replaces the search term with the replace term', () => {
+    it('replaces the search term with the replace term', () => {
         cy.window().then((window) => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 

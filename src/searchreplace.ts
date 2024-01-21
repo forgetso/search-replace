@@ -1,5 +1,13 @@
 import { ELEMENT_FILTER } from './constants'
 import {
+    PathTreeWalker,
+    copyElementAndRemoveSelectedElements,
+    elementIsVisible,
+    getIframeElements,
+    getInputElements,
+    inIframe,
+} from './elements'
+import {
     RegexFlags,
     ReplaceFunctionReturnType,
     SearchReplaceActions,
@@ -8,14 +16,6 @@ import {
     SearchReplaceResponse,
     SearchReplaceResult,
 } from './types/index'
-import {
-    copyElementAndRemoveSelectedElements,
-    elementIsVisible,
-    getIframeElements,
-    getInputElements,
-    inIframe,
-    restoreRemovedElements,
-} from './elements'
 import { getFlags, getSearchPattern } from './regex'
 import { getHints } from './hints'
 
@@ -150,12 +150,79 @@ function nodesUnder(
     element: Node,
     config: SearchReplaceConfig,
     searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, SearchReplaceResult>
+    elementsChecked: Map<Element, SearchReplaceResult>,
+    ignoredElements: Map<number[], Element>
 ) {
+    console.log('Config.searchTarget', config.searchTarget)
     const filter = config.searchTarget === 'innerHTML' ? NodeFilter.SHOW_ELEMENT : NodeFilter.SHOW_TEXT
     let node: Node | null
-    const walk = document.createTreeWalker(element, filter, null)
+    const walk = new PathTreeWalker(document, element, filter)
+    let path: number[] = []
+
+    let previousNode: Node | null = null
+    console.log('ignored element paths', ignoredElements.keys())
     while ((node = walk.nextNode())) {
+        // Initial element node will not have a previous node
+        if (!previousNode) {
+            path = [0]
+        }
+        // Build the path
+        // createTreeWalker jumps between levels, so we need a way to determine the depth of the current node.
+        // If the node is a text node, we use the text nodes parentElement. if the node is an element, we use it.
+        // We then check if the parent is the previous node, and if so, we increment the depth. If not, we decrement
+        // the depth. This allows us to build a path to the node, which we can use to ignore nodes in ignored elements
+        // let { parent, currentElement } = getNodeCurrentAndParentElement(node)
+        // let count = 0
+        // while (parent && currentElement) {
+        //     console.log('parent', parent, 'currentElement', currentElement, 'path', path)
+        //
+        //     //   The jump could be more than one level, so we need to check the parent of the
+        //     //   previous node to see if it is the current node. If not, we need to check the parent of the parent of the
+        //     //   previous node, and so on until we find the parent of the current node. We then need to check if the parent
+        //     //   of the current node is the previous node. If so, we increment the depth, if not, we decrement the depth.
+        //     if (currentElement) {
+        //         // Starting element, e.g. <body>
+        //         // If the parent (<html>) childNodes have an index of `element` then we are at the start. The path is [0]
+        //         const initialChildIndex = childIndex(parent, element)
+        //         if (element.parentElement && initialChildIndex > -1) {
+        //             path = [0]
+        //         } else if (previousNode) {
+        //             // If we are in a <div> under <body> and the previousNode (<body>) have an index of `currentElement` then we have traversed sideways out of the div.
+        //             // We pop a level off the path and append the childNode index
+        //             const previousNodeChildIndex = childIndex(previousNode, currentElement)
+        //             if (previousNodeChildIndex > -1) {
+        //                 path = [...path, previousNodeChildIndex]
+        //             }
+        //         } else {
+        //             // We have traversed sideways in the tree so remove a level from the path and take the child index
+        //             // of the node in its parent element
+        //             // e.g. [0, 1, 2] -> [0, 2]
+        //             const parentNodeChildIndex = childIndex(parent, currentElement)
+        //             path.pop()
+        //             path = [...path, parentNodeChildIndex]
+        //         }
+        //     }
+        //     const nextElements = getNodeCurrentAndParentElement(node)
+        //     parent = nextElements.parent
+        //     currentElement = nextElements.currentElement
+        //     count++
+        //     // We don't need to go any higher than the original element in the tree
+        //     if (parent && currentElement && !currentElement.isSameNode(element) && childIndex(parent, element) > -1) {
+        //         console.log('Breaking as we ahve')
+        //         break
+        //     }
+        //     if (count > 100) {
+        //         break
+        //     }
+        // }
+
+        console.log('node', node, 'path', path)
+        // if the node is in an ignored element, skip it
+        if (ignoredElements.has(path)) {
+            console.log('ignoring element', path)
+            continue
+        }
+
         // Don't replace in iframes
         if (node.nextSibling && node.nextSibling.nodeName.match(ELEMENT_FILTER)) {
             continue
@@ -188,6 +255,7 @@ function nodesUnder(
         } else {
             break
         }
+        previousNode = node
     }
 
     return { searchReplaceResult, elementsChecked }
@@ -196,27 +264,22 @@ function nodesUnder(
 function replaceInner(
     config: SearchReplaceConfig,
     document: Document,
+    originalElements: HTMLElement[],
     elements: HTMLElement[],
+    ignoredElements: Map<number[], Element>[],
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
-    for (const element of elements) {
+    for (const [index, element] of elements.entries()) {
         console.log('Checking', element)
         // continue if there is no inner text
         if (element[config.searchTarget] === undefined) {
             continue
         }
         const occurrences = countOccurrences(element, config)
+
         // continue if there are no occurrences
         if (!occurrences) {
-            continue
-        }
-
-        const nodeValue = element.childNodes[0].nodeValue
-        const nodeType = element.childNodes[0].nodeType
-
-        // continue if there is no node value or the node is not a text type
-        if (!nodeValue || !(nodeType === 3)) {
             continue
         }
 
@@ -230,7 +293,14 @@ function replaceInner(
 
         // cycle through nodes, replacing in text or the innerHTML
         if (config.replace) {
-            const nodesUnderResult = nodesUnder(document, element, config, searchReplaceResult, elementsChecked)
+            const nodesUnderResult = nodesUnder(
+                document,
+                originalElements[index],
+                config,
+                searchReplaceResult,
+                elementsChecked,
+                ignoredElements[index]
+            )
             searchReplaceResult = nodesUnderResult.searchReplaceResult
             elementsChecked = nodesUnderResult.elementsChecked
         }
@@ -304,47 +374,41 @@ function replaceInputFields(
 function replaceInHTML(
     config: SearchReplaceConfig,
     document: Document,
-    originalElementsArr: HTMLElement[],
+    originalElements: HTMLElement[],
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
-    let otherElementsArr = originalElementsArr.map((el) => el.cloneNode(true) as HTMLElement)
-    const hiddenElementPaths: Map<Element, number[]>[] = []
+    let clonedElements = originalElements.map((el) => el.cloneNode(true) as HTMLElement)
+    const ignoredElements: Map<number[], Element>[] = []
     if (config.visibleOnly) {
-        otherElementsArr = otherElementsArr.filter((el) => elementIsVisible(el))
+        clonedElements = clonedElements.filter((el) => elementIsVisible(el))
         // the above works if an ancestor of the element is hidden, but not if the element contains descendants that
         // are hidden. To check for this, we need to check the descendants of the element to see if they are hidden
         // and if so, create a copy of the element with the hidden elements removed, storing a map of the hidden
-        // elements and their paths so we can restore them later.
-        otherElementsArr = otherElementsArr.map((element) => {
+        // elements and their paths, so we can ignore them during replacement
+        clonedElements = clonedElements.map((element) => {
             // TODO is there an additional copy that can be removed here?
             const { elementCopy, removedMap } = copyElementAndRemoveSelectedElements(element, elementIsVisible, [true])
-            hiddenElementPaths.push(removedMap)
+            ignoredElements.push(removedMap)
             return elementCopy as HTMLElement
         })
     }
     // replace inner texts first, dropping out if we have done a replacement and are not working globally
-    const innerResult = replaceInner(config, document, otherElementsArr, searchReplaceResult, elementsChecked)
+    const innerResult = replaceInner(
+        config,
+        document,
+        originalElements,
+        clonedElements,
+        ignoredElements,
+        searchReplaceResult,
+        elementsChecked
+    )
 
     searchReplaceResult = innerResult.searchReplaceResult
     elementsChecked = innerResult.elementsChecked
 
     if (config.replaceNext && searchReplaceResult.replaced) {
         config.replace = false
-    }
-
-    if (hiddenElementPaths.length) {
-        // restore hidden elements
-        otherElementsArr.map((element, index) => {
-            return restoreRemovedElements(element, hiddenElementPaths[index]) as HTMLElement
-        })
-    }
-    // update the results with the modified elements
-    if (config.replace) {
-        originalElementsArr.map((element, index) => {
-            console.log('Replacing with', otherElementsArr[index])
-            element.replaceWith(otherElementsArr[index])
-        })
     }
 
     return { searchReplaceResult, elementsChecked }

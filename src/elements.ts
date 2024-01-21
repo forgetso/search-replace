@@ -75,7 +75,7 @@ export function copyElementAndRemoveSelectedElements(
     parentPath = []
 ) {
     let elementCopy = originalElement.cloneNode(true) as HTMLElement
-    const removedMap = new Map<HTMLElement, number[]>()
+    const removedMap = new Map<number[], HTMLElement>()
 
     function removeSelectedElements(element: HTMLElement, path: number[]) {
         if (element) {
@@ -86,7 +86,7 @@ export function copyElementAndRemoveSelectedElements(
 
                 if (!selectorFn(child as HTMLElement, ...selectorFnArgs)) {
                     // Save hidden element and its path in the map
-                    removedMap.set(child, childPath)
+                    removedMap.set(childPath, child)
                     // Remove the hidden element from the copy
                     if (child) {
                         element.removeChild(child)
@@ -124,4 +124,117 @@ export function restoreRemovedElements(elementCopy: Element, removedMap: Map<Ele
         }
     })
     return elementCopy
+}
+
+function childIndex(parent: HTMLElement, element: HTMLElement) {
+    return Array.from(parent.children).indexOf(element)
+}
+
+export class PathTreeWalker {
+    private walker: TreeWalker
+    private path: number[] = [0]
+    private _previousNode: Node | null = null
+
+    constructor(public document: Document, public start: Node, public nodeType: number | undefined) {
+        this.walker = document.createTreeWalker(start, nodeType)
+    }
+
+    public nextNode(): Element | null {
+        this.previousNode = this.currentNode
+        const node = this.walker.nextNode()
+        if (node) {
+            this.currentPath = this.buildPath()
+        }
+        return node as Element | null
+    }
+
+    private buildPath() {
+        const path = this.currentPath
+        console.log('path', path)
+        // Case 1
+        // Starting element, e.g. <body>
+        // If the parent (<html>) childNodes have an index of `element` then we are at the start. The path is [0]
+        // Do nothing as path is initialised as [0]
+
+        // Case 2 - Down the tree
+        // If we are in a <div> under <body> and the currentNode is a child node of the previousNode (<body>) then
+        // append the node index to the path
+        if (this.previousNode) {
+            const previousIndex = childIndex(this.previousNode, this.currentNode)
+            if (previousIndex > -1) {
+                console.log("found current node in previous node's children", this.currentNode, this.previousNode)
+                path.push(previousIndex)
+            }
+        }
+        if (this.previousNode) {
+            // Case 3 - Sideways or up in the tree
+            // We have traversed sideways in the tree so remove n levels from the path and take the child index
+            // of the node that is a parent of the currentNode
+            // e.g. [0, 1, 2, 8, 12] -> [0, 2], we need to traverse back up the tree using the path to get to the
+            // parent of the currentNode and then get the child index of the currentNode
+            while (this.previousNode && childIndex(this.previousNode, this.currentNode) === -1) {
+                path.pop()
+                this.previousNode = this.previousNode.parentElement
+            }
+            if (this.previousNode) {
+                console.log(
+                    'found parent of current node by traversing up the tree',
+                    this.currentNode,
+                    this.previousNode
+                )
+                path.push(childIndex(this.previousNode, this.currentNode))
+            } else {
+                throw new Error("Can't find parent of currentNode")
+            }
+        }
+        return path
+    }
+
+    get currentNode(): HTMLElement {
+        console.log('this.nodeType ', this.walker.currentNode.nodeType, Node.TEXT_NODE)
+        if (this.walker.currentNode.nodeType === Node.TEXT_NODE) {
+            if (this.walker.currentNode.parentElement) {
+                return this.walker.currentNode.parentElement
+            } else {
+                throw new Error('Text node has no parent element')
+            }
+        }
+        if (this.walker.currentNode.nodeType === Node.ELEMENT_NODE) {
+            return this.walker.currentNode as HTMLElement
+        }
+        throw new Error('currentNode is not an HTMLElement')
+    }
+
+    get previousNode(): HTMLElement | null {
+        if (this._previousNode) {
+            if (this._previousNode.nodeType === Node.TEXT_NODE) {
+                if (this._previousNode.parentElement) {
+                    return this._previousNode.parentElement
+                } else {
+                    throw new Error('Text node has no parent element')
+                }
+            }
+            if (this._previousNode.nodeType === Node.ELEMENT_NODE) {
+                return this._previousNode as HTMLElement
+            }
+            throw new Error('previousNode is not an HTMLElement')
+        }
+        return null
+    }
+
+    set previousNode(node: Node | null) {
+        this._previousNode = node
+    }
+
+    get currentPath() {
+        return this.path
+    }
+
+    set currentPath(path: number[]) {
+        this.path = path
+    }
+
+    get parentNode() {
+        return this.currentNode?.parentElement
+    }
 }
