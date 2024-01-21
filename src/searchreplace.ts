@@ -55,13 +55,10 @@ function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: 
         prototypeValueSetter = prototypeValueFn.set
     }
     if (valueSetter && prototypeValueSetter && valueSetter !== prototypeValueSetter) {
-        console.log('Setting input value: prototypeValueSetter', value)
         prototypeValueSetter.call(element, value)
     } else if (valueSetter) {
-        console.log('Setting input value: valueSetter', value)
         valueSetter.call(element, value)
     } else {
-        console.log('Setting input value', value)
         element.value = value
     }
 }
@@ -79,7 +76,7 @@ function replaceInInput(
         if (occurrences) {
             searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
             const newValue = input.value.replace(config.searchPattern, config.replaceTerm)
-            console.log('input', input, 'oldValue', oldValue, 'newValue', newValue, 'Config,replace', config.replace)
+
             if (config.replace && oldValue !== newValue) {
                 input.focus()
                 setNativeValue(input, newValue)
@@ -123,7 +120,6 @@ function containsAncestor(element: Element, results: Map<Element, SearchReplaceR
 }
 
 function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number {
-    console.log('Searching', el[config.searchTarget])
     const matches = el[config.searchTarget].match(config.globalSearchPattern) || []
     return matches.length
 }
@@ -139,7 +135,7 @@ function replaceInElement(node: Element, oldValue: string, config: SearchReplace
         if (replace) {
             replacementCount = config.replaceAll ? occurrences.length : 1 // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
             const nodeElement = getElementFromNode(node)
-            console.log('Replacing in element', nodeElement, oldValue, newValue)
+
             if ('value' in nodeElement) {
                 // TODO unify with replaceInInput, taking care not to count occurrences again
                 nodeElement['value'] = newValue
@@ -176,24 +172,20 @@ function getElementFromNode(node: Node): Element {
 function isIgnored(ignoredElements: Set<Element>, node: Node, visibleOnly: boolean): number {
     const toCheck = getElementFromNode(node)
     if (toCheck.tagName.match(ELEMENT_FILTER)) {
-        console.log('Filter Rejecting', toCheck, 'via element filter')
         return NodeFilter.FILTER_REJECT
     }
 
     if (ignoredElements.has(toCheck)) {
-        console.log('Filter Rejecting', toCheck, 'via ignoredElements set')
         return NodeFilter.FILTER_REJECT
     }
 
     const found = Array.from(ignoredElements.values()).filter((element) => element.isEqualNode(toCheck))
     if (found.length) {
-        console.log('Filter Rejecting', toCheck, 'via ignoredElements element check')
         return NodeFilter.FILTER_REJECT
     }
 
     if (visibleOnly) {
         if (!elementIsVisible(toCheck as HTMLElement)) {
-            console.log('Filter Rejecting', toCheck, 'via visibleOnly')
             return NodeFilter.FILTER_REJECT
         }
     }
@@ -209,7 +201,6 @@ function nodesUnder(
     elementsChecked: Map<Element, SearchReplaceResult>,
     ignoredElements: Set<Element>
 ) {
-    console.log('Config.searchTarget', config.searchTarget, 'config', config)
     const nodeType = config.searchTarget === 'innerHTML' ? NodeFilter.SHOW_ELEMENT : NodeFilter.SHOW_TEXT
     let node: Node | null
     const walk = document.createTreeWalker(element, nodeType, {
@@ -218,7 +209,6 @@ function nodesUnder(
         },
     })
 
-    console.log('ignored element paths', ignoredElements, ignoredElements.keys())
     while ((node = walk.nextNode())) {
         // Don't replace in iframes
         if (node.nextSibling && node.nextSibling.nodeName.match(ELEMENT_FILTER)) {
@@ -228,10 +218,9 @@ function nodesUnder(
         if (config.replace) {
             let oldValue = node['innerHTML']
             if (config.searchTarget === 'innerText') {
-                console.log('node', getElementFromNode(node), 'node.nodeValue', node.nodeValue)
                 oldValue = node.nodeValue || getElementFromNode(node)['value']
             }
-            console.log('node', node, 'OldValue', oldValue)
+
             if (node && oldValue && !node.nodeName.match(ELEMENT_FILTER)) {
                 // Do the replacement
                 const replaceResult = replaceInElement(node as Element, oldValue, config)
@@ -247,7 +236,6 @@ function nodesUnder(
                 element.dispatchEvent(new Event('input', { bubbles: true }))
                 node.dispatchEvent(new Event('input', { bubbles: true }))
                 if (config.replaceNext && searchReplaceResult.replaced) {
-                    console.log('Breaking as replaced')
                     config.replace = false
                     break
                 }
@@ -270,18 +258,14 @@ function replaceInner(
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     for (const [index, element] of elements.entries()) {
-        console.log('Checking', element)
         // continue if there is no inner text
         if (element[config.searchTarget] === undefined) {
-            console.log("Element doesn't have ", config.searchTarget, 'property')
             continue
         }
         const occurrences = countOccurrences(element, config)
-        console.log('Occurrences', occurrences)
 
         const ancestorChecked = containsAncestor(element, elementsChecked)
         elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
-        console.log("Element's ancestor checked", ancestorChecked)
 
         searchReplaceResult.count.original =
             ancestorChecked && elementIsVisible(element)
@@ -298,7 +282,7 @@ function replaceInner(
                 elementsChecked,
                 ignoredElements
             )
-            console.log('nodesUnderResult', JSON.stringify(nodesUnderResult, null, 4))
+
             searchReplaceResult = nodesUnderResult.searchReplaceResult
             elementsChecked = nodesUnderResult.elementsChecked
         }
@@ -310,9 +294,9 @@ function replaceInner(
         if (config.visibleOnly) {
             inputs = inputs.filter((input) => elementIsVisible(input))
         }
-        console.log('replacing in inputs', inputs)
+
         const inputResult = replaceInInputs(config, document, inputs, searchReplaceResult, elementsChecked)
-        console.log('inputResult', JSON.stringify(inputResult, null, 4))
+
         searchReplaceResult = inputResult.searchReplaceResult
         elementsChecked = inputResult.elementsChecked
     }
@@ -398,9 +382,7 @@ function replaceInHTML(
             return elementCopy as HTMLElement
         })
     }
-    console.log('ignoredElements', ignoredElements)
-    console.log('clonedElements', clonedElements)
-    console.log('originalElements', originalElements)
+
     // replace inner texts first, dropping out if we have done a replacement and are not working globally
     const innerResult = replaceInner(
         config,
