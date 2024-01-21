@@ -21,9 +21,11 @@ export function listenerInstall(details: chrome.runtime.InstalledDetails) {
         chrome.i18n.getAcceptLanguages(function (uiLanguage) {
             getAvailableLanguages().then((langList) => {
                 let initializeLang = 'en'
-                for (const lang of langList as LangList[]) {
-                    if (uiLanguage[0] === lang.languageCode) {
-                        initializeLang = lang.languageCode
+                if (langList && langList.length) {
+                    for (const lang of langList as LangList[]) {
+                        if (uiLanguage[0] === lang.languageCode) {
+                            initializeLang = lang.languageCode
+                        }
                     }
                 }
                 console.log('BACKGROUND:Fist Installation, preferredLanguage:', initializeLang)

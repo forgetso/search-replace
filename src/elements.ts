@@ -28,10 +28,10 @@ export function inIframe() {
 
 // Functions for dealing with hidden elements
 
-function ancestorIsHidden(element: Element) {
+function ancestorIsHidden(element: Element, cloned = false) {
     let parent = element.parentElement
     while (parent) {
-        if (!isVisible(parent)) {
+        if (!isVisible(parent, cloned)) {
             return true
         }
         parent = parent.parentElement
@@ -39,61 +39,65 @@ function ancestorIsHidden(element: Element) {
     return false
 }
 
-export function isVisible(element: HTMLElement | Element) {
-    // if it's an input, return whether the input is not hidden
+export function isVisible(element: HTMLElement | Element, cloned = false) {
+    // clones are not visible so we can't use checkVisibility
+    if (!cloned && 'checkVisibility' in element && typeof element.checkVisibility === 'function') {
+        // use the relatively new checkVisibility method, which returns `true` if the element is visible
+        console.log('element.checkVisibility()', element.checkVisibility(), 'isCloned', cloned)
+        return element.checkVisibility()
+    }
+
     if (element.nodeName === 'INPUT') {
         const inputElement = element as HTMLInputElement
+        // if it's an input, return true if the input is not `hidden`
         return inputElement.type !== 'hidden'
     }
-    // if the element has style
+
     if (element && 'style' in element) {
-        // check if the element is hidden by style
-        // return whether the inputs style is != none
+        // if the element has style return true if the style is something other than `none`
         return element.style.display !== 'none'
     }
-    // otherwise the element is not visible
+    // otherwise we assume the element is not visible
     return false
 }
 
-export function elementIsVisible(element: HTMLElement, ancestorCheck = true): boolean {
+export function elementIsVisible(element: HTMLElement, ancestorCheck = true, cloned = false): boolean {
     // check the immediate element to see if it's visible based on its style
-    if (!isVisible(element)) {
+    if (!isVisible(element, cloned)) {
+        console.log('returning false after isVisible check for', element)
         return false
     }
     // optionally skip the ancestor check and return indicating that the element is visible
-    if (!ancestorCheck) {
+    if (!ancestorCheck || element.tagName === 'BODY') {
         return true
     }
     // otherwise check up the tree to see if any ancestors are hidden
-    return !ancestorIsHidden(element)
+    return !ancestorIsHidden(element, cloned)
 }
 
 export function copyElementAndRemoveSelectedElements(
     originalElement: HTMLElement,
-    selectorFn: (e: HTMLElement, ...args: any) => boolean,
-    selectorFnArgs: any[],
-    parentPath = []
+    selectorFn: (e: HTMLElement, ...args: any) => boolean
 ) {
     let elementCopy = originalElement.cloneNode(true) as HTMLElement
-    const removedMap = new Map<number[], HTMLElement>()
+    const removedSet = new Set<HTMLElement>()
 
-    function removeSelectedElements(element: HTMLElement, path: number[]) {
+    function removeSelectedElements(element: HTMLElement) {
         if (element) {
             const childNodes = <HTMLElement[]>Array.from(element.children)
             for (let childIndex = 0; childIndex < childNodes.length; childIndex++) {
                 let child = childNodes[childIndex]
-                const childPath = [...path, childIndex]
 
-                if (!selectorFn(child as HTMLElement, ...selectorFnArgs)) {
+                if (selectorFn(child as HTMLElement)) {
                     // Save hidden element and its path in the map
-                    removedMap.set(childPath, child)
+                    removedSet.add(child)
                     // Remove the hidden element from the copy
                     if (child) {
                         element.removeChild(child)
                     }
                 } else {
                     // Recursively process visible child elements
-                    child = removeSelectedElements(child, childPath)
+                    child = removeSelectedElements(child)
 
                     if (element.children[childIndex] && child !== element.children[childIndex]) {
                         element = <HTMLElement>element.replaceChild(child, element.children[childIndex])
@@ -104,9 +108,9 @@ export function copyElementAndRemoveSelectedElements(
         return element
     }
 
-    elementCopy = removeSelectedElements(elementCopy, [])
+    elementCopy = removeSelectedElements(elementCopy)
 
-    return { elementCopy, removedMap }
+    return { elementCopy, removedSet }
 }
 
 export function restoreRemovedElements(elementCopy: Element, removedMap: Map<Element, number[]>) {
@@ -130,13 +134,15 @@ function childIndex(parent: HTMLElement, element: HTMLElement) {
     return Array.from(parent.children).indexOf(element)
 }
 
+// A tree walker that keeps track of the path to the current node
 export class PathTreeWalker {
     private walker: TreeWalker
     private path: number[] = [0]
     private _previousNode: Node | null = null
 
-    constructor(public document: Document, public start: Node, public nodeType: number | undefined) {
-        this.walker = document.createTreeWalker(start, nodeType)
+    constructor(public document: Document, public start: Node, public nodeType: number, filter?: NodeFilter) {
+        console.log('Creating tree walker with start node', start, 'filtering by node type', nodeType)
+        this.walker = document.createTreeWalker(start, nodeType, filter)
     }
 
     public nextNode(): Element | null {
@@ -144,17 +150,24 @@ export class PathTreeWalker {
         const node = this.walker.nextNode()
         if (node) {
             this.currentPath = this.buildPath()
+        } else {
+            console.log('next node undefined')
         }
+
         return node as Element | null
     }
 
     private buildPath() {
         const path = this.currentPath
-        console.log('path', path)
+        console.log('Building path starting with path', path)
         // Case 1
         // Starting element, e.g. <body>
         // If the parent (<html>) childNodes have an index of `element` then we are at the start. The path is [0]
         // Do nothing as path is initialised as [0]
+        if (this.previousNode?.isEqualNode(this.currentNode) && this.previousNode?.isEqualNode(this.start)) {
+            console.log('found start node', this.currentNode, this.previousNode, 'path', path)
+            return path
+        }
 
         // Case 2 - Down the tree
         // If we are in a <div> under <body> and the currentNode is a child node of the previousNode (<body>) then
@@ -162,8 +175,16 @@ export class PathTreeWalker {
         if (this.previousNode) {
             const previousIndex = childIndex(this.previousNode, this.currentNode)
             if (previousIndex > -1) {
-                console.log("found current node in previous node's children", this.currentNode, this.previousNode)
                 path.push(previousIndex)
+                console.log(
+                    "found current node in previous node's children",
+                    this.currentNode,
+                    this.previousNode,
+                    'path',
+                    path
+                )
+
+                return path
             }
         }
         if (this.previousNode) {
@@ -176,22 +197,22 @@ export class PathTreeWalker {
                 path.pop()
                 this.previousNode = this.previousNode.parentElement
             }
-            if (this.previousNode) {
+            if (this.previousNode && childIndex(this.previousNode, this.currentNode) > -1) {
+                path.push(childIndex(this.previousNode, this.currentNode))
                 console.log(
                     'found parent of current node by traversing up the tree',
                     this.currentNode,
-                    this.previousNode
+                    this.previousNode,
+                    'path',
+                    path
                 )
-                path.push(childIndex(this.previousNode, this.currentNode))
-            } else {
-                throw new Error("Can't find parent of currentNode")
+                return path
             }
         }
-        return path
+        throw new Error("Can't find parent of currentNode")
     }
 
     get currentNode(): HTMLElement {
-        console.log('this.nodeType ', this.walker.currentNode.nodeType, Node.TEXT_NODE)
         if (this.walker.currentNode.nodeType === Node.TEXT_NODE) {
             if (this.walker.currentNode.parentElement) {
                 return this.walker.currentNode.parentElement
