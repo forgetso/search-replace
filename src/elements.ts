@@ -75,31 +75,29 @@ export function elementIsVisible(element: HTMLElement, ancestorCheck = true, clo
 
 export function copyElementAndRemoveSelectedElements(
     originalElement: HTMLElement,
-    selectorFn: (e: HTMLElement, ...args: any) => boolean
+    selectorFn: (e: HTMLElement, ...args: any) => boolean,
+    clone = true
 ) {
-    let elementCopy = originalElement.cloneNode(true) as HTMLElement
+    let elementCopy = originalElement
+    if (clone) {
+        elementCopy = originalElement.cloneNode(true) as HTMLElement
+    }
     const removedSet = new Set<HTMLElement>()
 
     function removeSelectedElements(element: HTMLElement) {
         if (element) {
             const childNodes = <HTMLElement[]>Array.from(element.children)
-            for (let childIndex = 0; childIndex < childNodes.length; childIndex++) {
-                let child = childNodes[childIndex]
-
+            for (const child of childNodes) {
                 if (selectorFn(child as HTMLElement)) {
-                    // Save hidden element and its path in the map
-                    removedSet.add(child)
                     // Remove the hidden element from the copy
                     if (child) {
                         element.removeChild(child)
+                        // Save hidden element and its path in the map
+                        removedSet.add(child)
                     }
                 } else {
                     // Recursively process visible child elements
-                    child = removeSelectedElements(child)
-
-                    if (element.children[childIndex] && child !== element.children[childIndex]) {
-                        element = <HTMLElement>element.replaceChild(child, element.children[childIndex])
-                    }
+                    removeSelectedElements(child)
                 }
             }
         }
@@ -108,5 +106,5 @@ export function copyElementAndRemoveSelectedElements(
 
     elementCopy = removeSelectedElements(elementCopy)
 
-    return { elementCopy, removedSet }
+    return { clonedElementRemoved: elementCopy, removedSet }
 }

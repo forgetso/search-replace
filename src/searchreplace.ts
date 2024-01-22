@@ -18,6 +18,7 @@ import {
 } from './elements'
 import { getFlags, getSearchPattern } from './regex'
 import { getHints } from './hints'
+import { notEmpty } from './util'
 
 function newSearchReplaceCount() {
     return {
@@ -87,7 +88,7 @@ function replaceInInput(
                 searchReplaceResult.count.replaced += replaceCount
                 searchReplaceResult.replaced = true
 
-                if (config.usesKnockout) {
+                if (config.usesKnockout && document.documentElement) {
                     const knockoutValueChanger = getKnockoutValueChanger(input.id, newValue)
                     document.documentElement.setAttribute('onreset', knockoutValueChanger)
                     document.documentElement.dispatchEvent(new CustomEvent('reset'))
@@ -131,14 +132,12 @@ function replaceInElement(node: Element, oldValue: string, config: SearchReplace
     let replace = false
     let replaced = false
     if (occurrences.length) {
-        console.log('Occurrences in element', node, oldValue, occurrences.length)
-
         const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
         replace = oldValue != newValue
         if (replace) {
             replacementCount = config.replaceAll ? occurrences.length : 1 // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
             const nodeElement = getElementFromNode(node)
-            console.log('Replacing in element', nodeElement, oldValue, newValue)
+
             if ('value' in nodeElement) {
                 // TODO unify with replaceInInput, taking care not to count occurrences again
                 nodeElement['value'] = newValue
@@ -215,19 +214,8 @@ function nodesUnder(
     // FIXME - are iframes being walked?
     while ((node = walk.nextNode())) {
         if (getElementFromNode(node).tagName === 'IFRAME' || node.nodeName === 'IFRAME') {
-            console.log('Walking iframe', node)
         }
 
-        // FIXME - is this needed?
-        // Don't replace in iframes unless they're blob iframes
-        // if (
-        //     node.nextSibling &&
-        //     node.nextSibling.nodeName.match(config.elementFilter) &&
-        //     !isBlobIframe(node.nextSibling.parentElement as Element)
-        // ) {
-        //     console.log(`Skipping ${node.nextSibling.nodeName}`, node.nextSibling, getElementFromNode(node))
-        //     continue
-        // }
         if (config.replace) {
             let oldValue = node['innerHTML']
             if (config.searchTarget === 'innerText') {
@@ -264,55 +252,54 @@ function nodesUnder(
 function replaceInner(
     config: SearchReplaceConfig,
     document: Document,
-    originalElements: HTMLElement[],
-    elements: HTMLElement[],
+    originalElement: HTMLElement,
+    element: HTMLElement,
     ignoredElements: Set<Element>,
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
-    for (const [index, element] of elements.entries()) {
-        // continue if there is no inner text
-        if (element[config.searchTarget] === undefined) {
-            continue
-        }
-        const occurrences = countOccurrences(element, config)
-
-        const ancestorChecked = containsAncestor(element, elementsChecked)
-        elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
-
-        searchReplaceResult.count.original =
-            ancestorChecked && elementIsVisible(element)
-                ? searchReplaceResult.count.original
-                : searchReplaceResult.count.original + occurrences
-
-        // cycle through nodes, replacing in text or the innerHTML
-        if (config.replace) {
-            const nodesUnderResult = nodesUnder(
-                document,
-                originalElements[index],
-                config,
-                searchReplaceResult,
-                elementsChecked,
-                ignoredElements
-            )
-
-            searchReplaceResult = nodesUnderResult.searchReplaceResult
-            elementsChecked = nodesUnderResult.elementsChecked
-        }
-
-        // Now replace any inputs
-        let inputs = Array.from(originalElements[index].querySelectorAll('input'))
-        // TODO - use the cloned element result to check if the number of elements found in the clone is equal to the number
-        //  found in the original element.
-        if (config.visibleOnly) {
-            inputs = inputs.filter((input) => elementIsVisible(input))
-        }
-
-        const inputResult = replaceInInputs(config, document, inputs, searchReplaceResult, elementsChecked)
-
-        searchReplaceResult = inputResult.searchReplaceResult
-        elementsChecked = inputResult.elementsChecked
+    // continue if there is no inner searchTarget
+    if (element[config.searchTarget] === undefined) {
+        elementsChecked = updateResults(elementsChecked, element, false, 0, 0)
+        return { searchReplaceResult, elementsChecked }
     }
+
+    const occurrences = countOccurrences(element, config)
+    elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
+
+    const ancestorChecked = containsAncestor(element, elementsChecked)
+    searchReplaceResult.count.original =
+        ancestorChecked && elementIsVisible(element)
+            ? searchReplaceResult.count.original
+            : searchReplaceResult.count.original + occurrences
+
+    // cycle through nodes, replacing in text or the innerHTML
+    if (config.replace) {
+        const nodesUnderResult = nodesUnder(
+            document,
+            originalElement,
+            config,
+            searchReplaceResult,
+            elementsChecked,
+            ignoredElements
+        )
+
+        searchReplaceResult = nodesUnderResult.searchReplaceResult
+        elementsChecked = nodesUnderResult.elementsChecked
+    }
+
+    // Now replace any inputs
+    let inputs = Array.from(originalElement.querySelectorAll('input'))
+    // TODO - use the cloned element result to check if the number of elements found in the clone is equal to the number
+    //  found in the original element.
+    if (config.visibleOnly) {
+        inputs = inputs.filter((input) => elementIsVisible(input))
+    }
+
+    const inputResult = replaceInInputs(config, document, inputs, searchReplaceResult, elementsChecked)
+
+    searchReplaceResult = inputResult.searchReplaceResult
+    elementsChecked = inputResult.elementsChecked
     return { searchReplaceResult, elementsChecked }
 }
 
@@ -375,43 +362,55 @@ function replaceInHTML(
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
-    let clonedElements = originalElements.map((el) => el.cloneNode(true) as HTMLElement)
-    let ignoredElements = new Set<Element>()
-    if (config.visibleOnly) {
-        // We have to check the visibility of the original elements as the cloned ones are all invisible
-        clonedElements = clonedElements.filter((_el, index) => elementIsVisible(originalElements[index]))
-        // the above works if an ancestor of the element is hidden, but not if the element contains descendants that
-        // are hidden. To check for this, we need to check the relatives of the element to see if they are hidden
-        // and if so, create a copy of the element with the hidden elements removed, storing a map of the hidden
-        // elements and their paths, so we can ignore them during replacement
-        clonedElements = clonedElements.map((element) => {
-            // TODO is there an additional copy that can be removed here?
-            const { elementCopy, removedSet } = copyElementAndRemoveSelectedElements(
-                element,
+    for (const [originalIndex, originalElement] of originalElements.entries()) {
+        let ignoredElements = new Set<Element>()
+        let clonedElement = originalElement.cloneNode(true) as HTMLElement
+
+        const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
+            clonedElement,
+            // Remove elements that match the filter and are not blob iframes. Removes SCRIPT, STYLE, IFRAME, etc.
+            (el: HTMLElement) => !!el.nodeName.match(config.elementFilter) && !isBlobIframe(el)
+        )
+        clonedElement = clonedElementRemoved as HTMLElement
+        ignoredElements = removedSet
+
+        if (config.visibleOnly) {
+            // We have to check the visibility of the original elements as the cloned ones are all invisible
+            if (!elementIsVisible(originalElements[originalIndex])) {
+                continue
+            }
+            // the above works if an ancestor of the element is hidden, but not if the element contains descendants that
+            // are hidden. To check for this, we need to check the relatives of the element to see if they are hidden
+            // and if so, create a copy of the element with the hidden elements removed, storing a map of the hidden
+            // elements and their paths, so we can ignore them during replacement
+            const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
+                clonedElement,
                 // Tell it to remove elements that are not visible
-                (el: HTMLElement) => !elementIsVisible(el, true, true)
+                (el: HTMLElement) => !elementIsVisible(el, true, true),
+                // We need to avoid copying twice as the element is already cloned
+                false
             )
-            ignoredElements = removedSet
-            return elementCopy as HTMLElement
-        })
-    }
+            clonedElement = clonedElementRemoved as HTMLElement
+            ignoredElements = new Set([...ignoredElements, ...removedSet])
+        }
 
-    // replace inner texts first, dropping out if we have done a replacement and are not working globally
-    const innerResult = replaceInner(
-        config,
-        document,
-        originalElements,
-        clonedElements,
-        ignoredElements,
-        searchReplaceResult,
-        elementsChecked
-    )
+        // replace inner texts first, dropping out if we have done a replacement and are not working globally
+        const innerResult = replaceInner(
+            config,
+            document,
+            originalElement,
+            clonedElement,
+            ignoredElements,
+            searchReplaceResult,
+            elementsChecked
+        )
 
-    searchReplaceResult = innerResult.searchReplaceResult
-    elementsChecked = innerResult.elementsChecked
+        searchReplaceResult = innerResult.searchReplaceResult
+        elementsChecked = innerResult.elementsChecked
 
-    if (config.replaceNext && searchReplaceResult.replaced) {
-        config.replace = false
+        if (config.replaceNext && searchReplaceResult.replaced) {
+            config.replace = false
+        }
     }
 
     return { searchReplaceResult, elementsChecked }
@@ -482,12 +481,28 @@ export async function searchReplace(
         }
     } else {
         const startingElement = document.body || document.querySelector('div')
-        // FIXME - is this needed?
-        //const searchableIframes = getIframeElements(document, true)
+        const searchableIframePromises: Promise<HTMLElement>[] = getIframeElements(document, true).map((iframe) => {
+            return new Promise((resolve, reject) => {
+                if (iframe.contentDocument) {
+                    iframe.contentDocument.onreadystatechange = () => {
+                        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+                            const element = iframe.contentDocument.body || iframe.contentDocument.querySelector('div')
+                            if (!element) {
+                                reject('no iframe content')
+                            }
+                            resolve(element as HTMLElement)
+                        }
+                    }
+                }
+            })
+        })
+        const searchableIframes = (await Promise.all(searchableIframePromises)).filter(notEmpty)
+
+        console.log('searchable frames', searchableIframes)
         result = replaceInHTML(
             config,
             document,
-            [startingElement], //...searchableIframes],
+            [startingElement, ...searchableIframes],
             searchReplaceResult,
             elementsChecked
         )
