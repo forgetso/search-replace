@@ -1,3 +1,4 @@
+// Adapted from https://github.com/JJJ/ab-testing-for-wp/blob/master/cypress/support/commands.ts
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
     interface Chainable<Subject = any> {
