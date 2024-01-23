@@ -220,8 +220,7 @@ function nodesUnder(
         }
         walked.add(node)
         const nodeElement = getElementFromNode(node)
-        if (nodeElement.tagName === 'IFRAME' || node.nodeName === 'IFRAME') {
-        }
+
         if (nodeElement.tagName === 'WINDOW') {
             continue
         }
