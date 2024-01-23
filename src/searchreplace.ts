@@ -124,7 +124,10 @@ function containsAncestor(element: Element, results: Map<Element, SearchReplaceR
 }
 
 function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number {
-    const matches = el[config.searchTarget].match(config.globalSearchPattern) || []
+    let matches = el[config.searchTarget].match(config.globalSearchPattern) || []
+    if (config.hiddenContent && config.searchTarget === 'innerText' && 'textContent' in el) {
+        matches = (el as HTMLElement).textContent?.match(config.globalSearchPattern) || []
+    }
     return matches.length
 }
 
@@ -282,10 +285,20 @@ function replaceInner(
     elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
 
     const ancestorChecked = containsAncestor(element, elementsChecked)
-    searchReplaceResult.count.original =
-        ancestorChecked && elementIsVisible(element, false, true)
-            ? searchReplaceResult.count.original
-            : searchReplaceResult.count.original + occurrences
+
+    if (config.searchTarget === 'innerHTML') {
+        // We can reliably add the occurrences as any hidden elements will have been removed from the cloned element
+        searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
+    } else if (config.searchTarget === 'innerText') {
+        // We have to check if an ancestor has been checked as the innerText of the ancestor will contain the innerText
+        // of the element. We also need to check if the element is visible as we will have used textContent in this
+        // case, which does contain the hidden text.
+        if (!ancestorChecked && !config.hiddenContent) {
+            searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
+        } else if (!ancestorChecked && config.hiddenContent) {
+            searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
+        }
+    }
 
     // cycle through nodes, replacing in text or the innerHTML
     if (config.replace) {
