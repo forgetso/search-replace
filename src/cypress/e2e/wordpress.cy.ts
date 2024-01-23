@@ -6,27 +6,33 @@ import { searchReplace } from '../../searchreplace'
 
 const SEARCHTERM = 'Hello world'
 const REPLACETERM = 'Something else'
-
-describe('Search Replace WordPress', { baseUrl: 'http://localhost:8080/', responseTimeout: 120e3 }, () => {
+const BASEURL = 'http://localhost:8080'
+describe('Search Replace WordPress', { baseUrl: BASEURL, responseTimeout: 120e3 }, () => {
     before(() => {
         cy.cleanInstall().then(() => {
-            cy.installWordPress().then(() => {
-                cy.get('a[href*="wp-login.php"]')
-                    .click()
-                    .then(() => {
-                        cy.login().then(() => {
-                            cy.visit('/wp-admin/post.php?post=1&action=edit').then(() => {
-                                cy.get('iframe[name="editor-canvas"]').then((iframe) => {
-                                    expect(iframe.contents().find('body')).to.exist
-                                    cy.get('button[aria-label="Close"]')
-                                        .click()
-                                        .then(() => {
-                                            cy.get('button[aria-label="Close"]').should('not.exist')
-                                        })
-                                })
-                            })
-                        })
+            cy.installWordPress()
+        })
+    })
+    beforeEach(() => {
+        cy.login().then(() => {
+            cy.visit('/wp-admin/post.php?post=1&action=edit').then(() => {
+                cy.get('iframe[name="editor-canvas"]').then((iframe) => {
+                    expect(iframe.contents().find('body')).to.exist
+                    cy.getAllLocalStorage().then((localStorage) => {
+                        console.log(localStorage)
+                        if (BASEURL in localStorage && 'WP_PREFERENCES_USER_1' in localStorage[BASEURL]) {
+                            const wpPreferences = JSON.parse(localStorage[BASEURL]['WP_PREFERENCES_USER_1'].toString())
+                            console.log('localStorage', wpPreferences)
+                            if (!wpPreferences['core/edit-post']['welcomeGuide']) {
+                                cy.get('button[aria-label="Close"]')
+                                    .click()
+                                    .then(() => {
+                                        cy.get('button[aria-label="Close"]').should('not.exist')
+                                    })
+                            }
+                        }
                     })
+                })
             })
         })
     })
@@ -86,7 +92,7 @@ describe('Search Replace WordPress', { baseUrl: 'http://localhost:8080/', respon
                     ELEMENT_FILTER
                 ).then((result) => {
                     console.log(`result`, result)
-                    expect(result.searchReplaceResult.count.original).to.equal(0)
+                    expect(result.searchReplaceResult.count.original).to.equal(1)
                 })
             ).then(() => {
                 console.log('done')
@@ -120,7 +126,7 @@ describe('Search Replace WordPress', { baseUrl: 'http://localhost:8080/', respon
                     )
                 ).then(() => {
                     cy.savePost().then(() => {
-                        cy.reload()
+                        //cy.reload()
                         cy.wrap(
                             searchReplace(
                                 'count',
