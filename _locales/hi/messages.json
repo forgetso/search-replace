@@ -63,9 +63,9 @@
     "message": "केवल इनपुट फ़ील्ड्स",
     "description": "checkbox inputFieldsOnly"
   },
-  "visibleOnly": {
-    "message": "केवल दिखाई देने वाला सामग्री",
-    "description": "checkbox visibleOnly"
+  "hiddenContent": {
+    "message": "छिपी हुई सामग्री",
+    "description": "checkbox hiddenContent"
   },
   "wholeWord": {
     "message": "पूरे शब्द का मैच",
@@ -108,7 +108,7 @@
     "description": "popup"
   },
   "Hiddencontent": {
-    "message": "隠しコンテンツ",
+    "message": "छिपी हुई सामग्री",
     "description": "popup"
   },
   "Matchwhole": {
