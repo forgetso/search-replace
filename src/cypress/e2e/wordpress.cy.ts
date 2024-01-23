@@ -94,7 +94,7 @@ describe('Search Replace WordPress', { baseUrl: 'http://localhost:8080/', respon
         })
     })
     // iframes don't render in cypress
-    it.only('replaces the search term, updates the post, reloads the page, and the counts the correct number of occurrences', () => {
+    it('replaces the search term, updates the post, reloads the page, and the counts the correct number of occurrences', () => {
         cy.window()
             .then((window) => {
                 console.log(window.location.host)
