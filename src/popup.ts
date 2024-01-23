@@ -169,7 +169,7 @@ function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstan
  * @param e
  * @param translationFn
  */
-export function historyItemClickHandler(e, translationFn: TranslationProxy) {
+export function historyItemClickHandler(e: Event, translationFn: TranslationProxy) {
     const target = <HTMLElement>e.target
 
     if (target.tagName === 'LI') {

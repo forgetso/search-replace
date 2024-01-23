@@ -6,7 +6,7 @@ import {
     SearchReplaceCheckboxNames,
     SearchReplaceInstance,
     SearchReplaceOptions,
-    SearchReplaceStorageItems,
+    SearchReplacePopupStorage,
 } from './types'
 import {
     createTranslationProxy,
@@ -81,9 +81,10 @@ window.addEventListener('DOMContentLoaded', async function () {
     const savedInstancesContainer = document.getElementById('savedInstances')
 
     // Restore the SavedInstances from storage
-    port.onMessage.addListener(function (storageItems: SearchReplaceStorageItems) {
+    port.onMessage.addListener(function (storageItems: SearchReplacePopupStorage) {
         console.log('storage msg received: ', storageItems)
-        const saved: SavedInstances = storageItems.saved || ({} as SavedInstances)
+        console.log('storage msg received storageItems.saved: ', storageItems.storage.saved)
+        const saved: SavedInstances = storageItems.storage.saved || ({} as SavedInstances)
         const languageProxy = createTranslationProxy(langData)
         if (Object.keys(saved).length > 0) {
             // create a list of the saved search replace instances

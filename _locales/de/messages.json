@@ -63,9 +63,9 @@
         "message": "Nur Eingabefelder",
         "description": "checkbox inputFieldsOnly"
     },
-    "visibleOnly": {
-        "message": "Nur sichtbarer Inhalt",
-        "description": "checkbox visibleOnly"
+    "hiddenContent": {
+        "message": "Versteckter Inhalt",
+        "description": "checkbox hiddenContent"
     },
     "wholeWord": {
         "message": "Ganzes Wort suchen",

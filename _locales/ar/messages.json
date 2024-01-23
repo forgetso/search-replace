@@ -63,9 +63,9 @@
     "message": "حقول الإدخال فقط",
     "description": "checkbox inputFieldsOnly"
   },
-  "visibleOnly": {
-    "message": "المحتوى المرئي فقط",
-    "description": "checkbox visibleOnly"
+  "hiddenContent": {
+    "message": "محتوى مخفي",
+    "description": "checkbox hiddenContent"
   },
   "wholeWord": {
     "message": "مطابقة الكلمة كاملة",

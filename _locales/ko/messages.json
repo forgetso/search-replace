@@ -63,9 +63,9 @@
     "message": "입력 필드만",
     "description": "checkbox inputFieldsOnly"
   },
-  "visibleOnly": {
-    "message": "가시적인 콘텐츠만",
-    "description": "checkbox visibleOnly"
+  "hiddenContent": {
+    "message": "숨겨진 콘텐츠",
+    "description": "checkbox hiddenContent"
   },
   "wholeWord": {
     "message": "전체 단어 일치",

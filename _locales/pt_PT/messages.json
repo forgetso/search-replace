@@ -63,9 +63,9 @@
     "message": "Apenas campos de entrada",
     "description": "checkbox inputFieldsOnly"
   },
-  "visibleOnly": {
-    "message": "Apenas conteúdo visível",
-    "description": "checkbox visibleOnly"
+  "hiddenContent": {
+    "message": "Conteúdo oculto",
+    "description": "checkbox hiddenContent"
   },
   "wholeWord": {
     "message": "Corresponder palavra inteira",

@@ -63,9 +63,9 @@
         "message": "Solo Campos de Entrada",
         "description": "checkbox inputFieldsOnly"
     },
-    "visibleOnly": {
-        "message": "Solo Contenido Visible",
-        "description": "checkbox visibleOnly"
+    "hiddenContent": {
+        "message": "Contenido oculto",
+        "description": "checkbox hiddenContent"
     },
     "wholeWord": {
         "message": "Coincidir Palabra Completa",

@@ -506,6 +506,7 @@ export async function searchReplace(
         usesKnockout: usesKnockout(window.document),
         searchTarget,
     }
+    console.log('Search replace config', config)
 
     // we check other places if text was not replaced in a text editor
     let result: ReplaceFunctionReturnType

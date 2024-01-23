@@ -64,9 +64,20 @@ export async function listenerAdmin(msg: SearchReplaceBackgroundMessage, port: c
             storage.history = []
             await saveStorage(instance, history, savedInstances)
         } else if (msg.action === 'save' && instance.options.save && url) {
+            console.log('save message received', msg)
             // Saving a SearchReplaceInstance for use on subsequent page loads
             const instanceId = msg['instanceId']
-            const newInstance: SavedSearchReplaceInstance = { ...instance, url }
+            const newInstance: SavedSearchReplaceInstance = {
+                searchTerm: instance.searchTerm,
+                replaceTerm: instance.replaceTerm,
+                options: {
+                    ...instance.options,
+                    // Last historical searchReplace will give us the value of replaceAll - e.g. the button the user
+                    // clicked on the popup
+                    replaceAll: msg.storage ? msg.storage.history[0].options.replaceAll : false,
+                },
+                url,
+            }
             const newInstanceId = getInstanceId(newInstance, true)
             savedInstances[newInstanceId] = newInstance
             if (instanceId && instanceId !== newInstanceId) {

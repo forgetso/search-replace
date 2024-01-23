@@ -63,9 +63,9 @@
         "message": "Input fields only",
         "description": "checkbox inputFieldsOnly"
     },
-    "visibleOnly": {
-        "message": "Visible content only",
-        "description": "checkbox visibleOnly"
+    "hiddenContent": {
+        "message": "Hidden content",
+        "description": "checkbox hiddenContent"
     },
     "wholeWord": {
         "message": "Match whole word",

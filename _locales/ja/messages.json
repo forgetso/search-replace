@@ -63,8 +63,8 @@
     "message": "入力フィールドのみ",
     "description": "チェックボックス 入力フィールドのみ"
   },
-  "visibleOnly": {
-    "message": "可視コンテンツのみ",
+  "hiddenContent": {
+    "message": "隠しコンテンツ",
     "description": "チェックボックス 可視コンテンツのみ"
   },
   "wholeWord": {
@@ -108,7 +108,7 @@
     "description": "ポップアップ"
   },
   "Hiddencontent": {
-    "message": "可視コンテンツのみ",
+    "message": "隠しコンテンツ",
     "description": "ポップアップ"
   },
   "Matchwhole": {

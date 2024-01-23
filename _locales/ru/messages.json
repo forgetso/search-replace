@@ -63,9 +63,9 @@
     "message": "Только поля ввода",
     "description": "checkbox inputFieldsOnly"
   },
-  "visibleOnly": {
-    "message": "Только видимое содержание",
-    "description": "checkbox visibleOnly"
+  "hiddenContent": {
+    "message": "Скрытый контент",
+    "description": "checkbox hiddenContent"
   },
   "wholeWord": {
     "message": "Соответствие целому слову",
