@@ -75,6 +75,10 @@
     "message": "正規表現",
     "description": "チェックボックス 正規表現"
   },
+  "replaceHTML": {
+    "message": "HTMLを置き換える",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "すべて置換",
     "description": "チェックボックス すべて置換"
@@ -103,7 +107,7 @@
     "message": "入力フィールドのみ",
     "description": "ポップアップ"
   },
-  "Visiblecontent": {
+  "Hiddencontent": {
     "message": "可視コンテンツのみ",
     "description": "ポップアップ"
   },

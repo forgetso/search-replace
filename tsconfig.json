@@ -10,7 +10,10 @@
     "target": "es6",
     "jsx": "react",
     "allowJs": true,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "lib": [
+      "es5", "es6", "dom", "dom.iterable"
+    ],
   },
   "include": [
     "**/*.ts",
@@ -19,14 +22,15 @@
   ],
   "types": [
     "chrome",
-    "cypress"
+    "cypress",
+    "dom"
   ],
   "exclude": [
     "node_modules",
     "build",
     "tests",
-    "cypress",
-    "cypress.config.ts"
+    "src/cypress",
+    "src/cypress.config.ts"
   ],
 
 }

@@ -1,22 +1,21 @@
 import {
+    SavedInstances,
+    SavedSearchReplaceInstance,
+    SearchReplaceBackgroundActions,
+    SearchReplaceBackgroundMessage,
+    SearchReplaceCheckboxNames,
+    SearchReplaceInstance,
+    SearchReplaceOptions,
+    SearchReplaceStorageItems,
+} from './types'
+import {
     createTranslationProxy,
     getAvailableLanguages,
     getTranslation,
     localizeElements,
     manifest,
-    recoverMessage,
     tabConnect,
 } from './util'
-import {
-    SavedInstances,
-    SavedSearchReplaceInstance,
-    SearchReplaceAction,
-    SearchReplaceCheckboxNames,
-    SearchReplaceInstance,
-    SearchReplaceOptions,
-    SearchReplaceStorageItems,
-    SearchReplaceStorageMessage,
-} from './types'
 
 window.addEventListener('DOMContentLoaded', async function () {
     const languages = await getAvailableLanguages()
@@ -28,13 +27,13 @@ window.addEventListener('DOMContentLoaded', async function () {
         console.log('changes', changes)
         console.log('namespace', namespace)
         if (namespace === 'local') {
-            port.postMessage(recoverMessage)
+            port.postMessage({ action: 'recover' })
         }
     })
 
     // Get the stored values from the background page
     const port = tabConnect()
-    port.postMessage(recoverMessage)
+    port.postMessage({ action: 'recover' })
 
     const settingsContainer = document.getElementById('settingsSection') as HTMLSelectElement
     if (settingsContainer) {
@@ -59,14 +58,12 @@ window.addEventListener('DOMContentLoaded', async function () {
 
         // Load the preferred language from storage and select the corresponding option
         chrome.storage.sync.get({ preferredLanguage: 'en' }, (result) => {
-            const selectedLanguage = result.preferredLanguage
-            languageSelect.value = selectedLanguage
+            languageSelect.value = result.preferredLanguage
         })
 
         // Add an event listener for language selection changes
         languageSelect.addEventListener('change', function () {
             const selectedLanguage = this.value
-
             chrome.storage.sync.set({ preferredLanguage: selectedLanguage })
         })
     }
@@ -128,13 +125,13 @@ function getParentForm(el: HTMLElement) {
 
 function savedInstanceSubmitHandler(event) {
     event.preventDefault()
-    const action = event.target.name as SearchReplaceAction
+    const action = event.target.name as SearchReplaceBackgroundActions
     const form = getParentForm(event.target)
     if (form) {
         const url = form.elements['url'].value as string
         const searchTerm = form.elements['searchTerm'].value as string
         const replaceTerm = form.elements['replaceTerm'].value as string
-        const instanceId = form.elements['instanceId'].value as string
+        const instanceId = Number(form.elements['instanceId'].value)
         const options: Partial<SearchReplaceOptions> = { save: true }
         for (const name of getCheckboxNames()) {
             options[name] = form.elements[name].checked === true
@@ -146,12 +143,12 @@ function savedInstanceSubmitHandler(event) {
         }
         const port = tabConnect()
         port.postMessage({
-            actions: { [action]: true } as { [key in SearchReplaceAction]: boolean },
+            action: action,
             // TODO make history optional?
             storage: { instance, history: [] },
             instanceId,
             url,
-        } as SearchReplaceStorageMessage)
+        } as SearchReplaceBackgroundMessage)
     }
 }
 

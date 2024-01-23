@@ -1,13 +1,13 @@
+// Shared utils between the background and content scripts
+
 import {
     LangFile,
     LangList,
-    RegexFlags,
-    SavedSearchReplaceInstance,
-    SearchReplaceStorageMessage,
+    SearchReplaceInstance,
+    SearchReplaceResponse,
+    SearchReplaceResult,
     TranslationProxy,
 } from './types'
-import { Simulate } from 'react-dom/test-utils'
-import input = Simulate.input
 
 export const cyrb53 = (str, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -25,8 +25,12 @@ export const cyrb53 = (str, seed = 0) => {
     return 4294967296 * (2097151 & h2) + (h1 >>> 0)
 }
 
-export function getSavedInstanceId(instance: SavedSearchReplaceInstance) {
-    return cyrb53(`${instance.url}${instance.searchTerm}${instance.replaceTerm}${JSON.stringify(instance.options)}`)
+export function getInstanceId(instance: SearchReplaceInstance, useUrl: boolean) {
+    return cyrb53(
+        `${useUrl && instance.url ? instance.url : ''}${instance.searchTerm}${instance.replaceTerm}${JSON.stringify(
+            instance.options
+        )}`
+    )
 }
 
 export function tabConnect() {
@@ -35,100 +39,6 @@ export function tabConnect() {
     })
 }
 
-export const recoverMessage: SearchReplaceStorageMessage = {
-    actions: { recover: true },
-}
-
-export const clearHistoryMessage: SearchReplaceStorageMessage = {
-    actions: { clearHistory: true },
-}
-
-export function getInputElements(
-    document: Document,
-    visibleOnly?: boolean
-): (HTMLInputElement | HTMLTextAreaElement)[] {
-    const inputs = Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea'))
-    return visibleOnly ? inputs.filter((input) => elementIsVisible(input)) : inputs
-}
-
-export function getIframeElements(document: Document): HTMLIFrameElement[] {
-    return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe'))
-}
-
-export function getSearchOccurrences(
-    document: Document,
-    searchPattern: RegExp,
-    visibleOnly: boolean,
-    inputFieldsOnly?: boolean,
-    iframe?: boolean
-): number {
-    let matches
-    let iframeMatches = 0
-    if (visibleOnly && !inputFieldsOnly) {
-        // Get visible matches only, anywhere on the page
-        matches = document.body.innerText.match(searchPattern) || []
-        const inputs = getInputElements(document, visibleOnly)
-        const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
-
-        // combine the matches from the body and the inputs and remove empty matches
-        matches = [...matches, ...inputMatches].filter((match) => match.length > 0).flat()
-    } else if (inputFieldsOnly) {
-        // Get matches in input fields only, visible or hidden, depending on `visibleOnly`
-        const inputs = getInputElements(document, visibleOnly)
-        const inputMatches = inputs.map((input) => input.value.match(searchPattern) || [])
-        matches = inputMatches.filter((match) => match.length > 0).flat()
-    } else {
-        // Get matches anywhere in the page, visible or not
-        matches = Array.from(document.body.innerHTML.match(searchPattern) || [])
-    }
-
-    // Now check in any iframes by calling this function again, summing the total number of matches from each iframe
-    const iframes = getIframeElements(document)
-    if (!iframe) {
-        iframeMatches = iframes
-            .map((iframe) => {
-                try {
-                    return getSearchOccurrences(
-                        iframe.contentDocument!,
-                        searchPattern,
-                        visibleOnly,
-                        inputFieldsOnly,
-                        true
-                    )
-                } catch (e) {
-                    return 0
-                }
-            })
-            .reduce((a, b) => a + b, 0)
-    }
-
-    let occurences = 0
-    if (matches) {
-        console.debug(
-            `Matches ${matches.length}, Iframe matches: ${iframeMatches}, Total: ${matches.length + iframeMatches}`
-        )
-        occurences = matches.length + iframeMatches
-    }
-
-    return occurences
-}
-
-export function elementIsVisible(element: HTMLElement): boolean {
-    if (element && 'style' in element) {
-        const styleVisible = element.style.display !== 'none'
-        if (element.nodeName === 'INPUT') {
-            const inputElement = element as HTMLInputElement
-            return inputElement.type !== 'hidden' && styleVisible
-        } else {
-            return styleVisible
-        }
-    }
-    return false
-}
-
-export function inIframe() {
-    return window !== window.top
-}
 let manifestJSON = {
     version: 'test',
 }
@@ -137,10 +47,24 @@ if (chrome && chrome.runtime) {
 }
 export const manifest = manifestJSON
 
+// Function to clear any saved responses
+export function clearSavedResponses(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        try {
+            chrome.runtime.sendMessage({ action: 'clearSavedResponses' }, (result) => {
+                resolve(result)
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 // Function to retrieve the translation data
 export function getTranslation(): Promise<LangFile> {
     return new Promise((resolve) => {
         chrome.runtime.sendMessage({ action: 'getTranslation' }, (translation) => {
+            console.log('UTIL: getTranslation', translation)
             resolve(translation)
         })
     })
@@ -179,13 +103,13 @@ export function localizeElements(translationData: LangFile) {
             location.reload()
         }
     })
-
+    console.log('UTIL: localizeElements, translationData', translationData)
     document.querySelectorAll('[data-locale]').forEach((elem) => {
         const element = elem as HTMLElement
         const localeKey = element.getAttribute('data-locale')
 
         if (localeKey) {
-            let innerString
+            let innerString: string
             if (translationData.data[localeKey]) {
                 innerString = translationData.data[localeKey].message
             } else if (translationData.dataFallback[localeKey]) {
@@ -196,4 +120,40 @@ export function localizeElements(translationData: LangFile) {
             element.innerHTML = innerString // Use innerHTML to render HTML content
         }
     })
+}
+
+export function getExtensionStorage<T>(key: string): Promise<T | undefined> {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(key, (data: { [key: string]: T }) => {
+            resolve(data[key])
+        })
+    })
+}
+
+export function mergeSearchReplaceResponse(a: SearchReplaceResponse, b: SearchReplaceResponse): SearchReplaceResponse {
+    return {
+        instance: a.instance,
+        inIframe: a.inIframe,
+        hints: Array.from(new Set([...(a.hints || []), ...(b.hints || [])])),
+        location: a.location,
+        result: mergeSearchReplaceResults(a.result, b.result),
+        action: a.action,
+        iframes: a.iframes,
+        backgroundReceived: a.backgroundReceived + b.backgroundReceived,
+        host: a.host,
+    }
+}
+
+export function mergeSearchReplaceResults(a: SearchReplaceResult, b: SearchReplaceResult): SearchReplaceResult {
+    return {
+        count: {
+            original: a.count.original + b.count.original,
+            replaced: a.count.replaced + b.count.replaced,
+        },
+        replaced: a.replaced || b.replaced,
+    }
+}
+
+export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+    return value !== null && value !== undefined
 }

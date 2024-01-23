@@ -13,6 +13,7 @@ module.exports = {
         options: path.join(srcDir, 'options.ts'),
         util: path.join(srcDir, 'util.ts'),
         help: path.join(srcDir, 'help.ts'),
+        elements: path.join(srcDir, 'elements.ts'),
     },
     output: {
         path: path.join(__dirname, '../dist'),
@@ -31,7 +32,7 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/,
+                exclude: /node_modules|cypress/,
             },
         ],
     },

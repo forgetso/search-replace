@@ -75,6 +75,10 @@
     "message": "नियमित अभिव्यक्ति",
     "description": "checkbox isRegex"
   },
+  "replaceHTML": {
+    "message": "HTML बदलें",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "सभी को बदलें",
     "description": "checkbox replaceAll"
@@ -103,8 +107,8 @@
     "message": "केवल इनपुट फ़ील्ड्स",
     "description": "popup"
   },
-  "Visiblecontent": {
-    "message": "केवल दिखाई देने वाला सामग्री",
+  "Hiddencontent": {
+    "message": "隠しコンテンツ",
     "description": "popup"
   },
   "Matchwhole": {

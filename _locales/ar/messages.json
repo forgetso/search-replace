@@ -75,6 +75,10 @@
     "message": "تعبير منتظم (التعبيرات العادية)",
     "description": "checkbox isRegex"
   },
+  "replaceHTML": {
+    "message": "استبدال HTML",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "استبدال الكل",
     "description": "checkbox replaceAll"
@@ -103,8 +107,8 @@
     "message": "حقول الإدخال فقط",
     "description": "popup"
   },
-  "Visiblecontent": {
-    "message": "المحتوى المرئي فقط",
+  "Hiddencontent": {
+    "message": "محتوى مخفي",
     "description": "popup"
   },
   "Matchwhole": {

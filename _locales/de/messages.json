@@ -75,6 +75,10 @@
         "message": "Regulärer Ausdruck",
         "description": "checkbox isRegex"
     },
+    "replaceHTML": {
+        "message": "HTML ersetzen",
+        "description": "checkbox replaceHTML"
+    },
     "replaceAll": {
         "message": "Alle ersetzen",
         "description": "checkbox replaceAll"
@@ -103,8 +107,8 @@
         "message": "Nur Eingabefelder",
         "description": "popup"
     },
-    "Visiblecontent": {
-        "message": "Nur sichtbarer Inhalt",
+    "Hiddencontent": {
+        "message": "Versteckter Inhalt",
         "description": "popup"
     },
     "Matchwhole": {

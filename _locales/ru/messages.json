@@ -75,6 +75,10 @@
     "message": "Регулярное выражение",
     "description": "checkbox isRegex"
   },
+  "replaceHTML": {
+    "message": "Заменить HTML",
+    "description": "checkbox replaceHTML"
+  },
   "replaceAll": {
     "message": "Заменить все",
     "description": "checkbox replaceAll"
@@ -103,8 +107,8 @@
     "message": "Только поля ввода",
     "description": "popup"
   },
-  "Visiblecontent": {
-    "message": "Только видимое содержание",
+  "Hiddencontent": {
+    "message": "Скрытый контент",
     "description": "popup"
   },
   "Matchwhole": {

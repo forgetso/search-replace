@@ -15,4 +15,12 @@ import { defineConfig } from 'cypress'
 
 export default defineConfig({
     e2e: { baseUrl: 'http://localhost:9000' },
+    env: {
+        WP_USER: 'admin',
+        WP_PASSWORD: 'password',
+    },
+    chromeWebSecurity: false,
+    setupNodeEvents(on, config) {
+        // implement node event listeners here
+    },
 })
