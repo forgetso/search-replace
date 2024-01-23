@@ -70,7 +70,7 @@ Cypress.Commands.add('addBlockInEditor', (search: string, name?: string) => {
 })
 
 Cypress.Commands.add('savePost', () => {
-    cy.get('.editor-post-publish-button').click()
+    cy.get('.editor-post-publish-button').click({ force: true })
 
     // wait for saving
     cy.get('.components-snackbar__content a')
