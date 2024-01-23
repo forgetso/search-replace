@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import { ELEMENT_FILTER } from '../../constants'
-import { elementIsVisible } from '../../elements'
+import { copyElementAndRemoveSelectedElements, elementIsVisible } from '../../elements'
 import { searchReplace } from '../../searchreplace'
 
 const SEARCHTERM = 'This is a test!!!'
@@ -9,6 +9,17 @@ const REPLACETERM = 'Something else!!!'
 describe('Search Replace ', () => {
     beforeEach(() => {
         cy.visit('http://localhost:9000/tests/test.html')
+    })
+
+    it('creates a copy of the DOM with hidden elements removed', () => {
+        cy.document().then((document) => {
+            const copy = copyElementAndRemoveSelectedElements(document.body, (element: HTMLElement) => {
+                return !elementIsVisible(element, true, true)
+            })
+            const hidden = copy.clonedElementRemoved.querySelectorAll('.hidden')
+            expect(hidden.length).to.equal(0)
+            expect(copy.clonedElementRemoved.children.length).to.be.eq(1)
+        })
     })
 
     it('correctly identifies the number of visible inputs', () => {
@@ -34,7 +45,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     false,
                     false,
-                    false,
+                    true,
                     false,
                     false,
                     false,
@@ -67,7 +78,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     false,
                     false,
-                    true,
+                    false,
                     false,
                     false,
                     false,
@@ -96,7 +107,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     true,
                     false,
-                    false,
+                    true,
                     false,
                     false,
                     false,
@@ -125,7 +136,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     true,
                     false,
-                    false,
+                    true,
                     false,
                     false,
                     false,
@@ -154,7 +165,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     true,
                     false,
-                    true,
+                    false,
                     false,
                     false,
                     false,
@@ -183,7 +194,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     false,
                     false,
-                    false,
+                    true,
                     false,
                     false,
                     false,
@@ -214,7 +225,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     false,
                     false,
-                    false,
+                    true,
                     false,
                     false,
                     false,
@@ -245,7 +256,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     false,
                     false,
-                    false,
+                    true,
                     false,
                     false,
                     true,
@@ -254,7 +265,7 @@ describe('Search Replace ', () => {
                     iframes,
                     ELEMENT_FILTER
                 ).then((result) => {
-                    expect(result.searchReplaceResult.count.original).to.equal(14)
+                    expect(result.searchReplaceResult.count.original).to.equal(18)
                 })
             ).then(() => {
                 console.log('done')
@@ -262,7 +273,7 @@ describe('Search Replace ', () => {
         })
     })
 
-    it('counts the correct number of divs when replaceHTML and visibleOnly is set', () => {
+    it('counts the correct number of divs when replaceHTML and hiddenContent is not set', () => {
         cy.window().then((window) => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
@@ -274,7 +285,7 @@ describe('Search Replace ', () => {
                     REPLACETERM,
                     false,
                     false,
-                    true,
+                    false,
                     false,
                     false,
                     true,
@@ -303,7 +314,7 @@ describe('Search Replace ', () => {
                     'display: block;',
                     false,
                     true,
-                    false,
+                    true,
                     false,
                     false,
                     true,
@@ -319,7 +330,7 @@ describe('Search Replace ', () => {
                         '',
                         false,
                         false,
-                        true,
+                        false,
                         false,
                         false,
                         false,
@@ -328,7 +339,7 @@ describe('Search Replace ', () => {
                         iframes,
                         ELEMENT_FILTER
                     ).then((countResult) => {
-                        expect(countResult.searchReplaceResult.count.original).to.equal(9)
+                        expect(countResult.searchReplaceResult.count.original).to.equal(7)
                     })
                 })
             ).then(() => {

@@ -1,7 +1,7 @@
 export enum SearchReplaceCheckboxNames {
     matchCase = 'matchCase',
     inputFieldsOnly = 'inputFieldsOnly',
-    visibleOnly = 'visibleOnly',
+    hiddenContent = 'hiddenContent',
     wholeWord = 'wholeWord',
     isRegex = 'isRegex',
     replaceHTML = 'replaceHTML',
@@ -158,7 +158,7 @@ export type SearchReplaceConfig = {
     inputFieldsOnly: boolean
     isRegex: boolean
     replaceHTML: boolean
-    visibleOnly: boolean
+    hiddenContent: boolean
     wholeWord: boolean
     searchPattern: RegExp
     globalSearchPattern: RegExp

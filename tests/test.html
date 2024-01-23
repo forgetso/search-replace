@@ -4,58 +4,64 @@
 </head>
 <!-- An HTML page containing all kinds of input fields in which we will test replacing text -->
 <body>
+<div>
+    <h1>Tests</h1>
     <div>
-        <h1>Tests</h1>
-        <div>
-            <h2>1 Input Field</h2>
-            <form action="#" method="post">
-                <label>
-                    <input type="text" name="text" value="This is a test!!! ¹²">
-                </label>
-                <input type="submit" value="Submit">
-            </form>
-        </div>
-        <div>
-            <h2>2 Text Area</h2>
+        <h2>1 Input Field</h2>
+        <form action="#" method="post">
             <label>
-                <textarea name="text" rows="10" cols="50">This is a test!!! ¹²</textarea>
+                <input type="text" name="text" value="This is a test!!! ¹²">
             </label>
-        </div>
-        <div>
-            <h2>3 Text Area with HTML</h2>
-            <label>
-                <textarea name="text" rows="10" cols="50"><p>This is a test!!! ¹²</p></textarea>
-            </label>
-        </div>
-        <div>
-            <h2>4 Editable div with [role="textbox"]</h2>
-            <div contenteditable="true" role="textbox">This is a test!!! ¹²</div>
-        </div>
-        <div>
-            <h2>5 Hidden input</h2>
-            <form action="#" method="post">
-                <input type="hidden" name="hidden" value="This is a test!!! ¹²">
-            </form>
-
-        </div>
-        <div>
-            <h2>6 Hidden Div</h2>
-            <div style="display: none;">This is a test!!! ¹² - hidden</div>
-        </div>
-        <div>
-            <h2>7 Hidden Nested Div</h2>
-            <div style="display: none;">
-                <div>This is a test!!! ¹² - hidden</div>
-            </div>
-        </div>
-        <div>
-            <h2>8 Plain old div</h2>
-            <div>This is a test!!! ¹²</div>
-        </div>
-        <iframe src="iframe.html"></iframe>
-        <script type="text/javascript">
-            console.log("This is a test!!! ¹²")
-        </script>
+            <input type="submit" value="Submit">
+        </form>
     </div>
+    <div>
+        <h2>2 Text Area</h2>
+        <label>
+            <textarea name="text" rows="10" cols="50">This is a test!!! ¹²</textarea>
+        </label>
+    </div>
+    <div>
+        <h2>3 Text Area with HTML</h2>
+        <label>
+            <textarea name="text" rows="10" cols="50"><p>This is a test!!! ¹²</p></textarea>
+        </label>
+    </div>
+    <div>
+        <h2>4 Editable div with [role="textbox"]</h2>
+        <div contenteditable="true" role="textbox">This is a test!!! ¹²</div>
+    </div>
+    <div>
+        <h2>5 Hidden input</h2>
+        <form action="#" method="post">
+            <input type="hidden" name="hidden" value="This is a test!!! ¹²" class="hidden">
+        </form>
+
+    </div>
+    <div>
+        <h2>6 Hidden Div</h2>
+        <div style="display: none;" class="hidden">This is a test!!! ¹² - hidden</div>
+    </div>
+    <div>
+        <h2>7 Hidden Nested Div</h2>
+        <div style="display: none;">
+            <div class="hidden">This is a test!!! ¹² - hidden</div>
+        </div>
+    </div>
+    <div>
+        <h2>8 Plain old div</h2>
+        <div>This is a test!!! ¹²</div>
+    </div>
+    <iframe src="iframe.html"></iframe>
+    <script type="text/javascript">
+        console.log("This is a test!!! ¹²")
+    </script>
+</div>
+<div style="display: none;" class="hidden">Hidden Sibling</div>
+<div style="display: none;">
+    <div>
+        <div class="hidden">Hidden Nested Sibling</div>
+    </div>
+</div>
 </body>
 </html>

@@ -107,8 +107,8 @@
         "message": "Input fields only",
         "description": "popup"
     },
-    "Visiblecontent": {
-        "message": "Visible content only",
+    "Hiddencontent": {
+        "message": "Hidden content",
         "description": "popup"
     },
     "Matchwhole": {

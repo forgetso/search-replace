@@ -76,7 +76,7 @@
     "description": "checkbox isRegex"
   },
   "replaceHTML": {
-    "message": "Replace HTML",
+    "message": "HTML 바꾸기",
     "description": "checkbox replaceHTML"
   },
   "replaceAll": {
@@ -107,8 +107,8 @@
     "message": "입력 필드만",
     "description": "popup"
   },
-  "Visiblecontent": {
-    "message": "가시적인 콘텐츠만",
+  "Hiddencontent": {
+    "message": "숨겨진 콘텐츠",
     "description": "popup"
   },
   "Matchwhole": {

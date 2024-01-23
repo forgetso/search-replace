@@ -12,9 +12,11 @@ import {
     copyElementAndRemoveSelectedElements,
     elementIsVisible,
     getIframeElements,
+    getInitialIframeElement,
     getInputElements,
     inIframe,
     isBlobIframe,
+    isHidden,
 } from './elements'
 import { getFlags, getSearchPattern } from './regex'
 import { getHints } from './hints'
@@ -171,7 +173,7 @@ function getElementFromNode(node: Node): Element {
     return element
 }
 
-function isIgnored(ignoredElements: Set<Element>, node: Node, visibleOnly: boolean, elementFilter: RegExp): number {
+function isIgnored(ignoredElements: Set<Element>, node: Node, hiddenContent: boolean, elementFilter: RegExp): number {
     const toCheck = getElementFromNode(node)
     if (toCheck.tagName.match(elementFilter) && !isBlobIframe(toCheck)) {
         return NodeFilter.FILTER_REJECT
@@ -181,12 +183,11 @@ function isIgnored(ignoredElements: Set<Element>, node: Node, visibleOnly: boole
         return NodeFilter.FILTER_REJECT
     }
 
-    const found = Array.from(ignoredElements.values()).filter((element) => element.isEqualNode(toCheck))
-    if (found.length) {
+    if (equivalentInIgnoredElements(ignoredElements, toCheck)) {
         return NodeFilter.FILTER_REJECT
     }
 
-    if (visibleOnly) {
+    if (!hiddenContent) {
         if (!elementIsVisible(toCheck as HTMLElement)) {
             return NodeFilter.FILTER_REJECT
         }
@@ -207,19 +208,32 @@ function nodesUnder(
     let node: Node | null
     const walk = document.createTreeWalker(element, nodeType, {
         acceptNode: (node) => {
-            return isIgnored(ignoredElements, node, config.visibleOnly, config.elementFilter)
+            // This doesn't work - child elements aren't removed
+            return isIgnored(ignoredElements, node, config.hiddenContent, config.elementFilter)
         },
     })
+    const walked = new Set<Node>()
 
-    // FIXME - are iframes being walked?
     while ((node = walk.nextNode())) {
-        if (getElementFromNode(node).tagName === 'IFRAME' || node.nodeName === 'IFRAME') {
+        if (walked.has(node)) {
+            continue
+        }
+        walked.add(node)
+        const nodeElement = getElementFromNode(node)
+        if (nodeElement.tagName === 'IFRAME' || node.nodeName === 'IFRAME') {
+        }
+        if (nodeElement.tagName === 'WINDOW') {
+            continue
+        }
+
+        if (!config.hiddenContent && isHidden(nodeElement, false)) {
+            continue
         }
 
         if (config.replace) {
             let oldValue = node['innerHTML']
             if (config.searchTarget === 'innerText') {
-                oldValue = node.nodeValue || getElementFromNode(node)['value']
+                oldValue = node.nodeValue || nodeElement['value']
             }
 
             if (node && oldValue) {
@@ -265,11 +279,12 @@ function replaceInner(
     }
 
     const occurrences = countOccurrences(element, config)
+
     elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
 
     const ancestorChecked = containsAncestor(element, elementsChecked)
     searchReplaceResult.count.original =
-        ancestorChecked && elementIsVisible(element)
+        ancestorChecked && elementIsVisible(element, false, true)
             ? searchReplaceResult.count.original
             : searchReplaceResult.count.original + occurrences
 
@@ -292,8 +307,8 @@ function replaceInner(
     let inputs = Array.from(originalElement.querySelectorAll('input'))
     // TODO - use the cloned element result to check if the number of elements found in the clone is equal to the number
     //  found in the original element.
-    if (config.visibleOnly) {
-        inputs = inputs.filter((input) => elementIsVisible(input))
+    if (!config.hiddenContent) {
+        inputs = inputs.filter((input) => elementIsVisible(input, true, true))
     }
 
     const inputResult = replaceInInputs(config, document, inputs, searchReplaceResult, elementsChecked)
@@ -343,7 +358,7 @@ function replaceInputFields(
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
-    const allInputs = getInputElements(document, elementsChecked, config.visibleOnly)
+    const allInputs = getInputElements(document, elementsChecked, config.hiddenContent)
     // add inputs to elementsChecked
     allInputs.map((input) => elementsChecked.set(input, newSearchReplaceCount()))
     const inputsResult = replaceInInputs(config, document, allInputs, searchReplaceResult, elementsChecked)
@@ -353,6 +368,23 @@ function replaceInputFields(
         config.replace = false
     }
     return { searchReplaceResult, elementsChecked }
+}
+
+function getHiddenElements(element: HTMLElement, config: SearchReplaceConfig): Set<Element> {
+    return new Set(
+        Array.from(element.getElementsByTagName('*'))
+            .filter((el) => !el.tagName.match(config.elementFilter))
+            .filter((el) => !elementIsVisible(el as HTMLElement, false, false))
+    )
+}
+
+function equivalentInIgnoredElements(ignoredElements: Set<Element>, element: Element) {
+    for (const ignored of ignoredElements) {
+        if (ignored.isEqualNode(element)) {
+            return true
+        }
+    }
+    return false
 }
 
 function replaceInHTML(
@@ -369,29 +401,33 @@ function replaceInHTML(
         const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
             clonedElement,
             // Remove elements that match the filter and are not blob iframes. Removes SCRIPT, STYLE, IFRAME, etc.
-            (el: HTMLElement) => !!el.nodeName.match(config.elementFilter) && !isBlobIframe(el)
+            (el: HTMLElement) => !!el.nodeName.match(config.elementFilter) && !isBlobIframe(el),
+            false
         )
         clonedElement = clonedElementRemoved as HTMLElement
         ignoredElements = removedSet
-
-        if (config.visibleOnly) {
+        if (!config.hiddenContent) {
             // We have to check the visibility of the original elements as the cloned ones are all invisible
             if (!elementIsVisible(originalElements[originalIndex])) {
                 continue
             }
+            ignoredElements = new Set([...ignoredElements, ...getHiddenElements(originalElement, config)])
             // the above works if an ancestor of the element is hidden, but not if the element contains descendants that
             // are hidden. To check for this, we need to check the relatives of the element to see if they are hidden
             // and if so, create a copy of the element with the hidden elements removed, storing a map of the hidden
             // elements and their paths, so we can ignore them during replacement
             const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
                 clonedElement,
-                // Tell it to remove elements that are not visible
-                (el: HTMLElement) => !elementIsVisible(el, true, true),
-                // We need to avoid copying twice as the element is already cloned
+                (el) => equivalentInIgnoredElements(ignoredElements, el),
                 false
             )
+
             clonedElement = clonedElementRemoved as HTMLElement
             ignoredElements = new Set([...ignoredElements, ...removedSet])
+            console.log(
+                "Ignored elements after removing hidden elements from the element's descendants",
+                ignoredElements
+            )
         }
 
         // replace inner texts first, dropping out if we have done a replacement and are not working globally
@@ -426,7 +462,7 @@ export async function searchReplace(
     replaceTerm: string,
     inputFieldsOnly: boolean,
     isRegex: boolean,
-    visibleOnly: boolean,
+    hiddenContent: boolean,
     wholeWord: boolean,
     matchCase: boolean,
     replaceHTML: boolean,
@@ -460,7 +496,7 @@ export async function searchReplace(
         inputFieldsOnly,
         isRegex,
         replaceHTML,
-        visibleOnly,
+        hiddenContent,
         wholeWord,
         searchPattern,
         globalSearchPattern,
@@ -481,24 +517,26 @@ export async function searchReplace(
         }
     } else {
         const startingElement = document.body || document.querySelector('div')
-        const searchableIframePromises: Promise<HTMLElement>[] = getIframeElements(document, true).map((iframe) => {
-            return new Promise((resolve, reject) => {
-                if (iframe.contentDocument) {
-                    iframe.contentDocument.onreadystatechange = () => {
-                        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-                            const element = iframe.contentDocument.body || iframe.contentDocument.querySelector('div')
-                            if (!element) {
-                                reject('no iframe content')
+        const searchableIframePromises: Promise<HTMLElement | null>[] = getIframeElements(document, true).map(
+            (iframe) => {
+                return new Promise((resolve, reject) => {
+                    if (iframe.contentDocument) {
+                        if (iframe.contentDocument.readyState !== 'complete') {
+                            iframe.contentDocument.onreadystatechange = () => {
+                                if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+                                    const element = getInitialIframeElement(iframe)
+                                    resolve(element)
+                                }
                             }
-                            resolve(element as HTMLElement)
+                        } else {
+                            resolve(getInitialIframeElement(iframe))
                         }
                     }
-                }
-            })
-        })
+                })
+            }
+        )
         const searchableIframes = (await Promise.all(searchableIframePromises)).filter(notEmpty)
 
-        console.log('searchable frames', searchableIframes)
         result = replaceInHTML(
             config,
             document,
@@ -529,7 +567,7 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             instance.replaceTerm,
             instance.options.inputFieldsOnly,
             instance.options.isRegex,
-            instance.options.visibleOnly,
+            instance.options.hiddenContent,
             instance.options.wholeWord,
             instance.options.matchCase,
             instance.options.replaceHTML,

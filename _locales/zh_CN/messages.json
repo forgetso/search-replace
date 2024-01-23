@@ -76,7 +76,7 @@
     "description": "复选框 正则表达式"
   },
   "replaceHTML": {
-    "message": "Replace HTML",
+    "message": "替换 HTML",
     "description": "checkbox replaceHTML"
   },
   "replaceAll": {
@@ -107,8 +107,8 @@
     "message": "仅输入字段",
     "description": "弹出窗口"
   },
-  "Visiblecontent": {
-    "message": "仅可见内容",
+  "Hiddencontent": {
+    "message": "隐藏内容",
     "description": "弹出窗口"
   },
   "Matchwhole": {

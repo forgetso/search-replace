@@ -76,7 +76,7 @@
     "description": "checkbox isRegex"
   },
   "replaceHTML": {
-    "message": "Replace HTML",
+    "message": "Substituir HTML",
     "description": "checkbox replaceHTML"
   },
   "replaceAll": {
@@ -107,8 +107,8 @@
     "message": "Apenas campos de entrada",
     "description": "popup"
   },
-  "Visiblecontent": {
-    "message": "Apenas conteúdo visível",
+  "Hiddencontent": {
+    "message": "Conteúdo oculto",
     "description": "popup"
   },
   "Matchwhole": {

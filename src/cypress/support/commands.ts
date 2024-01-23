@@ -73,7 +73,7 @@ Cypress.Commands.add('savePost', () => {
     cy.get('.editor-post-publish-button').click()
 
     // wait for saving
-    cy.contains('Post published.')
+    cy.get('.components-snackbar__content a')
 })
 
 Cypress.Commands.add('focusBlock', (number = 0) => {

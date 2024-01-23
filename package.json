@@ -13,7 +13,7 @@
     "start": "light-server --no-reload -s . -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\"",
     "cypress:open": "npx cypress open --project src",
     "cypress:run": "npx cypress run --project src",
-    "e2e:docker:down": "docker compose --file ./docker/docker-compose.wordpress.yml down --volumes",
+    "e2e:docker:down": "docker compose --file ./docker/docker-compose.wordpress.yml down --volumes --remove-orphans",
     "e2e:docker:up": "docker compose --file ./docker/docker-compose.wordpress.yml up -d"
   },
   "devDependencies": {
@@ -22,6 +22,7 @@
     "@html-eslint/parser": "^0.22.0",
     "@types/chrome": "*",
     "@types/jest": "^27.0.2",
+    "@types/node": "^20.11.5",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

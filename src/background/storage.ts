@@ -7,7 +7,7 @@ export function getDefaultStorage(): SearchReplacePopupStorage {
         options: {
             matchCase: false,
             inputFieldsOnly: true,
-            visibleOnly: true,
+            hiddenContent: false,
             wholeWord: false,
             isRegex: false,
             replaceHTML: false,

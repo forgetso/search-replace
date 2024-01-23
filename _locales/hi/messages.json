@@ -76,7 +76,7 @@
     "description": "checkbox isRegex"
   },
   "replaceHTML": {
-    "message": "Replace HTML",
+    "message": "HTML बदलें",
     "description": "checkbox replaceHTML"
   },
   "replaceAll": {
@@ -107,8 +107,8 @@
     "message": "केवल इनपुट फ़ील्ड्स",
     "description": "popup"
   },
-  "Visiblecontent": {
-    "message": "केवल दिखाई देने वाला सामग्री",
+  "Hiddencontent": {
+    "message": "隠しコンテンツ",
     "description": "popup"
   },
   "Matchwhole": {

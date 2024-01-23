@@ -386,7 +386,7 @@ function getInputValues(replaceAll: boolean): SearchReplaceInstance {
     const replaceTerm = getReplaceTermElement().value || ''
     const matchCase = (<HTMLInputElement>document.getElementById('matchCase')).checked
     const inputFieldsOnly = (<HTMLInputElement>document.getElementById('inputFieldsOnly')).checked
-    const visibleOnly = (<HTMLInputElement>document.getElementById('visibleOnly')).checked
+    const hiddenContent = (<HTMLInputElement>document.getElementById('hiddenContent')).checked
     const wholeWord = (<HTMLInputElement>document.getElementById('wholeWord')).checked
     const isRegex = (<HTMLInputElement>document.getElementById('isRegex')).checked
     const replaceHTML = (<HTMLInputElement>document.getElementById('replaceHTML')).checked
@@ -397,7 +397,7 @@ function getInputValues(replaceAll: boolean): SearchReplaceInstance {
         options: {
             matchCase,
             inputFieldsOnly,
-            visibleOnly,
+            hiddenContent,
             wholeWord,
             isRegex,
             replaceHTML,
