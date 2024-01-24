@@ -124,10 +124,14 @@ function containsAncestor(element: Element, results: Map<Element, SearchReplaceR
 }
 
 function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number {
-    let matches = el[config.searchTarget].match(config.globalSearchPattern) || []
+    let target = el[config.searchTarget]
+
     if (config.hiddenContent && config.searchTarget === 'innerText' && 'textContent' in el) {
-        matches = (el as HTMLElement).textContent?.match(config.globalSearchPattern) || []
+        // textContent contains text of visible and hidden elements
+        target = (el as HTMLElement).textContent
     }
+
+    const matches = target.match(config.globalSearchPattern) || []
     return matches.length
 }
 
@@ -178,18 +182,21 @@ function getElementFromNode(node: Node): Element {
 
 function isIgnored(ignoredElements: Set<Element>, node: Node, hiddenContent: boolean, elementFilter: RegExp): number {
     const toCheck = getElementFromNode(node)
+    // if a script or an iframe that is not a blob iframe, reject
     if (toCheck.tagName.match(elementFilter) && !isBlobIframe(toCheck)) {
         return NodeFilter.FILTER_REJECT
     }
-
+    // if an ignored element, reject
     if (ignoredElements.has(toCheck)) {
         return NodeFilter.FILTER_REJECT
     }
 
+    // if the equivalent of an ignored element (e.g. ignored are clones), reject
     if (equivalentInIgnoredElements(ignoredElements, toCheck)) {
         return NodeFilter.FILTER_REJECT
     }
 
+    // if we're not checking hidden content and the element is hidden, reject
     if (!hiddenContent) {
         if (!elementIsVisible(toCheck as HTMLElement)) {
             return NodeFilter.FILTER_REJECT
@@ -396,6 +403,7 @@ function equivalentInIgnoredElements(ignoredElements: Set<Element>, element: Ele
             return true
         }
     }
+
     return false
 }
 
@@ -407,7 +415,6 @@ function replaceInHTML(
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     for (const [originalIndex, originalElement] of originalElements.entries()) {
-        let ignoredElements = new Set<Element>()
         let clonedElement = originalElement.cloneNode(true) as HTMLElement
 
         const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
@@ -417,13 +424,16 @@ function replaceInHTML(
             false
         )
         clonedElement = clonedElementRemoved as HTMLElement
-        ignoredElements = removedSet
+        let ignoredElements = removedSet
         if (!config.hiddenContent) {
             // We have to check the visibility of the original elements as the cloned ones are all invisible
             if (!elementIsVisible(originalElements[originalIndex])) {
                 continue
             }
-            ignoredElements = new Set([...ignoredElements, ...getHiddenElements(originalElement, config)])
+            ignoredElements = new Set([
+                ...ignoredElements,
+                ...(getHiddenElements(originalElement, config) as Set<HTMLElement>),
+            ])
             // the above works if an ancestor of the element is hidden, but not if the element contains descendants that
             // are hidden. To check for this, we need to check the relatives of the element to see if they are hidden
             // and if so, create a copy of the element with the hidden elements removed, storing a map of the hidden
@@ -519,7 +529,6 @@ export async function searchReplace(
         usesKnockout: usesKnockout(window.document),
         searchTarget,
     }
-    console.log('Search replace config', config)
 
     // we check other places if text was not replaced in a text editor
     let result: ReplaceFunctionReturnType

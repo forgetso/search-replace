@@ -58,8 +58,6 @@ export function isHidden(element: HTMLElement | Element, cloned = false) {
 
     // clones are not visible so we can't use checkVisibility
     if (!cloned && 'checkVisibility' in element && typeof element.checkVisibility === 'function') {
-        if (element.classList.contains('interface-complementary-area-header__small-title')) {
-        }
         // use the relatively new checkVisibility method, which returns `true` if the element is visible
         return !element.checkVisibility()
     }
@@ -67,8 +65,7 @@ export function isHidden(element: HTMLElement | Element, cloned = false) {
     // This method is not as accurate as checkVisibility
     // compute the style as its not immediately obvious if the element is hidden
     const computedStyle = getComputedStyle(element)
-    if (element.classList.contains('interface-complementary-area-header__small-title')) {
-    }
+
     if (computedStyle.display === 'none') {
         return true
     }
@@ -112,8 +109,8 @@ export function copyElementAndRemoveSelectedElements(
     function removeSelectedElements(element: HTMLElement) {
         if (element) {
             const childNodes = <HTMLElement[]>Array.from(element.children)
-            // eslint-disable-next-line prefer-const
-            for (let [childIndex, child] of childNodes.entries()) {
+
+            for (const child of childNodes) {
                 if (child.isEqualNode(element)) {
                     continue
                 }
@@ -127,9 +124,9 @@ export function copyElementAndRemoveSelectedElements(
                     }
                 } else {
                     // Recursively process visible child elements
-                    child = removeSelectedElements(child as HTMLElement)
-                    if (element.children[childIndex] && !child.isEqualNode(element.children[childIndex])) {
-                        element.replaceChild(child, element.children[childIndex])
+                    const newChild = removeSelectedElements(child as HTMLElement)
+                    if (element.contains(child) && !newChild.isEqualNode(child)) {
+                        element.replaceChild(newChild, child)
                     }
                 }
             }

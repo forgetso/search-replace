@@ -18,7 +18,7 @@ describe('Search Replace ', () => {
             })
             const hidden = copy.clonedElementRemoved.querySelectorAll('.hidden')
             expect(hidden.length).to.equal(0)
-            expect(copy.clonedElementRemoved.children.length).to.be.eq(1)
+            expect(copy.clonedElementRemoved.children.length).to.be.eq(2)
         })
     })
 
