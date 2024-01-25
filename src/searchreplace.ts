@@ -130,13 +130,16 @@ function replaceInInput(
     document: Document,
     input: HTMLInputElement | HTMLTextAreaElement,
     searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, SearchReplaceResult>
+    elementsChecked: Map<Element, SearchReplaceResult>,
+    addOccurrences?: boolean
 ): ReplaceFunctionReturnType {
     if (input.value !== undefined) {
         const oldValue = getValue(input, config)
         const occurrences = oldValue.match(config.searchPattern)
         if (occurrences) {
-            searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+            searchReplaceResult.count.original = addOccurrences
+                ? searchReplaceResult.count.original + occurrences.length
+                : searchReplaceResult.count.original
             const newValue = input.value.replace(config.searchPattern, config.replaceTerm)
 
             if (config.replace && oldValue !== newValue) {
@@ -190,6 +193,7 @@ function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number 
         // textContent contains text of visible and hidden elements
         target = (el as HTMLElement).textContent
     }
+    console.log('counting in', target)
 
     const matches = target.match(config.globalSearchPattern) || []
     return matches.length
@@ -431,12 +435,20 @@ function replaceInInputs(
     document: Document,
     inputs: (HTMLInputElement | HTMLTextAreaElement | HTMLElement)[],
     searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, SearchReplaceResult>
+    elementsChecked: Map<Element, SearchReplaceResult>,
+    addOccurrences?: boolean
 ): ReplaceFunctionReturnType {
     for (const input of inputs) {
         if ('value' in input) {
             // input, textarea
-            const inputResult = replaceInInput(config, document, input, searchReplaceResult, elementsChecked)
+            const inputResult = replaceInInput(
+                config,
+                document,
+                input,
+                searchReplaceResult,
+                elementsChecked,
+                addOccurrences
+            )
             searchReplaceResult = inputResult.searchReplaceResult
             elementsChecked = inputResult.elementsChecked
             if (config.replaceNext && searchReplaceResult.replaced) {
@@ -446,7 +458,9 @@ function replaceInInputs(
             const oldValue = getValue(input, config)
             const occurrences = oldValue.match(config.globalSearchPattern)
             if (occurrences) {
-                searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+                searchReplaceResult.count.original = addOccurrences
+                    ? searchReplaceResult.count.original + occurrences.length
+                    : searchReplaceResult.count.original
                 if (config.replace) {
                     // contenteditable
                     const elementResult = replaceInContentEditableDiv(input, oldValue, occurrences, config)
