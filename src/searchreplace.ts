@@ -150,17 +150,6 @@ function replaceInInput(
                 searchReplaceResult.count.replaced += replaceCount
                 searchReplaceResult.replaced = true
 
-                // const nodesUnderResult = nodesUnder(
-                //     document,
-                //     input,
-                //     config,
-                //     searchReplaceResult,
-                //     elementsChecked,
-                //     new Set()
-                // )
-                // searchReplaceResult = nodesUnderResult.searchReplaceResult
-                // elementsChecked = nodesUnderResult.elementsChecked
-
                 if (config.usesKnockout && document.documentElement) {
                     const knockoutValueChanger = getKnockoutValueChanger(input.id, newValue)
                     document.documentElement.setAttribute('onreset', knockoutValueChanger)
