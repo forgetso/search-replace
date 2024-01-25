@@ -59,12 +59,70 @@ function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: 
         prototypeValueSetter = prototypeValueFn.set
     }
     if (valueSetter && prototypeValueSetter && valueSetter !== prototypeValueSetter) {
+        console.log('prototypeValueSetter.call(element, value)')
         prototypeValueSetter.call(element, value)
     } else if (valueSetter) {
         valueSetter.call(element, value)
+        console.log('valueSetter.call(element, value)')
     } else {
         element.value = value
+        element.setAttribute('value', value)
+        element.shadowRoot?.getElementById(element.id)?.setAttribute('value', value)
+        console.log(element)
+        console.log('element.value = value')
+        console.log(element)
     }
+}
+
+function replaceInInputShadow(
+    input: HTMLInputElement | HTMLTextAreaElement,
+    config: SearchReplaceConfig,
+    newValue: string
+) {
+    if (config.shadowRoots.length) {
+        config.shadowRoots.map((shadowRoot) => {
+            let shadowInputs = Array.from(shadowRoot.querySelectorAll(`input[id="${input['id']}"]`))
+            if (!shadowInputs.length) {
+                shadowInputs = Array.from(shadowRoot.querySelectorAll(`input[name="${input['name']}"]`))
+            }
+            if (!shadowInputs.length) {
+                shadowInputs = Array.from(shadowRoot.querySelectorAll(`input[value="${input['value']}"]`))
+            }
+            if (!shadowInputs.length) {
+                // perform less exact search
+                shadowInputs = Array.from(shadowRoot.querySelectorAll(`*[value="${input['value']}"]`))
+            }
+            if (shadowInputs.length) {
+                shadowInputs.map((shadowInput) => {
+                    shadowInput['value'] = newValue
+                    shadowInput.dispatchEvent(new Event('input', { bubbles: true }))
+                })
+                shadowRoot.host.dispatchEvent(new Event('input', { bubbles: true }))
+            }
+        })
+    }
+}
+
+function getValue(node: Element | Node, config: SearchReplaceConfig): string {
+    const nodeElement = getElementFromNode(node)
+    // if it's an input or a textarea, take the value
+    if (nodeElement && (nodeElement.nodeName === 'INPUT' || nodeElement.nodeName === 'TEXTAREA')) {
+        return nodeElement['value']
+    }
+    // if it's a contenteditable div, take the innerHTML
+    if (nodeElement && nodeElement.nodeName === 'DIV' && nodeElement.getAttribute('contenteditable') === 'true') {
+        return nodeElement['innerHTML']
+    }
+    // if the search target is innerHTML, take the innerHTML
+    if (nodeElement && config.searchTarget === 'innerHTML') {
+        return nodeElement['innerHTML']
+    }
+    // If it's a text node, return the nodeValue
+    if (node.nodeType === Node.TEXT_NODE) {
+        return node.nodeValue || ''
+    }
+    // Otherwise return the innerText
+    return node['innerText']
 }
 
 function replaceInInput(
@@ -75,20 +133,33 @@ function replaceInInput(
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     if (input.value !== undefined) {
-        const oldValue = input.value
+        const oldValue = getValue(input, config)
         const occurrences = oldValue.match(config.searchPattern)
         if (occurrences) {
             searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
             const newValue = input.value.replace(config.searchPattern, config.replaceTerm)
 
             if (config.replace && oldValue !== newValue) {
+                replaceInInputShadow(input, config, newValue)
                 input.focus()
                 setNativeValue(input, newValue)
+
                 const replaceCount = config.replaceAll ? occurrences.length : 1
                 elementsChecked = updateResults(elementsChecked, input, true, occurrences.length, replaceCount)
 
                 searchReplaceResult.count.replaced += replaceCount
                 searchReplaceResult.replaced = true
+
+                // const nodesUnderResult = nodesUnder(
+                //     document,
+                //     input,
+                //     config,
+                //     searchReplaceResult,
+                //     elementsChecked,
+                //     new Set()
+                // )
+                // searchReplaceResult = nodesUnderResult.searchReplaceResult
+                // elementsChecked = nodesUnderResult.elementsChecked
 
                 if (config.usesKnockout && document.documentElement) {
                     const knockoutValueChanger = getKnockoutValueChanger(input.id, newValue)
@@ -135,43 +206,53 @@ function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number 
     return matches.length
 }
 
-function replaceInElement(node: Element, oldValue: string, config: SearchReplaceConfig) {
-    const occurrences = oldValue.match(config.globalSearchPattern) || []
-    let replacementCount = 0
-    let replace = false
-    let replaced = false
-    if (occurrences.length) {
-        const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
-        replace = oldValue != newValue
-        if (replace) {
-            replacementCount = config.replaceAll ? occurrences.length : 1 // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
-            const nodeElement = getElementFromNode(node)
-
-            if ('value' in nodeElement) {
-                // TODO unify with replaceInInput, taking care not to count occurrences again
-                nodeElement['value'] = newValue
-                replaced = true
-            }
-            if (config.searchTarget === 'innerHTML') {
-                node[config.searchTarget] = newValue
-                replaced = true
-            } else if (node.nodeValue) {
-                // replace in innerText but use nodeValue only as innerText contains text of descendent elements
-                node.nodeValue = newValue
-                replaced = true
-            }
-        }
-    }
-    return { node, occurrences: occurrences.length, replacementCount, replaced }
+function replaceInContentEditableDiv(
+    element: Element,
+    oldValue: string,
+    occurrences: RegExpMatchArray,
+    config: SearchReplaceConfig
+) {
+    const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
+    return replaceInNodeOrElement(element, newValue, occurrences, config, 'innerHTML')
 }
 
-function getElementFromNode(node: Node): Element {
+// TODO make replace function part of config instead of continuously checking innerText vs. innerHTML
+function replaceInNodeOrElement(
+    node: Node | Element,
+    newValue: string,
+    occurrences: RegExpMatchArray,
+    config: SearchReplaceConfig,
+    replaceTarget?: 'innerText' | 'innerHTML'
+) {
+    let replacementCount = 0
+    let replaced = false
+    const nodeElement = getElementFromNode(node)
+    if (config.searchTarget === 'innerHTML' && nodeElement) {
+        nodeElement[config.searchTarget] = newValue
+        replaced = true
+    } else if (replaceTarget && nodeElement) {
+        nodeElement[replaceTarget] = newValue
+        replaced = true
+    } else {
+        // replace in innerText but use nodeValue only as innerText contains text of descendent elements
+        node.nodeValue = newValue
+        replaced = true
+    }
+    if (replaced) {
+        replacementCount = config.replaceAll ? occurrences.length : 1 // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
+    }
+    nodeElement?.dispatchEvent(new Event('input', { bubbles: true }))
+
+    return { node, replacementCount, replaced }
+}
+
+function getElementFromNode(node: Node): Element | undefined {
     let element = node as Element
     if (node.nodeType === Node.TEXT_NODE) {
         if (node.parentElement) {
             element = node.parentElement
         } else {
-            throw new Error('Text node has no parent element')
+            return undefined
         }
     }
     if (!(element && element.nodeType === Node.ELEMENT_NODE)) {
@@ -182,6 +263,11 @@ function getElementFromNode(node: Node): Element {
 
 function isIgnored(ignoredElements: Set<Element>, node: Node, hiddenContent: boolean, elementFilter: RegExp): number {
     const toCheck = getElementFromNode(node)
+    // if there is no element, reject
+    if (!toCheck) {
+        return NodeFilter.FILTER_REJECT
+    }
+
     // if a script or an iframe that is not a blob iframe, reject
     if (toCheck.tagName.match(elementFilter) && !isBlobIframe(toCheck)) {
         return NodeFilter.FILTER_REJECT
@@ -225,34 +311,50 @@ function nodesUnder(
     const walked = new Set<Node>()
 
     while ((node = walk.nextNode())) {
+        if (!config.replace) {
+            break
+        }
+        console.log('Config.replace', config.replace)
+
         if (walked.has(node)) {
+            console.log('Continuing as already walked')
             continue
         }
         walked.add(node)
         const nodeElement = getElementFromNode(node)
 
+        if (!nodeElement) {
+            console.log('Continuing as no parentElement')
+            continue
+        }
+
         if (nodeElement.tagName === 'WINDOW') {
+            console.log('Continuing as element is window')
+            continue
+        }
+        const oldValue = getValue(node, config)
+        const occurrences = oldValue.match(config.globalSearchPattern)
+
+        if (!occurrences) {
+            console.log('Continuing as no occurrences')
             continue
         }
 
         if (!config.hiddenContent && isHidden(nodeElement, false)) {
+            console.log('Continuing as isHidden nodeElement', nodeElement)
             continue
         }
 
         if (config.replace) {
-            let oldValue = node['innerHTML']
-            if (config.searchTarget === 'innerText') {
-                oldValue = node.nodeValue || nodeElement['value']
-            }
-
-            if (node && oldValue) {
+            const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
+            if (node && oldValue && oldValue !== newValue) {
                 // Do the replacement
-                const replaceResult = replaceInElement(node as Element, oldValue, config)
+                const replaceResult = replaceInNodeOrElement(node, newValue, occurrences, config)
                 elementsChecked = updateResults(
                     elementsChecked,
                     node as Element,
                     replaceResult.replaced,
-                    replaceResult.occurrences,
+                    occurrences.length,
                     replaceResult.replacementCount
                 )
                 searchReplaceResult.count.replaced += replaceResult.replacementCount
@@ -264,8 +366,6 @@ function nodesUnder(
                     break
                 }
             }
-        } else {
-            break
         }
     }
 
@@ -327,8 +427,9 @@ function replaceInner(
     // TODO - use the cloned element result to check if the number of elements found in the clone is equal to the number
     //  found in the original element.
     if (!config.hiddenContent) {
-        inputs = inputs.filter((input) => elementIsVisible(input, true, true))
+        inputs = inputs.filter((input) => elementIsVisible(input, true, false))
     }
+    console.log('Found inputs', inputs)
 
     const inputResult = replaceInInputs(config, document, inputs, searchReplaceResult, elementsChecked)
 
@@ -340,16 +441,44 @@ function replaceInner(
 function replaceInInputs(
     config: SearchReplaceConfig,
     document: Document,
-    inputs: (HTMLInputElement | HTMLTextAreaElement)[],
+    inputs: (HTMLInputElement | HTMLTextAreaElement | HTMLElement)[],
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     for (const input of inputs) {
-        const inputResult = replaceInInput(config, document, input, searchReplaceResult, elementsChecked)
-        searchReplaceResult = inputResult.searchReplaceResult
-        elementsChecked = inputResult.elementsChecked
-        if (config.replaceNext && searchReplaceResult.replaced) {
-            config.replace = false
+        if ('value' in input) {
+            // input, textarea
+            const inputResult = replaceInInput(config, document, input, searchReplaceResult, elementsChecked)
+            searchReplaceResult = inputResult.searchReplaceResult
+            elementsChecked = inputResult.elementsChecked
+            if (config.replaceNext && searchReplaceResult.replaced) {
+                config.replace = false
+            }
+        } else {
+            const oldValue = getValue(input, config)
+            const occurrences = oldValue.match(config.globalSearchPattern)
+            console.log('oldValue', oldValue, 'occurrences', occurrences)
+            if (occurrences) {
+                searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
+                if (config.replace) {
+                    // contenteditable
+                    const elementResult = replaceInContentEditableDiv(input, oldValue, occurrences, config)
+                    elementsChecked = updateResults(
+                        elementsChecked,
+                        input,
+                        elementResult.replaced,
+                        occurrences.length,
+                        elementResult.replacementCount
+                    )
+                    searchReplaceResult.count.replaced += elementResult.replacementCount
+                    searchReplaceResult.replaced = elementResult.replaced
+                    input.dispatchEvent(new Event('input', { bubbles: true }))
+                    if (config.replaceNext && searchReplaceResult.replaced) {
+                        config.replace = false
+                        break
+                    }
+                }
+            }
         }
     }
     return { searchReplaceResult, elementsChecked }
@@ -446,11 +575,8 @@ function replaceInHTML(
 
             clonedElement = clonedElementRemoved as HTMLElement
             ignoredElements = new Set([...ignoredElements, ...removedSet])
-            console.log(
-                "Ignored elements after removing hidden elements from the element's descendants",
-                ignoredElements
-            )
         }
+        console.log('Ignored elements', ignoredElements)
 
         // replace inner texts first, dropping out if we have done a replacement and are not working globally
         const innerResult = replaceInner(
@@ -507,6 +633,13 @@ export async function searchReplace(
     const globalFlags = getFlags(matchCase, true)
     const globalSearchPattern = getSearchPattern(searchTerm, isRegex, globalFlags, wholeWord)
     const searchTarget = replaceHTML ? 'innerHTML' : 'innerText'
+    let shadowRoots: ShadowRoot[] = []
+    if (replace) {
+        shadowRoots = Array.from(document.querySelectorAll('*'))
+            .map((el) => el.shadowRoot)
+            .filter(notEmpty)
+    }
+
     const config: SearchReplaceConfig = {
         action,
         replace,
@@ -528,6 +661,7 @@ export async function searchReplace(
         elementFilter,
         usesKnockout: usesKnockout(window.document),
         searchTarget,
+        shadowRoots,
     }
 
     // we check other places if text was not replaced in a text editor
