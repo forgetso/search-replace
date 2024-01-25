@@ -190,6 +190,7 @@ function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number 
         // textContent contains text of visible and hidden elements
         target = (el as HTMLElement).textContent
     }
+    console.log('searching target', target)
 
     const matches = target.match(config.globalSearchPattern) || []
     return matches.length
@@ -377,7 +378,7 @@ function replaceInner(
     }
 
     const occurrences = countOccurrences(element, config)
-
+    console.log('occurrences', occurrences, element)
     elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
 
     const ancestorChecked = containsAncestor(element, elementsChecked)
@@ -731,7 +732,7 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             }
 
             // Send the response to the background script for processing
-            console.log('sending response to background script')
+            console.log('sending response to background script', JSON.stringify(response, null, 4))
             chrome.runtime.sendMessage(response).then((r) => {
                 sendResponse({
                     action: 'searchReplaceResponsePopup',

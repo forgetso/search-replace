@@ -31,10 +31,10 @@ export function getIframeElements(document: Document, blob = false): HTMLIFrameE
             iframe.src.length &&
             // We don't want to count iframes injected by other chrome extensions
             !iframe.src.startsWith('chrome-extension://') &&
-            // We only want to wait on iframes from the same origin
-            iframe.src.startsWith(window.location.origin) &&
-            // We may or may not want blob iframes
-            (blob ? isBlobIframe(iframe) : !isBlobIframe(iframe))
+            // We only want to wait on iframes from the same origin OR blob iframes
+            (iframe.src.startsWith(window.location.origin) ||
+                // We may or may not want blob iframes
+                (blob ? isBlobIframe(iframe) : !isBlobIframe(iframe)))
     )
 }
 
