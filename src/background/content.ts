@@ -1,4 +1,4 @@
-import { SearchReplaceResponse } from '../types'
+import { HintPreferences, SearchReplaceResponse, SearchReplaceStorageItems } from '../types'
 import { getAllStorageKeys } from './storage'
 import { getExtensionStorage, getInstanceId, mergeSearchReplaceResponse } from '../util'
 
@@ -79,12 +79,15 @@ async function checkPreviousResponse(msg: SearchReplaceResponse) {
 
             // merge the responses if there are iframeResults
             if (iframeResults) {
+                const hintPreferences: HintPreferences =
+                    (await getExtensionStorage<SearchReplaceStorageItems>('storage'))?.hintPreferences || {}
                 for (const iframeResult of iframeResults) {
-                    mergedResult = mergeSearchReplaceResponse(mergedResult, iframeResult)
+                    mergedResult = mergeSearchReplaceResponse(mergedResult, iframeResult, hintPreferences)
                 }
                 // if the total number in msg.backGroundReceived is equal to the number of iframes then we're good,
                 // send the response to the popup.
                 if (mergedResult.backgroundReceived === mergedResult.iframes) {
+                    console.log('Sending merged result to popup', JSON.stringify(mergedResult, null, 4))
                     await chrome.runtime.sendMessage(mergedResult)
                     await removeSearchReplaceResponses(`savedResponse-${msg.instance.instanceId}`)
                 }

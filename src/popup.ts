@@ -6,6 +6,8 @@ import {
     SEARCH_TERM_INPUT_ID,
 } from './popup/constants'
 import {
+    Hint,
+    HintPreferences,
     SearchReplaceActions,
     SearchReplaceBackgroundMessage,
     SearchReplaceContentMessage,
@@ -268,15 +270,32 @@ function setCount(result: SearchReplaceResult, translationFn: TranslationProxy) 
     }
 }
 
-function setHints(hints?: string[]) {
+function setHints(hints?: Hint[]) {
     const hintsElement = document.getElementById('hints')
     if (hintsElement) {
         hintsElement.innerHTML = ''
         if (hints) {
+            console.log('Hints', hints)
             for (const hint of hints) {
+                console.log('hint', hint)
+                // check that this hint has not been previously dismissed by reading the local storage
+
                 const hintElement = document.createElement('div')
-                hintElement.innerText = hint
-                hintElement.className = 'hint alert alert-info'
+                hintElement.innerText = hint.hint
+                hintElement.setAttribute('role', 'alert')
+                const dismissButton = document.createElement('button')
+                dismissButton.className = 'btn-close'
+                dismissButton.setAttribute('data-bs-dismiss', 'alert')
+                dismissButton.setAttribute('aria-label', 'Close')
+                dismissButton.setAttribute('type', 'button')
+                hintElement.appendChild(dismissButton)
+                dismissButton.onclick = function () {
+                    const searchReplaceInput = getInputValues(false)
+                    const history = constructSearchReplaceHistory()
+                    const hintPreferences: HintPreferences = { [hint.name]: true }
+                    sendToStorage(searchReplaceInput, history, hintPreferences)
+                }
+                hintElement.className = 'hint alert alert-info alert-dismissible'
                 hintsElement.appendChild(hintElement)
             }
         }
@@ -310,7 +329,7 @@ async function storeTerms(
             // This counts the terms on the page
             const url = await contentScriptCall('count', searchReplaceInput, history)
             // This sends the search replace terms to the background page and stores them
-            sendToStorage(searchReplaceInput, history, url, save)
+            sendToStorage(searchReplaceInput, history, {}, url, save)
         }
     }
 }
@@ -318,6 +337,7 @@ async function storeTerms(
 function sendToStorage(
     searchReplaceInstance: SearchReplaceInstance,
     history: SearchReplaceInstance[],
+    hintPreferences?: HintPreferences,
     url?: string,
     save?: boolean
 ) {
@@ -329,6 +349,7 @@ function sendToStorage(
         storage: {
             instance: searchReplaceInstance,
             history,
+            hintPreferences,
         },
         action: 'store',
         url,

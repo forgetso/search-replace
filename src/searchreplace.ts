@@ -418,7 +418,6 @@ function replaceInner(
     if (!config.hiddenContent) {
         inputs = inputs.filter((input) => elementIsVisible(input, true, false))
     }
-    console.log('Found inputs', inputs)
 
     const inputResult = replaceInInputs(config, document, inputs, searchReplaceResult, elementsChecked)
 
@@ -446,7 +445,6 @@ function replaceInInputs(
         } else {
             const oldValue = getValue(input, config)
             const occurrences = oldValue.match(config.globalSearchPattern)
-            console.log('oldValue', oldValue, 'occurrences', occurrences)
             if (occurrences) {
                 searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
                 if (config.replace) {
@@ -565,7 +563,6 @@ function replaceInHTML(
             clonedElement = clonedElementRemoved as HTMLElement
             ignoredElements = new Set([...ignoredElements, ...removedSet])
         }
-        console.log('Ignored elements', ignoredElements)
 
         // replace inner texts first, dropping out if we have done a replacement and are not working globally
         const innerResult = replaceInner(
@@ -734,6 +731,7 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             }
 
             // Send the response to the background script for processing
+            console.log('sending response to background script')
             chrome.runtime.sendMessage(response).then((r) => {
                 sendResponse({
                     action: 'searchReplaceResponsePopup',
