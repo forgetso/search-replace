@@ -1,5 +1,6 @@
 // Utils for dealing with Elements
 
+import { HINTS } from './constants'
 import { SearchReplaceResult } from './types'
 
 export function getInputElements(
@@ -19,6 +20,11 @@ export function isBlobIframe(el: Element) {
 }
 
 export function getIframeElements(document: Document, blob = false): HTMLIFrameElement[] {
+    // we don't want to count iframes in gmail
+    if (document.querySelector(HINTS['gmail'].selector) || window.location.href.indexOf(HINTS['gmail'].domain) > -1) {
+        return []
+    }
+
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter(
         (iframe) =>
             // We don't want empty iframes
