@@ -7,7 +7,9 @@ export function getInputElements(
     elementFilter: Map<Element, SearchReplaceResult>,
     hiddenContent?: boolean
 ): (HTMLInputElement | HTMLTextAreaElement)[] {
-    const inputs = Array.from(<NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea'))
+    const inputs = Array.from(
+        <NodeListOf<HTMLInputElement>>document.querySelectorAll('input,textarea,div[contenteditable="true"]')
+    )
     const visibleElements = !hiddenContent ? inputs.filter((input) => elementIsVisible(input, true, false)) : inputs
     return visibleElements.filter((input) => !elementFilter.has(input))
 }

@@ -168,6 +168,7 @@ export type SearchReplaceConfig = {
     elementFilter: RegExp
     usesKnockout: boolean
     searchTarget: 'innerHTML' | 'innerText' | 'value'
+    shadowRoots: ShadowRoot[]
 }
 
 export type ReplaceFunctionReturnType = {
