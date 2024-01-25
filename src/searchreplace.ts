@@ -130,16 +130,13 @@ function replaceInInput(
     document: Document,
     input: HTMLInputElement | HTMLTextAreaElement,
     searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, SearchReplaceResult>,
-    addOccurrences?: boolean
+    elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     if (input.value !== undefined) {
         const oldValue = getValue(input, config)
         const occurrences = oldValue.match(config.searchPattern)
         if (occurrences) {
-            searchReplaceResult.count.original = addOccurrences
-                ? searchReplaceResult.count.original + occurrences.length
-                : searchReplaceResult.count.original
+            searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
             const newValue = input.value.replace(config.searchPattern, config.replaceTerm)
 
             if (config.replace && oldValue !== newValue) {
@@ -435,20 +432,12 @@ function replaceInInputs(
     document: Document,
     inputs: (HTMLInputElement | HTMLTextAreaElement | HTMLElement)[],
     searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, SearchReplaceResult>,
-    addOccurrences?: boolean
+    elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     for (const input of inputs) {
         if ('value' in input) {
             // input, textarea
-            const inputResult = replaceInInput(
-                config,
-                document,
-                input,
-                searchReplaceResult,
-                elementsChecked,
-                addOccurrences
-            )
+            const inputResult = replaceInInput(config, document, input, searchReplaceResult, elementsChecked)
             searchReplaceResult = inputResult.searchReplaceResult
             elementsChecked = inputResult.elementsChecked
             if (config.replaceNext && searchReplaceResult.replaced) {
@@ -458,9 +447,7 @@ function replaceInInputs(
             const oldValue = getValue(input, config)
             const occurrences = oldValue.match(config.globalSearchPattern)
             if (occurrences) {
-                searchReplaceResult.count.original = addOccurrences
-                    ? searchReplaceResult.count.original + occurrences.length
-                    : searchReplaceResult.count.original
+                searchReplaceResult.count.original = Number(searchReplaceResult.count.original) + occurrences.length
                 if (config.replace) {
                     // contenteditable
                     const elementResult = replaceInContentEditableDiv(input, oldValue, occurrences, config)
@@ -692,7 +679,7 @@ export async function searchReplace(
             }
         )
         const searchableIframes = (await Promise.all(searchableIframePromises)).filter(notEmpty)
-
+        console.log('searchableIframes', searchableIframes)
         result = replaceInHTML(
             config,
             document,

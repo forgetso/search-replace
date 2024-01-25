@@ -32,7 +32,7 @@ describe('Search Replace ', () => {
         })
     })
 
-    it.only('counts the correct number of occurrences', () => {
+    it('counts the correct number of occurrences', () => {
         cy.window().then((window) => {
             console.log(window.location.host)
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
