@@ -33,6 +33,7 @@ export type SearchReplaceStorageItems = {
     history: SearchReplaceInstance[]
     instance: SearchReplaceInstance
     saved?: SavedInstances
+    hintPreferences?: HintPreferences
 }
 
 export type SearchReplacePopupStorage = {
@@ -125,10 +126,21 @@ export interface LangFile {
     }
 }
 
+export type Hint = {
+    hint: string
+    domain: string
+    selector: string
+    name: string
+}
+
+export type HintPreferences = {
+    [key: string]: boolean
+}
+
 export interface SearchReplaceResponse {
     instance: SearchReplaceInstance
     inIframe: boolean
-    hints?: string[]
+    hints?: Hint[]
     location: string
     result: SearchReplaceResult
     action: SearchReplaceActions

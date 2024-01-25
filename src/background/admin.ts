@@ -1,4 +1,5 @@
 import {
+    HintPreferences,
     SavedInstances,
     SavedSearchReplaceInstance,
     SearchReplaceBackgroundMessage,
@@ -11,7 +12,8 @@ import { getInstanceId } from '../util'
 async function saveStorage(
     instance: SearchReplaceInstance,
     history: SearchReplaceInstance[],
-    savedInstances: SavedInstances
+    savedInstances: SavedInstances,
+    hintPreferences?: HintPreferences
 ) {
     // always store the instance and history
     const newStorage: SearchReplacePopupStorage = {
@@ -19,6 +21,7 @@ async function saveStorage(
             instance,
             history,
             saved: savedInstances,
+            hintPreferences,
         },
     }
     await chrome.storage.local.set(newStorage)
@@ -43,14 +46,15 @@ export async function setupStorage(msg: SearchReplaceBackgroundMessage) {
     //console.log('BACKGROUND: history is: ', history)
     const url = msg.url
     const savedInstances: SavedInstances = storage.saved || {}
+    const hintPreferences = { ...(storage.hintPreferences || {}), ...(msg.storage?.hintPreferences || {}) }
     //console.log('BACKGROUND: SavedInstances is: ', savedInstances)
-    return { instance, history, url, savedInstances, storage }
+    return { instance, history, url, savedInstances, storage, hintPreferences }
 }
 
 export async function listenerAdmin(msg: SearchReplaceBackgroundMessage, port: chrome.runtime.Port) {
     if (msg.action) {
         const storage = await setupStorage(msg)
-        const { instance, history, url } = storage
+        const { instance, history, url, hintPreferences } = storage
         const savedInstances = storage.savedInstances
 
         if (msg.action === 'recover') {
@@ -91,7 +95,7 @@ export async function listenerAdmin(msg: SearchReplaceBackgroundMessage, port: c
             await saveStorage(instance, history, savedInstances)
         } else if (msg.action === 'store') {
             // Store the instance and history in the storage
-            await saveStorage(instance, history, savedInstances)
+            await saveStorage(instance, history, savedInstances, hintPreferences)
         }
     }
 }

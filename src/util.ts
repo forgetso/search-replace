@@ -1,6 +1,8 @@
 // Shared utils between the background and content scripts
 
 import {
+    Hint,
+    HintPreferences,
     LangFile,
     LangList,
     SearchReplaceInstance,
@@ -130,11 +132,23 @@ export function getExtensionStorage<T>(key: string): Promise<T | undefined> {
     })
 }
 
-export function mergeSearchReplaceResponse(a: SearchReplaceResponse, b: SearchReplaceResponse): SearchReplaceResponse {
+function mergeHints(hintA: Hint[], hintB: Hint[], hintPreferences: HintPreferences): Hint[] {
+    return [...(hintA || []), ...(hintB || [])]
+        .filter((hint, index, hintsObj) => hintsObj.findIndex((v2) => v2.name === hint.name) === index)
+        .filter((hint) => {
+            return !hintPreferences[hint.name]
+        })
+}
+
+export function mergeSearchReplaceResponse(
+    a: SearchReplaceResponse,
+    b: SearchReplaceResponse,
+    hintPreferences: HintPreferences
+): SearchReplaceResponse {
     return {
         instance: a.instance,
         inIframe: a.inIframe,
-        hints: Array.from(new Set([...(a.hints || []), ...(b.hints || [])])),
+        hints: mergeHints(a.hints || [], b.hints || [], hintPreferences),
         location: a.location,
         result: mergeSearchReplaceResults(a.result, b.result),
         action: a.action,

@@ -1,13 +1,12 @@
-import { GMAIL_APPLICATION_NAME, GOOGLE_MAIL_DOMAIN, HINTS } from './constants'
-import { inIframe } from './elements'
+import { HINTS } from './constants'
+import { Hint } from './types'
 
-export function getHints(document: Document): string[] {
-    const hints: string[] = []
-    // check if meta tag application-name is Gmail
-    if (!inIframe()) {
-        const meta = document.querySelector(`meta[content=${GMAIL_APPLICATION_NAME}]`)
-        if (window.location.href.indexOf(GOOGLE_MAIL_DOMAIN) > -1 || meta) {
-            hints.push(HINTS.gmail)
+export function getHints(document: Document): Hint[] {
+    const hints: Hint[] = []
+    for (const [hintType, { domain, selector }] of Object.entries(HINTS)) {
+        const hasSelector = document.querySelector(selector)
+        if (window.location.href.indexOf(domain) > -1 || hasSelector) {
+            hints.push(HINTS[hintType])
         }
     }
     return hints
