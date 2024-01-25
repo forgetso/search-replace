@@ -186,11 +186,10 @@ function containsAncestor(element: Element, results: Map<Element, SearchReplaceR
 function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number {
     let target = el[config.searchTarget]
 
-    if (config.hiddenContent && config.searchTarget === 'innerText' && 'textContent' in el) {
+    if (config.hiddenContent && config.searchTarget === 'innerText') {
         // textContent contains text of visible and hidden elements
         target = (el as HTMLElement).textContent
     }
-    console.log('searching target', target)
 
     const matches = target.match(config.globalSearchPattern) || []
     return matches.length
@@ -694,52 +693,57 @@ export async function searchReplace(
 
 if (chrome && chrome.runtime && chrome.runtime.onMessage) {
     chrome.runtime.onMessage.addListener(function (msg: SearchReplaceContentMessage, sender, sendResponse) {
-        const instance = msg.instance
-        const replaceAll = msg.action === 'count' ? true : instance.options.replaceAll
-        const action = msg.action
-        // are we in an iframe?
-        const isIframe = inIframe()
-        // get all iframes
-        const iframes = getIframeElements(window.document)
+        try {
+            const instance = msg.instance
+            const replaceAll = msg.action === 'count' ? true : instance.options.replaceAll
+            const action = msg.action
+            // are we in an iframe?
+            const isIframe = inIframe()
+            // get all iframes
+            const iframes = getIframeElements(window.document)
 
-        // Setup event listeners to communicate between iframes and parent
-        searchReplace(
-            action,
-            window,
-            instance.searchTerm,
-            instance.replaceTerm,
-            instance.options.inputFieldsOnly,
-            instance.options.isRegex,
-            instance.options.hiddenContent,
-            instance.options.wholeWord,
-            instance.options.matchCase,
-            instance.options.replaceHTML,
-            replaceAll,
-            isIframe,
-            iframes,
-            ELEMENT_FILTER
-        ).then((result) => {
-            const response: SearchReplaceResponse = {
-                inIframe: inIframe(),
-                result: result.searchReplaceResult,
-                location: window.location.toString(),
-                action: 'searchReplaceResponseBackground',
-                hints: getHints(document),
-                iframes: iframes.length,
-                instance: instance,
-                backgroundReceived: 0,
-                host: window.location.host,
-            }
+            // Setup event listeners to communicate between iframes and parent
+            searchReplace(
+                action,
+                window,
+                instance.searchTerm,
+                instance.replaceTerm,
+                instance.options.inputFieldsOnly,
+                instance.options.isRegex,
+                instance.options.hiddenContent,
+                instance.options.wholeWord,
+                instance.options.matchCase,
+                instance.options.replaceHTML,
+                replaceAll,
+                isIframe,
+                iframes,
+                ELEMENT_FILTER
+            ).then((result) => {
+                const response: SearchReplaceResponse = {
+                    inIframe: inIframe(),
+                    result: result.searchReplaceResult,
+                    location: window.location.toString(),
+                    action: 'searchReplaceResponseBackground',
+                    hints: getHints(document),
+                    iframes: iframes.length,
+                    instance: instance,
+                    backgroundReceived: 0,
+                    host: window.location.host,
+                }
 
-            // Send the response to the background script for processing
-            console.log('sending response to background script', JSON.stringify(response, null, 4))
-            chrome.runtime.sendMessage(response).then((r) => {
-                sendResponse({
-                    action: 'searchReplaceResponsePopup',
-                    msg: `Content script sent message to background with response ${r}`,
+                // Send the response to the background script for processing
+                console.log('sending response to background script', JSON.stringify(response, null, 4))
+                chrome.runtime.sendMessage(response).then((r) => {
+                    sendResponse({
+                        action: 'searchReplaceResponsePopup',
+                        msg: `Content script sent message to background with response ${r}`,
+                    })
                 })
+                return true
             })
-            return true
-        })
+        } catch (err) {
+            console.log('Error in content script', err)
+            sendResponse({ action: 'searchReplaceResponsePopup', msg: err })
+        }
     })
 }
