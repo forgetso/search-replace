@@ -4,7 +4,7 @@ export const ELEMENT_FILTER = /(HTML|HEAD|SCRIPT|STYLE|IFRAME)/i
 export const INPUT_TEXTAREA_FILTER = /(INPUT|TEXTAREA)/
 export const HINTS: Record<string, Hint> = {
     gmail: {
-        hint: 'Hint: Gmail detected. Check "Visible content only?" when editing draft emails.',
+        hint: 'Hint: Gmail detected. Check "Input fields only?" when editing draft emails.',
         domain: 'mail.google.com',
         selector: `meta[content="Gmail"]`,
         name: 'gmail',
