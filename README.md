@@ -25,6 +25,7 @@ Please report issues [here](https://github.com/forgetso/search-replace/issues/ne
 - Version
 - Web page
 - Search and Replace options used (e.g. Input Fields Only)
+- Attach a copy of the problem page downloaded by using [this chrome extension to download it](https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle?hl=en).
 
 ## Contributing
 
