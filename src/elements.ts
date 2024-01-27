@@ -25,17 +25,28 @@ export function getIframeElements(document: Document, blob = false): HTMLIFrameE
         return []
     }
 
-    return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter(
-        (iframe) =>
-            // We don't want empty iframes
-            iframe.src.length &&
+    return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter((iframe) => {
+        console.log('iframe.src.length', iframe.src.length)
+        console.log("iframe.src.startsWith('chrome-extension://')", iframe.src.startsWith('chrome-extension://'))
+        console.log('window location origin', window.location.origin)
+        console.log('iframe.src.startsWith(window.location.origin)', iframe.src.startsWith(window.location.origin))
+        console.log('blob', blob)
+        console.log('isBlobIframe(iframe)', isBlobIframe(iframe))
+        console.log(
+            '(blob ? isBlobIframe(iframe) : !isBlobIframe(iframe))',
+            blob ? isBlobIframe(iframe) : !isBlobIframe(iframe)
+        )
+        // We don't want empty iframes
+        const want =
+            iframe.src.length > 0 &&
             // We don't want to count iframes injected by other chrome extensions
             !iframe.src.startsWith('chrome-extension://') &&
             // We only want to wait on iframes from the same origin OR blob iframes
-            iframe.src.startsWith(window.location.origin) &&
+            iframe.src.indexOf(window.location.origin) > -1 &&
             // We may or may not want blob iframes
             (blob ? isBlobIframe(iframe) : !isBlobIframe(iframe))
-    )
+        return want
+    })
 }
 
 export function inIframe() {
