@@ -5,12 +5,12 @@ const TerserPlugin = require('terser-webpack-plugin')
 module.exports = merge(common, {
     mode: 'production',
     optimization: {
-        minimize: false,
+        minimize: true,
         minimizer: [
             new TerserPlugin({
                 terserOptions: {
                     compress: {
-                        drop_console: false,
+                        drop_console: true,
                     },
                 },
             }),
