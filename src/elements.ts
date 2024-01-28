@@ -65,6 +65,18 @@ function ancestorIsVisible(element: Element, cloned = false) {
     return true
 }
 
+/**
+ * Check if an element is hidden by checking the following conditions
+ * - If the element is the body, assume it's visible and return `false`
+ * - If the element is an input, return true if the input is `hidden`
+ * - If the element has style return true if the style is `none`
+ * - If the element is not a clone, does not have display:`contents`,
+ *   and has a `checkVisibility` method, return the result of that method
+ * - Get the computed style and return true if the computed style is `none`
+ * - Otherwise return `false`
+ * @param element
+ * @param cloned
+ */
 export function isHidden(element: HTMLElement | Element, cloned = false) {
     if (element.tagName === 'BODY') {
         return false
@@ -78,19 +90,28 @@ export function isHidden(element: HTMLElement | Element, cloned = false) {
         }
     }
 
-    if (element && 'style' in element && element.style.display === 'none') {
-        // if the element has style return true if the style is `none`
-        return true
-    }
+    if (element && 'style' in element) {
+        if (element.style.display === 'none') {
+            // if the element has style return true if the style is `none`
+            return true
+        }
 
-    // clones are not visible so we can't use checkVisibility
-    if (!cloned && 'checkVisibility' in element && typeof element.checkVisibility === 'function') {
-        // use the relatively new checkVisibility method, which returns `true` if the element is visible
-        return !element.checkVisibility()
+        if (
+            // clones are not visible, so we can't use checkVisibility on them
+            !cloned &&
+            // checkVisibility currently returns false for elements with `display: contents`
+            // https://chromium-review.googlesource.com/c/chromium/src/+/4950634
+            element.style.display !== 'contents' &&
+            'checkVisibility' in element &&
+            typeof element.checkVisibility === 'function'
+        ) {
+            // use the relatively new checkVisibility method, which returns `true` if the element is visible
+            return !element.checkVisibility()
+        }
     }
 
     // This method is not as accurate as checkVisibility
-    // compute the style as its not immediately obvious if the element is hidden
+    // compute the style as it's not immediately obvious if the element is hidden
     const computedStyle = getComputedStyle(element)
 
     if (computedStyle.display === 'none') {
