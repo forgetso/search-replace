@@ -103,23 +103,28 @@ function replaceInInputShadow(
 
 function getValue(node: Element | Node, config: SearchReplaceConfig): string {
     const nodeElement = getElementFromNode(node)
+    console.log('nodeElement', nodeElement)
     // if it's an input or a textarea, take the value
     if (nodeElement && (nodeElement.nodeName === 'INPUT' || nodeElement.nodeName === 'TEXTAREA')) {
         return nodeElement['value']
     }
     // if it's a contenteditable div, take the outerHTML if we're replacing HTML, otherwise take the innerHTML
-    if (nodeElement && nodeElement.nodeName === 'DIV' && nodeElement.getAttribute('contenteditable') === 'true') {
+    if (nodeElement && nodeElement.nodeName.match(/DIV|BODY/g) && nodeElement.hasAttribute('contenteditable')) {
+        console.log('returning outer / innerHTML')
         return config.searchTarget === 'innerHTML' ? nodeElement['outerHTML'] : nodeElement['innerHTML']
     }
     // if the search target is innerHTML, take the innerHTML
     if (nodeElement && config.searchTarget === 'innerHTML') {
+        console.log('returning innerHTML')
         return nodeElement['innerHTML']
     }
     // If it's a text node, return the nodeValue
     if (node.nodeType === Node.TEXT_NODE) {
+        console.log('returning nodeValue')
         return node.nodeValue || ''
     }
     // Otherwise return the innerText
+    console.log('returning innerText')
     return node['innerText']
 }
 
@@ -182,11 +187,12 @@ function containsAncestor(element: Element, results: Map<Element, SearchReplaceR
 }
 
 function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number {
-    let target = el[config.searchTarget]
+    let target = getValue(el, config)
 
     if (config.hiddenContent && config.searchTarget === 'innerText') {
         // textContent contains text of visible and hidden elements
-        target = (el as HTMLElement).textContent
+        console.log('using textContent')
+        target = (el as HTMLElement).textContent || ''
     }
     console.log('counting in', target)
     const matches = target.match(config.globalSearchPattern) || []
@@ -529,6 +535,7 @@ function replaceInHTML(
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     for (const [originalIndex, originalElement] of originalElements.entries()) {
+        console.log('replacing in element', originalElement)
         let clonedElement = originalElement.cloneNode(true) as HTMLElement
 
         const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
@@ -582,7 +589,13 @@ function replaceInHTML(
         elementsChecked = innerResult.elementsChecked
 
         // Now replace in input fields
-        const inputResult = replaceInputFields(config, document, searchReplaceResult, elementsChecked)
+        const inputResult = replaceInInputs(
+            config,
+            document,
+            getInputElements(originalElement, elementsChecked, config.hiddenContent),
+            searchReplaceResult,
+            elementsChecked
+        )
 
         searchReplaceResult = inputResult.searchReplaceResult
         elementsChecked = inputResult.elementsChecked
@@ -670,6 +683,7 @@ export async function searchReplace(
         const searchableIframes = (await getSearchableIframes(window, document))
             .map(getInitialIframeElement)
             .filter(notEmpty)
+        console.log('searchable iframes', searchableIframes)
         result = replaceInHTML(
             config,
             document,

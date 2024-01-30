@@ -5,7 +5,7 @@ import { SearchReplaceResult } from './types'
 import { notEmpty } from './util'
 
 export function getInputElements(
-    document: Document,
+    document: HTMLElement | Document,
     elementFilter: Map<Element, SearchReplaceResult>,
     hiddenContent?: boolean
 ): (HTMLInputElement | HTMLTextAreaElement)[] {
