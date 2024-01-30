@@ -1,5 +1,8 @@
 import { Hint } from './types'
-export const RICH_TEXT_EDITORS = ['mce-edit-area', 'cke_wysiwyg_frame', 'tinymce', 'wysiwyg']
+export const RICH_TEXT_EDITORS = {
+    class: ['mce-edit-area', 'cke_wysiwyg_frame', 'tinymce', 'wysiwyg'],
+    name: ['editor-canvas'],
+}
 export const ELEMENT_FILTER = /(HTML|HEAD|SCRIPT|STYLE|IFRAME)/i
 export const INPUT_TEXTAREA_CONTENT_EDITABLE_SELECTOR = 'input,textarea,*[contenteditable="true"]'
 export const HINTS: Record<string, Hint> = {

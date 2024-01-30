@@ -29,11 +29,14 @@ export function isBlobIframe(el: Element) {
 }
 
 export function isWYSIWYGEditorIframe(el: Element) {
-    return RICH_TEXT_EDITORS.some((editor) => containsPartialClass(el, editor))
+    return (
+        RICH_TEXT_EDITORS.name.some((editor) => 'name' in el && el.name === editor) ||
+        RICH_TEXT_EDITORS.class.some((editor) => containsPartialClass(el, editor))
+    )
 }
 
 export function containsPartialClass(element: Element, partialClass: string) {
-    return element.className.split(' ').some((c) => c.includes(partialClass))
+    return Array.from(element.classList).some((c) => c.includes(partialClass))
 }
 
 export function getLocalIframes(window: Window, document: Document): HTMLIFrameElement[] {
