@@ -11,12 +11,15 @@ import {
 import {
     copyElementAndRemoveSelectedElements,
     elementIsVisible,
-    getIframeElements,
     getInitialIframeElement,
     getInputElements,
+    getRespondingIframes,
+    getSearchableIframes,
     inIframe,
     isBlobIframe,
     isHidden,
+    isInputElement,
+    isWYSIWYGEditorIframe,
 } from './elements'
 import { getFlags, getSearchPattern } from './regex'
 import { getHints } from './hints'
@@ -59,18 +62,13 @@ function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: 
         prototypeValueSetter = prototypeValueFn.set
     }
     if (valueSetter && prototypeValueSetter && valueSetter !== prototypeValueSetter) {
-        console.log('prototypeValueSetter.call(element, value)')
         prototypeValueSetter.call(element, value)
     } else if (valueSetter) {
         valueSetter.call(element, value)
-        console.log('valueSetter.call(element, value)')
     } else {
         element.value = value
         element.setAttribute('value', value)
         element.shadowRoot?.getElementById(element.id)?.setAttribute('value', value)
-        console.log(element)
-        console.log('element.value = value')
-        console.log(element)
     }
 }
 
@@ -190,7 +188,6 @@ function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number 
         // textContent contains text of visible and hidden elements
         target = (el as HTMLElement).textContent
     }
-    console.log('counting in', target)
 
     const matches = target.match(config.globalSearchPattern) || []
     return matches.length
@@ -318,6 +315,16 @@ function nodesUnder(
             continue
         }
 
+        if (nodeElement.tagName.match(/INPUT|TEXTAREA/g)) {
+            console.log('Continuing as input or textarea handled later')
+            continue
+        }
+
+        if ('contentEditable' in nodeElement && nodeElement.contentEditable === true) {
+            console.log('Continuing as contentEditable handled later')
+            continue
+        }
+
         if (nodeElement.tagName === 'WINDOW') {
             console.log('Continuing as element is window')
             continue
@@ -412,18 +419,6 @@ function replaceInner(
         elementsChecked = nodesUnderResult.elementsChecked
     }
 
-    // Now replace any inputs
-    let inputs = Array.from(originalElement.querySelectorAll('input'))
-    // TODO - use the cloned element result to check if the number of elements found in the clone is equal to the number
-    //  found in the original element.
-    if (!config.hiddenContent) {
-        inputs = inputs.filter((input) => elementIsVisible(input, true, false))
-    }
-
-    const inputResult = replaceInInputs(config, document, inputs, searchReplaceResult, elementsChecked)
-
-    searchReplaceResult = inputResult.searchReplaceResult
-    elementsChecked = inputResult.elementsChecked
     return { searchReplaceResult, elementsChecked }
 }
 
@@ -497,6 +492,7 @@ function replaceInputFields(
     const allInputs = getInputElements(document, elementsChecked, config.hiddenContent)
     // add inputs to elementsChecked
     allInputs.map((input) => elementsChecked.set(input, newSearchReplaceCount()))
+    console.log('Inputs', allInputs)
     const inputsResult = replaceInInputs(config, document, allInputs, searchReplaceResult, elementsChecked)
     searchReplaceResult = inputsResult.searchReplaceResult
     elementsChecked = inputsResult.elementsChecked
@@ -536,8 +532,13 @@ function replaceInHTML(
 
         const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
             clonedElement,
-            // Remove elements that match the filter and are not blob iframes. Removes SCRIPT, STYLE, IFRAME, etc.
-            (el: HTMLElement) => !!el.nodeName.match(config.elementFilter) && !isBlobIframe(el),
+            // Remove elements that
+            // - match the element filter, but are not blob iframes, nor are WYSIWYG iframes.
+            //   Removes SCRIPT, STYLE, IFRAME, etc.
+            // - match the input filter, as these are handled later
+            (el: HTMLElement) =>
+                (!!el.nodeName.match(config.elementFilter) && !isBlobIframe(el) && !isWYSIWYGEditorIframe(el)) ||
+                isInputElement(el),
             false
         )
         clonedElement = clonedElementRemoved as HTMLElement
@@ -579,11 +580,16 @@ function replaceInHTML(
         searchReplaceResult = innerResult.searchReplaceResult
         elementsChecked = innerResult.elementsChecked
 
+        // Now replace in input fields
+        const inputResult = replaceInputFields(config, document, searchReplaceResult, elementsChecked)
+
+        searchReplaceResult = inputResult.searchReplaceResult
+        elementsChecked = inputResult.elementsChecked
+
         if (config.replaceNext && searchReplaceResult.replaced) {
             config.replace = false
         }
     }
-
     return { searchReplaceResult, elementsChecked }
 }
 function replaceNextOnly(flags: string): boolean {
@@ -650,7 +656,6 @@ export async function searchReplace(
         searchTarget,
         shadowRoots,
     }
-
     // we check other places if text was not replaced in a text editor
     let result: ReplaceFunctionReturnType
     if (inputFieldsOnly) {
@@ -660,26 +665,10 @@ export async function searchReplace(
         }
     } else {
         const startingElement = document.body || document.querySelector('div')
-        const searchableIframePromises: Promise<HTMLElement | null>[] = getIframeElements(document, true).map(
-            (iframe) => {
-                return new Promise((resolve, reject) => {
-                    if (iframe.contentDocument) {
-                        if (iframe.contentDocument.readyState !== 'complete') {
-                            iframe.contentDocument.onreadystatechange = () => {
-                                if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-                                    const element = getInitialIframeElement(iframe)
-                                    resolve(element)
-                                }
-                            }
-                        } else {
-                            resolve(getInitialIframeElement(iframe))
-                        }
-                    }
-                })
-            }
-        )
-        const searchableIframes = (await Promise.all(searchableIframePromises)).filter(notEmpty)
-        console.log('searchableIframes', searchableIframes)
+
+        const searchableIframes = (await getSearchableIframes(window, document))
+            .map(getInitialIframeElement)
+            .filter(notEmpty)
         result = replaceInHTML(
             config,
             document,
@@ -701,8 +690,7 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             // are we in an iframe?
             const isIframe = inIframe()
             // get all iframes
-            const iframes = getIframeElements(window.document)
-
+            const iframes = getRespondingIframes(window, window.document)
             // Setup event listeners to communicate between iframes and parent
             searchReplace(
                 action,
