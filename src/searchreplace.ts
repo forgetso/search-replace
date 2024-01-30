@@ -107,9 +107,9 @@ function getValue(node: Element | Node, config: SearchReplaceConfig): string {
     if (nodeElement && (nodeElement.nodeName === 'INPUT' || nodeElement.nodeName === 'TEXTAREA')) {
         return nodeElement['value']
     }
-    // if it's a contenteditable div, take the innerHTML
+    // if it's a contenteditable div, take the outerHTML if we're replacing HTML, otherwise take the innerHTML
     if (nodeElement && nodeElement.nodeName === 'DIV' && nodeElement.getAttribute('contenteditable') === 'true') {
-        return nodeElement['innerHTML']
+        return config.searchTarget === 'innerHTML' ? nodeElement['outerHTML'] : nodeElement['innerHTML']
     }
     // if the search target is innerHTML, take the innerHTML
     if (nodeElement && config.searchTarget === 'innerHTML') {
@@ -188,7 +188,7 @@ function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number 
         // textContent contains text of visible and hidden elements
         target = (el as HTMLElement).textContent
     }
-
+    console.log('counting in', target)
     const matches = target.match(config.globalSearchPattern) || []
     return matches.length
 }
@@ -200,7 +200,8 @@ function replaceInContentEditableDiv(
     config: SearchReplaceConfig
 ) {
     const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
-    return replaceInNodeOrElement(element, newValue, occurrences, config, 'innerHTML')
+    const replaceTarget = config.searchTarget === 'innerHTML' ? 'outerHTML' : 'innerHTML'
+    return replaceInNodeOrElement(element, newValue, occurrences, config, replaceTarget)
 }
 
 // TODO make replace function part of config instead of continuously checking innerText vs. innerHTML
@@ -209,7 +210,7 @@ function replaceInNodeOrElement(
     newValue: string,
     occurrences: RegExpMatchArray,
     config: SearchReplaceConfig,
-    replaceTarget?: 'innerText' | 'innerHTML'
+    replaceTarget?: 'innerText' | 'innerHTML' | 'outerHTML'
 ) {
     let replacementCount = 0
     let replaced = false
