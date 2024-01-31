@@ -715,19 +715,14 @@ export async function searchReplace(
             result.elementsChecked = srcDocResult.elementsChecked
         })
         console.log(JSON.stringify(result.searchReplaceResult))
-        const searchableIframes = searchableIframesInitial
-            .filter((iframe: HTMLIFrameElement) => {
-                !iframe.srcdoc
-            })
-            .map(getInitialIframeElement)
-            .filter(notEmpty)
-        result = replaceInHTML(
-            config,
-            document,
-            [startingElement, ...searchableIframes],
-            searchReplaceResult,
-            elementsChecked
-        )
+        console.log('searchableIframesInitial', searchableIframesInitial)
+        const searchableIframes = searchableIframesInitial.filter((iframe: HTMLIFrameElement) => {
+            return iframe.srcdoc === '' || iframe.srcdoc === undefined
+        })
+        const searchable = searchableIframes.map(getInitialIframeElement).filter(notEmpty)
+        console.log('searchableIframes', searchableIframes)
+        console.log('searchable', searchable)
+        result = replaceInHTML(config, document, [startingElement, ...searchable], searchReplaceResult, elementsChecked)
     }
 
     return result

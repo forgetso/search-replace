@@ -203,6 +203,7 @@ export function elementIsVisible(element: HTMLElement, ancestorCheck = true, clo
 
 export function getInitialIframeElement(iframe: HTMLIFrameElement): HTMLElement | null {
     let element: HTMLElement | null = null
+    console.log('iframe', iframe)
     if (iframe.srcdoc) {
         return iframe
     }
