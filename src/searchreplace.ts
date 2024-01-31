@@ -103,11 +103,15 @@ function replaceInInputShadow(
 
 function getValue(node: Element | Node, config: SearchReplaceConfig): string {
     const nodeElement = getElementFromNode(node)
-    console.log('nodeElement', nodeElement)
     // if it's an input or a textarea, take the value
     if (nodeElement && (nodeElement.nodeName === 'INPUT' || nodeElement.nodeName === 'TEXTAREA')) {
         return nodeElement['value']
     }
+    // if it's an iframe with srcdoc, take the srcdoc
+    if (nodeElement && nodeElement.nodeName === 'IFRAME' && nodeElement.hasAttribute('srcdoc')) {
+        return nodeElement['srcdoc']
+    }
+
     // if it's a contenteditable div, take the outerHTML if we're replacing HTML, otherwise take the innerHTML
     if (nodeElement && nodeElement.nodeName.match(/DIV|BODY/g) && nodeElement.hasAttribute('contenteditable')) {
         console.log('returning outer / innerHTML')
@@ -189,12 +193,10 @@ function containsAncestor(element: Element, results: Map<Element, SearchReplaceR
 function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number {
     let target = getValue(el, config)
 
-    if (config.hiddenContent && config.searchTarget === 'innerText') {
+    if (config.hiddenContent && config.searchTarget === 'innerText' && el.tagName !== 'IFRAME') {
         // textContent contains text of visible and hidden elements
-        console.log('using textContent')
         target = (el as HTMLElement).textContent || ''
     }
-    console.log('counting in', target)
     const matches = target.match(config.globalSearchPattern) || []
     return matches.length
 }
@@ -233,6 +235,7 @@ function replaceInNodeOrElement(
         replaced = true
     }
     if (replaced) {
+        console.log('adding', config.replaceAll ? occurrences.length : 1, 'to replaced count')
         replacementCount = config.replaceAll ? occurrences.length : 1 // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
     }
     nodeElement?.dispatchEvent(new Event('input', { bubbles: true }))
@@ -392,7 +395,7 @@ function replaceInner(
     }
 
     const occurrences = countOccurrences(element, config)
-    console.log('occurrences', occurrences, element)
+    console.log('occurrences', occurrences)
     elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
 
     const ancestorChecked = containsAncestor(element, elementsChecked)
@@ -527,6 +530,24 @@ function equivalentInIgnoredElements(ignoredElements: Set<Element>, element: Ele
     return false
 }
 
+function replaceInSrcDocIframe(
+    config: SearchReplaceConfig,
+    iframe: HTMLIFrameElement,
+    searchReplaceResult: SearchReplaceResult,
+    elementsChecked: Map<Element, SearchReplaceResult>
+): ReplaceFunctionReturnType {
+    const occurrences = countOccurrences(iframe, config)
+    console.log("occurrences in iframe's srcdoc", occurrences)
+    elementsChecked = updateResults(elementsChecked, iframe, false, occurrences, 0)
+    searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
+    if (config.replace && occurrences) {
+        iframe.srcdoc = iframe.srcdoc.replace(config.searchPattern, config.replaceTerm)
+        console.log('adding', config.replaceAll ? occurrences : 1, 'to replaced count')
+        searchReplaceResult.count.replaced += config.replaceAll ? occurrences : 1
+    }
+    return { searchReplaceResult, elementsChecked }
+}
+
 function replaceInHTML(
     config: SearchReplaceConfig,
     document: Document,
@@ -535,7 +556,6 @@ function replaceInHTML(
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     for (const [originalIndex, originalElement] of originalElements.entries()) {
-        console.log('replacing in element', originalElement)
         let clonedElement = originalElement.cloneNode(true) as HTMLElement
 
         const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
@@ -544,9 +564,11 @@ function replaceInHTML(
             // - match the element filter, but are not blob iframes, nor are WYSIWYG iframes.
             //   Removes SCRIPT, STYLE, IFRAME, etc.
             // - match the input filter, as these are handled later
+            // - are already in the elementsChecked map
             (el: HTMLElement) =>
                 (!!el.nodeName.match(config.elementFilter) && !isBlobIframe(el) && !isWYSIWYGEditorIframe(el)) ||
-                isInputElement(el),
+                isInputElement(el) ||
+                elementsChecked.has(el),
             false
         )
         clonedElement = clonedElementRemoved as HTMLElement
@@ -671,7 +693,7 @@ export async function searchReplace(
         shadowRoots,
     }
     // we check other places if text was not replaced in a text editor
-    let result: ReplaceFunctionReturnType
+    let result: ReplaceFunctionReturnType = { searchReplaceResult, elementsChecked }
     if (inputFieldsOnly) {
         result = replaceInputFields(config, document, searchReplaceResult, elementsChecked)
         if (config.replaceNext && result.searchReplaceResult.replaced) {
@@ -680,17 +702,27 @@ export async function searchReplace(
     } else {
         const startingElement = document.body || document.querySelector('div')
 
-        const searchableIframes = (await getSearchableIframes(window, document))
-            .map(getInitialIframeElement)
-            .filter(notEmpty)
-        console.log('searchable iframes', searchableIframes)
-        result = replaceInHTML(
-            config,
-            document,
-            [startingElement, ...searchableIframes],
-            searchReplaceResult,
-            elementsChecked
-        )
+        const searchableIframesInitial = await getSearchableIframes(window, document)
+        const srcDocIframes = searchableIframesInitial.filter((iframe) => iframe.hasAttribute('srcdoc'))
+        srcDocIframes.map((iframe) => {
+            const srcDocResult = replaceInSrcDocIframe(
+                config,
+                iframe,
+                result.searchReplaceResult,
+                result.elementsChecked
+            )
+            result.searchReplaceResult = srcDocResult.searchReplaceResult
+            result.elementsChecked = srcDocResult.elementsChecked
+        })
+        console.log(JSON.stringify(result.searchReplaceResult))
+        console.log('searchableIframesInitial', searchableIframesInitial)
+        const searchableIframes = searchableIframesInitial.filter((iframe: HTMLIFrameElement) => {
+            return iframe.srcdoc === '' || iframe.srcdoc === undefined
+        })
+        const searchable = searchableIframes.map(getInitialIframeElement).filter(notEmpty)
+        console.log('searchableIframes', searchableIframes)
+        console.log('searchable', searchable)
+        result = replaceInHTML(config, document, [startingElement, ...searchable], searchReplaceResult, elementsChecked)
     }
 
     return result
