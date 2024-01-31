@@ -40,8 +40,9 @@ export function containsPartialClass(element: Element, partialClass: string) {
 }
 
 export function getLocalIframes(window: Window, document: Document): HTMLIFrameElement[] {
+    console.log('iframes', document.querySelectorAll('iframe'))
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter((iframe) => {
-        return iframe.src === '' || iframe.src === 'about:blank' || iframe.src === window.location.href
+        return iframe.src === '' || iframe.src === 'about:blank' || iframe.srcdoc || iframe.src === window.location.href
     })
 }
 
@@ -72,6 +73,8 @@ export const waitForIframeLoad = async (iframe: HTMLIFrameElement): Promise<HTML
             } else {
                 resolve(iframe)
             }
+        } else if (iframe.srcdoc) {
+            resolve(iframe)
         } else {
             resolve(null)
         }
@@ -200,6 +203,9 @@ export function elementIsVisible(element: HTMLElement, ancestorCheck = true, clo
 
 export function getInitialIframeElement(iframe: HTMLIFrameElement): HTMLElement | null {
     let element: HTMLElement | null = null
+    if (iframe.srcdoc) {
+        return iframe
+    }
     if (iframe.contentDocument) {
         element = iframe.contentDocument?.body || iframe.contentDocument?.querySelector('div')
     }
