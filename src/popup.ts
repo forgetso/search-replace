@@ -62,7 +62,9 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     // Restore the recent search replace instance and history list from storage
     port.onMessage.addListener(function (msg: SearchReplaceStorageItems) {
+        console.log('received msg', msg)
         const history: SearchReplaceInstance[] = msg.history || []
+        const hideAd: boolean = msg.hintPreferences?.ad || false
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
             recentSearch = recentSearch || history[0]
@@ -71,6 +73,13 @@ window.addEventListener('DOMContentLoaded', async function () {
         if (recentSearch) {
             restoreSearchReplaceInstance(recentSearch)
         }
+        if (hideAd) {
+            const adElement = document.getElementById('ad')
+            if (adElement) {
+                document.body.removeChild(adElement)
+            }
+        }
+
         // Trigger a search term count if there is an existing search term
         contentScriptCall('count', recentSearch, history).catch((e) => {
             console.error(e)
@@ -139,6 +148,18 @@ window.addEventListener('DOMContentLoaded', async function () {
         autoGrow(searchTerm)
         autoGrow(replaceTerm)
     })
+
+    // Click handler for closing the ad banner
+    const adCloseElement = document.getElementById('ad-close')
+    if (adCloseElement) {
+        adCloseElement.onclick = function () {
+            const searchReplaceInput = getInputValues(false)
+            const history = constructSearchReplaceHistory()
+            const hintPreferences: HintPreferences = { ['ad']: true }
+            sendToStorage(searchReplaceInput, history, hintPreferences)
+        }
+    }
+
     // Localize HTML elements
     localizeElements(langData)
 })

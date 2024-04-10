@@ -65,8 +65,7 @@ export async function listenerAdmin(msg: SearchReplaceBackgroundMessage, port: c
             return
         } else if (msg.action === 'clearHistory') {
             // Clearing the history in the popup
-            storage.history = []
-            await saveStorage(instance, history, savedInstances)
+            await saveStorage(instance, [], savedInstances)
         } else if (msg.action === 'save' && instance.options.save && url) {
             console.log('save message received', msg)
             // Saving a SearchReplaceInstance for use on subsequent page loads
