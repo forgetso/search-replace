@@ -27,6 +27,10 @@
     "message": "정보",
     "description": "about"
   },
+  "back": {
+      "message": "뒤로",
+      "description": "Back"
+  },
   "version": {
     "message": "버전",
     "description": "version"
@@ -204,7 +208,7 @@
     "description": "Explanation about replacing text in editors and text fields"
   },
   "replace_editors_p2": {
-    "message": "텍스트 편집기 또는 입력 상자에서 텍스트를 교체하려면 <code>입력 필드만?</code> 확인란을 선택해야 합니다. 그렇지 않으면 검색 텍스트가 페이지 전체에 교체되어 페이지가 망가질 수 있습니다. 숨겨진 입력 필드를 변경하지 않으려면 <code>가시적인 요소만?</code> 확인란도 선택해야 합니다.",
+    "message": "텍스트 편집기 또는 입력 상자에서 텍스트를 교체하려면 <code>입력 필드만?</code> 확인란을 선택해야 합니다.",
     "description": "Explanation about replacing text in editors and text fields"
   },
   "Setup": {
@@ -216,7 +220,7 @@
     "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p1": {
-    "message": "페이지 어디서나 텍스트 교체",
+    "message": "HTML, 텍스트 편집기 및 텍스트 필드에 포함된 텍스트를 바꾸려면 <code>HTML을 바꾸시겠습니까?</code> 확인란을 선택해야 합니다.",
     "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p2": {
@@ -304,7 +308,7 @@
     "description": "Multiple Matching Rules"
   },
   "ReportingIssues": {
-    "message": "확장 팝업에서 <a href='options.html'>규칙 편집</a> 링크를 클릭하여 저장된 규칙을 편집할 수 있습니다. <code>URL 패턴</code> 필드는 여러 다른 웹 사이트에 동일한 규칙을 적용할 수 있도록 하는 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>정규 표현식</a>입니다.",
+    "message": "확장 팝업에서 <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> 링크를 클릭하여 저장된 규칙을 편집할 수 있습니다. <code>URL 패턴</code> 필드는 여러 다른 웹 사이트에 동일한 규칙을 적용할 수 있도록 하는 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>정규 표현식</a>입니다.",
     "description": ""
   },
   "ReportingIssuesWarning": {

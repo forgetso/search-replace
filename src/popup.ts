@@ -19,7 +19,23 @@ import {
     TranslationProxy,
 } from './types'
 import { clearHistoryClickHandler, constructSearchReplaceHistory, historyHeaderClickHandler } from './popup/history'
-import { createTranslationProxy, getInstanceId, getTranslation, localizeElements, manifest, tabConnect } from './util'
+import {
+    createTranslationProxy,
+    getInstanceId,
+    getTranslation,
+    localizeElements,
+    manifest,
+    tabConnect,
+    getAvailableLanguages,
+} from './util'
+
+// Enum for content types
+enum ContentType {
+    Setting = 'settingSection',
+    SearchForm = 'searchReplaceForm',
+    About = 'aboutSection',
+    History = 'historySection',
+}
 
 const RELEASE_NOTES_URL = 'https://github.com/forgetso/search-replace/releases/tag'
 
@@ -64,7 +80,6 @@ window.addEventListener('DOMContentLoaded', async function () {
     port.onMessage.addListener(function (msg: SearchReplaceStorageItems) {
         console.log('received msg', msg)
         const history: SearchReplaceInstance[] = msg.history || []
-        const hideAd: boolean = msg.hintPreferences?.ad || false
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
             recentSearch = recentSearch || history[0]
@@ -73,19 +88,12 @@ window.addEventListener('DOMContentLoaded', async function () {
         if (recentSearch) {
             restoreSearchReplaceInstance(recentSearch)
         }
-        if (hideAd) {
-            const adElement = document.getElementById('ad')
-            if (adElement) {
-                document.body.removeChild(adElement)
-            }
-        }
 
         // Trigger a search term count if there is an existing search term
         contentScriptCall('count', recentSearch, history).catch((e) => {
             console.error(e)
         })
     })
-    ;(<HTMLButtonElement>document.querySelector('#historyHeader')).addEventListener('click', historyHeaderClickHandler)
 
     // Replace Next anb ReplaceAll click handlers
     for (const elementId of ['#replaceNext', '#replaceAll']) {
@@ -105,11 +113,43 @@ window.addEventListener('DOMContentLoaded', async function () {
         event.preventDefault()
     })
 
+    // Display searchReplaceForm as a default
+    loadContent(ContentType.SearchForm)
+    // Change the content when the icon is pressed (setting | about | history)
+    ;(<HTMLButtonElement>document.querySelector('#setting')).addEventListener('click', function () {
+        loadContent(ContentType.Setting)
+    })
+
+    // Change the content when the icon is pressed (setting | about | history)
+    ;(<HTMLButtonElement>document.querySelector('#about')).addEventListener('click', function () {
+        loadContent(ContentType.About)
+    })
+
+    // Change the content when the icon is pressed (setting | about | history)
+    ;(<HTMLButtonElement>document.querySelector('#history')).addEventListener('click', function (e) {
+        loadContent(ContentType.History)
+        // historyHeaderClickHandler(e);
+    })
+
+    // Click the back button, return main popup
+    ;(<HTMLButtonElement>document.querySelector('#settingSection #back')).addEventListener('click', function () {
+        loadContent(ContentType.SearchForm)
+    })
+    // Click the back button, return main popup
+    ;(<HTMLButtonElement>document.querySelector('#aboutSection #back')).addEventListener('click', function () {
+        loadContent(ContentType.SearchForm)
+    })
+    // Click the back button, return main popup
+    ;(<HTMLButtonElement>document.querySelector('#historySection #back')).addEventListener('click', function () {
+        loadContent(ContentType.SearchForm)
+    })
+
     //Click events for Options Link, Help link, and Clear History
     ;(<HTMLButtonElement>document.querySelector('#clearHistory')).addEventListener('click', function () {
         clearHistoryClickHandler(tabConnect())
     })
-    for (const link of ['help', 'options']) {
+
+    for (const link of ['help', 'saveRules']) {
         ;(<HTMLAnchorElement>document.getElementById(link)).addEventListener('click', function () {
             openLink(link)
         })
@@ -149,19 +189,10 @@ window.addEventListener('DOMContentLoaded', async function () {
         autoGrow(replaceTerm)
     })
 
-    // Click handler for closing the ad banner
-    const adCloseElement = document.getElementById('ad-close')
-    if (adCloseElement) {
-        adCloseElement.onclick = function () {
-            const searchReplaceInput = getInputValues(false)
-            const history = constructSearchReplaceHistory()
-            const hintPreferences: HintPreferences = { ['ad']: true }
-            sendToStorage(searchReplaceInput, history, hintPreferences)
-        }
-    }
-
     // Localize HTML elements
-    localizeElements(langData)
+    localizeElements(langData, () => {
+        loadContent(ContentType.SearchForm);
+    });
 })
 
 async function storeTermsHandler(e: Event, translationFn: TranslationProxy) {
@@ -172,6 +203,125 @@ async function storeTermsHandler(e: Event, translationFn: TranslationProxy) {
 function autoGrow(element: HTMLTextAreaElement) {
     element.style.height = 'auto'
     element.style.height = element.scrollHeight + 'px'
+}
+
+// function to load content from HTML file
+async function loadContent(contentType: ContentType) {
+    const searchReplaceForm = document.getElementById('searchReplaceForm')
+    const settingSection = document.getElementById('settingSection')
+    const aboutSection = document.getElementById('aboutSection')
+    const historySection = document.getElementById('historySection')
+    const replaceNext = document.getElementById('replaceNext')
+    const replaceAll = document.getElementById('replaceAll')
+    const historyBtn = document.getElementById('history')
+    const aboutBtn = document.getElementById('about')
+    const settingBtn = document.getElementById('setting')
+
+    switch (contentType) {
+        case ContentType.Setting: // pressed setting icon
+            hideElement(replaceNext)
+            hideElement(replaceAll)
+            showElement(settingSection)
+            hideElement(searchReplaceForm)
+            hideElement(aboutSection)
+            hideElement(historySection)
+            // Add color in setting button
+            unactiveButton(historyBtn)
+            unactiveButton(aboutBtn)
+            activeButton(settingBtn)
+            await loadLanguageOptions()
+            break
+        case ContentType.About: // pressed about icon
+            hideElement(replaceNext)
+            hideElement(replaceAll)
+            showElement(aboutSection)
+            hideElement(searchReplaceForm)
+            hideElement(settingSection)
+            hideElement(historySection)
+            // Add color in about button
+            unactiveButton(historyBtn)
+            activeButton(aboutBtn)
+            unactiveButton(settingBtn)
+            break
+        case ContentType.History: // pressed history icon
+            hideElement(replaceNext)
+            hideElement(replaceAll)
+            showElement(historySection)
+            hideElement(searchReplaceForm)
+            hideElement(settingSection)
+            hideElement(aboutSection)
+            // Add color in history button
+            activeButton(historyBtn)
+            unactiveButton(aboutBtn)
+            unactiveButton(settingBtn)
+            break
+        case ContentType.SearchForm: // default
+            showElement(replaceNext)
+            showElement(replaceAll)
+            hideElement(settingSection)
+            showElement(searchReplaceForm)
+            hideElement(historySection)
+            hideElement(aboutSection)
+            // Remove color of button
+            unactiveButton(historyBtn)
+            unactiveButton(aboutBtn)
+            unactiveButton(settingBtn)
+            break
+    }
+}
+
+function showElement(element) {
+    if (element) {
+        element.classList.add('d-block')
+        element.classList.remove('d-none')
+    }
+}
+
+function hideElement(element) {
+    if (element) {
+        element.classList.remove('d-block')
+        element.classList.add('d-none')
+    }
+}
+
+function activeButton(element) {
+    if (element) {
+        element.classList.add('icon-selected')
+    }
+}
+
+function unactiveButton(element) {
+    if (element) {
+        element.classList.remove('icon-selected')
+    }
+}
+
+async function loadLanguageOptions() {
+    const languageSelect = document.getElementById('languageSelect') as HTMLSelectElement
+    if (!languageSelect) return
+
+    const languages = await getAvailableLanguages()
+    languages.sort((a, b) => a.languageName.localeCompare(b.languageName))
+
+    languageSelect.innerHTML = '' // Clear existing options
+
+    languages.forEach((option) => {
+        const optionElement = document.createElement('option')
+        optionElement.value = option.languageCode
+        optionElement.textContent = option.languageName
+        languageSelect.appendChild(optionElement)
+    })
+
+    // Load the preferred language from storage and select the corresponding option
+    chrome.storage.sync.get({ preferredLanguage: 'en' }, (result) => {
+        languageSelect.value = result.preferredLanguage
+    })
+
+    // Add an event listener for language selection changes
+    languageSelect.addEventListener('change', function () {
+        const selectedLanguage = this.value
+        chrome.storage.sync.set({ preferredLanguage: selectedLanguage })
+    })
 }
 
 function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstance) {
@@ -225,6 +375,8 @@ async function formSubmitHandler(
 ) {
     const loader = document.getElementById('loader')
     if (loader) loader.style.display = 'block'
+    const githubVersion = document.getElementById('github_version')
+    if (githubVersion) githubVersion.style.display = 'block'
     const content = document.getElementById('content')
     if (content) content.style.display = 'none'
     const searchReplaceInstance = getInputValues(replaceAll)
@@ -252,7 +404,6 @@ export async function contentScriptCall(
     const query = { active: true, currentWindow: true }
     let url: string | undefined = undefined
     const [tab] = await chrome.tabs.query(query)
-
     if (tab.id != null) {
         const instanceId = getInstanceId({ ...searchReplaceInstance, url: tab.url ? tab.url : '' }, true)
         const message: SearchReplaceContentMessage = {
@@ -262,8 +413,8 @@ export async function contentScriptCall(
             url: tab.url,
             instanceId,
         }
-
         await chrome.tabs.sendMessage(tab.id, message)
+        console.log(url);
         url = tab.url
     }
     return url
@@ -276,6 +427,7 @@ export async function contentScriptCall(
 function contentScriptCallback(msg: SearchReplaceResponse, translationFn: TranslationProxy) {
     removeLoader()
     if (msg && msg.action === 'searchReplaceResponseMerged') {
+        loadContent(ContentType.SearchForm)
         setCount(msg.result, translationFn)
         setHints(msg.hints)
     }
@@ -326,6 +478,8 @@ function setHints(hints?: Hint[]) {
 function removeLoader() {
     const loader = document.getElementById('loader')
     if (loader) loader.style.display = 'none'
+    const githubVersion = document.getElementById('github_version')
+    if (githubVersion) githubVersion.style.display = 'none'
     const content = document.getElementById('content')
     if (content) content.style.display = 'block'
 }

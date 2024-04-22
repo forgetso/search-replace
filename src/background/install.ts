@@ -7,7 +7,7 @@ export function listenerInstall(details: chrome.runtime.InstalledDetails) {
         chrome.notifications.create('install', {
             type: 'basic',
             title: 'Search and Replace',
-            iconUrl: 'assets/icon.png',
+            iconUrl: 'assets/icon-32.png',
             message: 'Thanks for installing. Remember to REFRESH the page you wish to replace text on before using!',
             priority: 2,
             buttons: [{ title: 'Ok' }],

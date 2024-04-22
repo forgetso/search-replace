@@ -27,6 +27,10 @@
     "message": "حول",
     "description": "about"
   },
+  "back": {
+    "message": "عودة",
+    "description": "Back"
+  },
   "version": {
     "message": "الإصدار",
     "description": "version"
@@ -200,7 +204,7 @@
     "description": "Explanation about replacing text in editors and text fields"
   },
   "replace_editors_p1": {
-    "message": "لتغيير النص في محررات النص أو حقول الإدخال يجب عليك التحقق من خانة <code>حقول الإدخال فقط؟</code>. في غير ذلك، سيتم استبدال النص بجميع النصوص في HTML بأكمله، مما قد يؤدي إلى تلف الصفحة. لتجنب تغيير حقول الإدخال المخفية، يجب أيضًا التحقق من خانة <code>المحتوى المرئي فقط؟</code>.",
+    "message": "لتغيير النص في محررات النص أو حقول الإدخال يجب عليك التحقق من خانة <code>حقول الإدخال فقط؟</code>.",
     "description": "Explanation about replacing text in editors and text fields"
   },
   "replace_editors_p2": {
@@ -216,7 +220,7 @@
     "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p1": {
-    "message": "للقيام بذلك، اترك خانة <code>حقول الإدخال فقط؟</code> و <code>المحتوى المرئي فقط؟</code> غير محددة <b>.",
+    "message": "لاستبدال النص الموجود داخل HTML، والموجود داخل محرر النصوص، والموجود داخل حقل النص، يجب عليك تحديد خانة الاختيار <code>هل تريد استبدال HTML؟</code>.",
     "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p2": {
@@ -296,7 +300,7 @@
     "description": "Multiple Matching Rules"
   },
   "Save_apply_multi_p2": {
-    "message": "يمكنك تعديل القواعد المحفوظة بالنقر على الرابط <a href='options.html'>تحرير القواعد</a> في القائمة المنبثقة للتمديد. حقل <code>نمط العنوان (URL)</code> هو تعبير منتظم <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>التعبيرات العادية</a>، مما يسمح لك باستخدام نفس القاعدة على العديد من مواقع الويب المختلفة.",
+    "message": "يمكنك تعديل القواعد المحفوظة بالنقر على الرابط <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> في القائمة المنبثقة للتمديد. حقل <code>نمط العنوان (URL)</code> هو تعبير منتظم <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>التعبيرات العادية</a>، مما يسمح لك باستخدام نفس القاعدة على العديد من مواقع الويب المختلفة.",
     "description": "Multiple Matching Rules"
   },
   "Save_apply_multi_p3": {

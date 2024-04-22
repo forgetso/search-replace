@@ -12,7 +12,7 @@ module.exports = {
         searchreplace: path.join(srcDir, 'searchreplace.ts'),
         options: path.join(srcDir, 'options.ts'),
         util: path.join(srcDir, 'util.ts'),
-        help: path.join(srcDir, 'help.ts'),
+        // help: path.join(srcDir, 'help.ts'),
         elements: path.join(srcDir, 'elements.ts'),
     },
     output: {

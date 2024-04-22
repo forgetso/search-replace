@@ -27,6 +27,10 @@
         "message": "About",
         "description": "about"
     },
+    "back": {
+      "message": "Back",
+      "description": "Back"
+    },
     "version": {
         "message": "Version",
         "description": "version"
@@ -200,7 +204,7 @@
         "description": "Explanation about replacing text in editors and text fields"
     },
     "replace_editors_p1": {
-        "message": "To replace text in text editors or input boxes you should check the <code>Input fields only?</code> check box. Otherwise, the search text will be replaced throughout the entire HTML, possibly breaking the page. To avoid changing hidden input  fields, you should also check the <code>Visible elements only?</code> check box.",
+        "message": "To replace text in text editors or input boxes you should check the <code>Input fields only?</code> check box.",
         "description": "Explanation about replacing text in editors and text fields"
     },
     "replace_editors_p2": {
@@ -216,7 +220,7 @@
         "description": "Explanation about replacing text anywhere on the page"
     },
     "Replacing_anywhere_p1": {
-        "message": "To replace text that is not contained within a text editor and not contained within a text field, leave the <code>Input Fields only?</code> and <code>Only change visible content?</code> boxes <b>unchecked</b>.",
+        "message": "To replace text that is contained within a HTML, contained within a text editor and contained within a text field, you should check the <code>Replace HTML?</code> check box.",
         "description": "Explanation about replacing text anywhere on the page"
     },
     "Replacing_anywhere_p2": {
@@ -300,7 +304,7 @@
         "description": "Multiple Matching Rules"
     },
     "Save_apply_multi_p3": {
-        "message": "You can edit the saved rules by clicking on the <a href='options.html'>Edit Rules</a> link in the extension popup. The <code>URL Pattern</code> field is a <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regular expression</a>, which allows you to apply the same rule to many different websites.",
+        "message": "You can edit the saved rules by clicking on the <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> link in the extension popup. The <code>URL Pattern</code> field is a <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regular expression</a>, which allows you to apply the same rule to many different websites.",
         "description": "Multiple Matching Rules"
     },
     "ReportingIssues": {

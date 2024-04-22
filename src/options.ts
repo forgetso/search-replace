@@ -12,7 +12,6 @@ import {
     createTranslationProxy,
     getAvailableLanguages,
     getTranslation,
-    localizeElements,
     manifest,
     tabConnect,
 } from './util'
@@ -34,39 +33,6 @@ window.addEventListener('DOMContentLoaded', async function () {
     // Get the stored values from the background page
     const port = tabConnect()
     port.postMessage({ action: 'recover' })
-
-    const settingsContainer = document.getElementById('settingsSection') as HTMLSelectElement
-    if (settingsContainer) {
-        settingsContainer.innerHTML = `
-        <label for="languageSelect">${getString('select_language')}</label>
-        <select id="languageSelect" class="form-select"></select>
-        `
-    }
-
-    const languageSelect = document.getElementById('languageSelect') as HTMLSelectElement
-
-    if (settingsContainer && languageSelect) {
-        // Populate the select element
-        languages
-            .sort((a, b) => (a.languageName > b.languageName ? 1 : -1))
-            .forEach((option) => {
-                const optionElement = document.createElement('option')
-                optionElement.value = option.languageCode
-                optionElement.textContent = option.languageName
-                languageSelect.appendChild(optionElement)
-            })
-
-        // Load the preferred language from storage and select the corresponding option
-        chrome.storage.sync.get({ preferredLanguage: 'en' }, (result) => {
-            languageSelect.value = result.preferredLanguage
-        })
-
-        // Add an event listener for language selection changes
-        languageSelect.addEventListener('change', function () {
-            const selectedLanguage = this.value
-            chrome.storage.sync.set({ preferredLanguage: selectedLanguage })
-        })
-    }
 
     const aboutContainer = document.getElementById('aboutSection')
     if (aboutContainer) {
@@ -101,7 +67,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     })
 
     // Localize HTML elements
-    localizeElements(langData)
+    // localizeElements(langData)
 })
 
 function addFormSubmitListeners() {
@@ -181,30 +147,31 @@ function instanceToHTML(instance: SavedSearchReplaceInstance, instanceId: string
     const getString = i18n
 
     return `
-    <div class="row align-items-start rounded-1 mb-2 card" id="instanceForm${instanceId}">
-            <div class="card-header">
+    <div class="col-3 rounded-1 p-3" id="instanceForm${instanceId}">
+        <div class="card">
+            <div class="card-header fw-bold">
                 ${getString('RuleID')}: ${instanceId}
             </div>
             <form class="card-body"> 
                 <div class="form-group col">
-                    <label for="url">${getString('URLPattern')}</label>
+                    <label for="url" class="fw-bold">${getString('URLPattern')}</label>
                     <input type="text" class="form-control data_field" id="url" value="${instance.url}">
                 </div>
                 <div class="form-group col">
-                    <label for="searchTerm">${getString('SearchTerm')}</label>
+                    <label for="searchTerm" class="fw-bold">${getString('SearchTerm')}</label>
                     <input type="text" class="form-control rounded-1 data_field" id="searchTerm" value="${
                         instance.searchTerm
                     }">
                 </div>
                 <div class="form-group col">
-                    <label for="replaceTerm">${getString('SearchTerm')}</label>
+                    <label for="replaceTerm" class="fw-bold">${getString('SearchTerm')}</label>
                     <input type="text" class="form-control rounded-1 data_field" id="replaceTerm" value="${
                         instance.replaceTerm
                     }">
                 </div>
                 <div class="col">${checkBoxesToHTML(instance, i18n)}</div>
                 <div class="form-group row">
-                    <button name="save" id="save" class="col btn btn-light mb-2 rounded-1 border-1 border-dark-subtle m-2" type="submit">${getString(
+                    <button name="save" id="save" class="col btn btn-light mb-2 rounded-1 border-1 border-dark-subtle m-2 bg-button" type="submit">${getString(
                         'Save'
                     )}</button>
                     <button name="delete" id="delete" class="col btn btn-danger mb-2 rounded-1 border-1 border-dark-subtle m-2" type="submit">${getString(
@@ -213,6 +180,7 @@ function instanceToHTML(instance: SavedSearchReplaceInstance, instanceId: string
                 </div>
                 <input type="hidden" name="instanceId" value="${instanceId}">
             </form>
+        </div>
     </div>`
 }
 
