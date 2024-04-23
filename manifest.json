@@ -19,7 +19,7 @@
     "content_scripts": [
         {
             "all_frames": true,
-            "js": ["searchreplace.js", "options.js", "popup.js", "util.js", "help.js", "elements.js"],
+            "js": ["searchreplace.js", "options.js", "popup.js", "help.js", "util.js", "elements.js"],
             "matches": ["http://*/*", "https://*/*", "file:///*"]
         }
     ],
@@ -28,11 +28,10 @@
     "name": "Search and Replace",
     "description": "__MSG_ext_description__",
     "manifest_version": 3,
-    "permissions": ["activeTab", "storage", "notifications"],
+    "permissions": ["activeTab", "storage", "notifications", "tabs"],
     "host_permissions": ["http://*/*", "https://*/*"],
     "update_url": "http://clients2.google.com/service/update2/crx",
     "version":"2.0.9",
-    "options_page": "assets/options.html",
     "icons": {
         "16": "assets/icon-16.png",
         "32": "assets/icon-32.png",

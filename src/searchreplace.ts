@@ -220,6 +220,11 @@ function replaceInNodeOrElement(
     config: SearchReplaceConfig,
     replaceTarget?: 'innerText' | 'innerHTML' | 'outerHTML'
 ) {
+    console.log(newValue);
+    console.log(occurrences);
+    console.log(config);
+    console.log(replaceTarget);
+
     let replacementCount = 0
     let replaced = false
     const nodeElement = getElementFromNode(node)

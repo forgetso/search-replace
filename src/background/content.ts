@@ -98,7 +98,7 @@ async function checkPreviousResponse(msg: SearchReplaceResponse) {
 
 export async function listenerContentResponse(msg: SearchReplaceResponse) {
     msg.action = 'searchReplaceResponseMerged'
-    console.log('BACKGROUND: Received msg from content', JSON.stringify(msg, null, 4))
+    // console.log('BACKGROUND: Received msg from content', JSON.stringify(msg, null, 4))
     if (!msg.inIframe && msg.iframes === 0) {
         console.log('BACKGROUND: Sending msg to popup immediately', JSON.stringify(msg, null, 4))
         await chrome.runtime.sendMessage(msg)

@@ -98,7 +98,7 @@ export function createTranslationProxy(translationData: LangFile): TranslationPr
 }
 
 // Function to localize HTML elements using translation data
-export function localizeElements(translationData: LangFile) {
+export function localizeElements(translationData: LangFile, callback: () => void) {
     chrome.storage.onChanged.addListener((changes, areaName) => {
         if (areaName === 'sync' && 'preferredLanguage' in changes) {
             // Reload the page when the preferredLanguage is changed
@@ -122,6 +122,7 @@ export function localizeElements(translationData: LangFile) {
             element.innerHTML = innerString // Use innerHTML to render HTML content
         }
     })
+    callback();
 }
 
 export function getExtensionStorage<T>(key: string): Promise<T | undefined> {
