@@ -316,7 +316,7 @@
     "description": ""
   },
   "ReportingIssuesInfo": {
-    "message": "Se a página estiver quebrada após o uso da extensão, tente atualizar a página e, em seguida, marcar as caixas <code>Apenas campos de entrada?</code> e <code>Apenas alterar conteúdo visível?</code> antes de realizar uma pesquisa e substituição.",
+    "message": "Se a página estiver quebrada após o uso da extensão, tente atualizar a página e, em seguida, marcar as caixas <code>Apenas campos de entrada?</code> antes de realizar uma pesquisa e substituição.",
     "description": ""
   },
   "ReportingIssues_p1": {

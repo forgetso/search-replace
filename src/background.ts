@@ -48,24 +48,7 @@ chrome.runtime.onMessage.addListener(function (msg: SearchReplaceResponse, sende
 // Listen for the extension being installed or updated
 chrome.runtime.onInstalled.addListener(function (details) {
     listenerInstall(details)
-    // Inject content script into already open tabs when extension is installed
-    // if (details.reason === 'install') {
-    //     console.log('----------------- installed -----------------')
-    //     injectContentScriptIntoOpenTabs()
-    // }
 })
-
-// Function to inject content script into all open tabs
-// function injectContentScriptIntoOpenTabs() {
-//     chrome.tabs.query({}, function (tabs) {
-//         tabs.forEach((tab) => {
-//             console.log(tab.id)
-//             if (tab.id) {
-//                 chrome.tabs.executeScript(tab.id, { file: 'popup.js' })
-//             }
-//         })
-//     })
-// }
 
 // Listen for tab updates and apply any saved instances
 chrome.tabs.onUpdated.addListener(function (tabId, info) {

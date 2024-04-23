@@ -316,7 +316,7 @@
     "description": ""
   },
   "ReportingIssuesInfo": {
-    "message": "如果在使用扩展后页面出现问题，请尝试刷新页面，然后选中 <code>仅输入字段？</code> 和 <code>仅更改可见内容？</code> 复选框后执行搜索和替换。",
+    "message": "如果在使用扩展后页面出现问题，请尝试刷新页面，然后选中 <code>仅输入字段？</code>复选框后执行搜索和替换。",
     "description": ""
   },
   "ReportingIssues_p1": {

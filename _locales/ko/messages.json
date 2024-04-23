@@ -124,215 +124,215 @@
     "description": "popup"
   },
   "Saveandapply": {
-    "message": "모두 대체",
+    "message": "페이지 새로 고침 시 저장 및 적용",
     "description": "popup"
   },
   "ReplaceNext": {
-    "message": "저장하고 페이지 다시로드 시 적용",
-    "description": "popup"
+      "message": "다음 항목 바꾸기",
+      "description": "popup"
   },
   "ReplaceAll": {
-    "message": "다음 찾기",
-    "description": "popup"
+      "message": "모두 바꾸기",
+      "description": "popup"
   },
   "History": {
-    "message": "모두 교체",
-    "description": "popup"
+      "message": "기록",
+      "description": "popup"
   },
   "Clear": {
-    "message": "기록",
-    "description": "popup"
+      "message": "지우기",
+      "description": "popup"
   },
   "EditSettings": {
-    "message": "지우기",
-    "description": "popup"
+      "message": "설정 편집",
+      "description": "popup"
   },
   "Help": {
-    "message": "설정 편집",
-    "description": ""
+      "message": "도움말",
+      "description": ""
   },
   "help_title": {
-    "message": "도움말",
-    "description": "help"
+      "message": "검색 및 바꾸기 도움말 페이지",
+      "description": "help"
   },
   "URL": {
-    "message": "검색 및 대체 도움말 페이지",
-    "description": ""
+      "message": "URL",
+      "description": ""
   },
   "Search": {
-    "message": "URL",
-    "description": ""
+      "message": "검색",
+      "description": ""
   },
   "Replace": {
-    "message": "검색",
-    "description": ""
+      "message": "바꾸기",
+      "description": ""
   },
   "Priority": {
-    "message": "대체",
-    "description": ""
+      "message": "우선 순위",
+      "description": ""
   },
   "Example": {
-    "message": "우선순위",
-    "description": ""
+      "message": "예시",
+      "description": ""
   },
   "applied_first": {
-    "message": "예제",
-    "description": ""
+      "message": "먼저 적용됨",
+      "description": ""
   },
   "applied_last": {
-    "message": "첫 번째 적용",
-    "description": ""
+      "message": "마지막에 적용됨",
+      "description": ""
   },
   "next_vs_all": {
-    "message": "마지막 적용",
-    "description": "Replace Next vs. Replace All"
+      "message": "다음 항목 바꾸기 vs. 모두 바꾸기",
+      "description": "Replace Next vs. Replace All"
   },
   "next_vs_all_p1": {
-    "message": "다음 찾기 vs. 모두 교체",
-    "description": "Replace Next vs. Replace All"
+      "message": "검색어의 첫 번째 발생을 바꾸려면 <code>다음 항목 바꾸기</code>를 누르세요. 더 이상 발생하지 않을 때까지 버튼을 누를 수 있습니다.",
+      "description": "Replace Next vs. Replace All"
   },
   "next_vs_all_p2": {
-    "message": "검색 용어의 첫 번째 발견물을 교체하려면 <code>다음 찾기</code>를 누르십시오. 더 이상 일치하는 항목이 없을 때까지 해당 버튼을 계속 누를 수 있습니다.",
-    "description": "Replace Next vs. Replace All"
+      "message": "검색어의 모든 발생을 바꾸려면 <code>모두 바꾸기</code>를 누르세요.",
+      "description": "Replace Next vs. Replace All"
   },
   "next_vs_all_p3": {
-    "message": "검색 용어의 모든 발견물을 교체하려면 <code>모두 교체</code>를 누르십시오.",
-    "description": "Replace Next vs. Replace All"
+      "message": "현재 취소 기능은 없습니다. 실수를 했다면 페이지를 다시 로드하여 원래 텍스트를 복원할 수 있습니다. 그러나 텍스트 편집기와 텍스트 입력 필드에서의 저장되지 않은 변경 사항은 손실됩니다.",
+      "description": "Replace Next vs. Replace All"
   },
   "replace_editors": {
-    "message": "현재로서 취소 기능은 없습니다. 실수를 저지르면 페이지를 다시로드하여 원래 텍스트를 복원할 수 있지만, 텍스트 편집기 및 텍스트 입력 필드에서 저장하지 않은 모든 변경 내용을 잃게 됩니다.",
-    "description": "Explanation about replacing text in editors and text fields"
+      "message": "편집기 및 텍스트 필드에서 텍스트 교체하기",
+      "description": "편집기 및 텍스트 필드에서 텍스트 교체에 대한 설명"
   },
   "replace_editors_p1": {
-    "message": "편집기 및 텍스트 필드에서 텍스트 교체",
-    "description": "Explanation about replacing text in editors and text fields"
+      "message": "텍스트 편집기나 입력 상자에서 텍스트를 교체하려면 <code>입력 필드만 대상?</code> 확인란을 선택해야 합니다.",
+      "description": "편집기 및 텍스트 필드에서 텍스트 교체에 대한 설명"
   },
   "replace_editors_p2": {
-    "message": "텍스트 편집기 또는 입력 상자에서 텍스트를 교체하려면 <code>입력 필드만?</code> 확인란을 선택해야 합니다.",
-    "description": "Explanation about replacing text in editors and text fields"
+      "message": "텍스트 편집기나 입력 상자에서 텍스트를 교체하려면 <code>입력 필드만 대상?</code> 확인란을 선택해야 합니다. 그렇지 않으면 검색어가 전체 HTML에서 교체되어 페이지가 손상될 수 있습니다. 숨겨진 입력 상자의 변경을 피하려면 <code>가시적 요소만 대상?</code> 확인란도 선택해야 합니다.",
+      "description": "편집기 및 텍스트 필드에서 텍스트 교체에 대한 설명"
   },
   "Setup": {
-    "message": "텍스트 편집기 또는 입력 상자에서 텍스트를 교체하려면 <code>입력 필드만?</code> 확인란을 선택해야 합니다. 그렇지 않으면 검색 텍스트가 페이지 전체에 교체되어 페이지가 망가질 수 있습니다. 숨겨진 입력 필드를 변경하지 않으려면 <code>가시적인 요소만?</code> 확인란도 선택해야 합니다.",
-    "description": "help"
+      "message": "설정",
+      "description": "help"
   },
   "Replacing_anywhere": {
-    "message": "설정",
-    "description": "Explanation about replacing text anywhere on the page"
+      "message": "페이지 어디서든 텍스트 교체하기",
+      "description": "페이지 어디서든 텍스트 교체에 대한 설명"
   },
   "Replacing_anywhere_p1": {
-    "message": "HTML, 텍스트 편집기 및 텍스트 필드에 포함된 텍스트를 바꾸려면 <code>HTML을 바꾸시겠습니까?</code> 확인란을 선택해야 합니다.",
-    "description": "Explanation about replacing text anywhere on the page"
+      "message": "HTML 안에 포함된 텍스트, 텍스트 편집기 안에 포함된 텍스트, 텍스트 필드 안에 포함된 텍스트를 교체하려면 <code>HTML 교체?</code> 확인란을 선택해야 합니다.",
+      "description": "페이지 어디서든 텍스트 교체에 대한 설명"
   },
   "Replacing_anywhere_p2": {
-    "message": "텍스트 편집기에 포함되지 않고 텍스트 필드에 포함되지 않은 텍스트를 교체하려면 <code>입력 필드만?</code> 및 <code>가시적인 콘텐츠만?</code> 확인란을 <b>선택하지 않은</b> 상태로 두어야 합니다.",
-    "description": "Explanation about replacing text anywhere on the page"
+      "message": "텍스트 편집기 안에 포함되지 않은 텍스트 및 텍스트 필드 안에 포함되지 않은 텍스트를 교체하려면 <code>입력 필드만 대상?</code>와 <code>가시적인 콘텐츠만 변경?</code> 확인란을 <b>체크하지 않은 상태</b>로 유지해야 합니다.",
+      "description": "페이지 어디서든 텍스트 교체에 대한 설명"
   },
   "Replacing_anywhere_warning": {
-    "message": "텍스트 편집기에 포함되지 않고 텍스트 필드에 포함되지 않은 텍스트를 교체하려면 <code>입력 필드만?</code> 및 <code>가시적인 콘텐츠만?</code> 확인란을 <b>선택하지 않은</b> 상태로 두어야 합니다.",
-    "description": "Explanation about replacing text anywhere on the page"
+    "message": "경고: 이 설정은 페이지 HTML을 변경하고 페이지를 손상시킬 수 있습니다. 페이지를 다시 로드하여 페이지를 복원할 수 있지만, 텍스트 편집기와 텍스트 입력 필드에서의 저장되지 않은 변경 사항이 손실됩니다.",
+    "description": "페이지 어디서든 텍스트 교체에 대한 설명"
   },
   "Matching_case": {
-    "message": "경고: 이 설정은 페이지의 HTML을 변경하고 페이지를 망가뜨릴 수 있습니다. 페이지를 다시로드하여 페이지를 복원할 수 있지만 텍스트 편집기 및 텍스트 입력 필드에서 저장하지 않은 모든 변경 내용을 잃게 됩니다.",
-    "description": "Explanation about matching the case of text"
+      "message": "텍스트의 대소문자 매칭",
+      "description": "텍스트의 대소문자 매칭에 대한 설명"
   },
   "Matching_case_p1": {
-    "message": "텍스트의 대소문자 일치",
-    "description": "Explanation about matching the case of text"
+      "message": "<code>이것</code>은 바꾸고 싶지만 <code>이것</code>은 바꾸고 싶지 않다면 대소문자 매칭 옵션을 사용해야 합니다.",
+      "description": "텍스트의 대소문자 매칭에 대한 설명"
   },
   "Matching_case_p2": {
-    "message": "<code>이렇게</code>를 교체해야하지만 <code>이렇게</code>를 교체하지 않아야 하는 경우 대소문자 일치 옵션을 사용해야 합니다.",
-    "description": "Explanation about matching the case of text"
+      "message": "다음 설정은 <code>Condo</code>는 매칭하지만 <code>condo</code>는 매칭하지 않습니다. 이 설정은 페이지에서 가시적인 텍스트 필드에서 <code>Condo</code>를 <code>아파트</code>로 바꿉니다.",
+      "description": "텍스트의 대소문자 매칭에 대한 설명"
   },
   "Matching_whole": {
-    "message": "다음 설정에서는 <code>아파트</code>를 일치시키지만 <code>아파트</code>를 일치시키지 않습니다. 페이지에서 보이는 텍스트 필드에서 <code>아파트</code>를 <code>아파트</code>로 교체합니다.",
-    "description": "Matching whole words"
+      "message": "전체 단어 매칭",
+      "description": "전체 단어 매칭"
   },
   "Matching_whole_p1": {
-    "message": "전체 단어 일치",
-    "description": "Matching whole words"
+      "message": "만약 <code>partial</code>을 바꾸고 싶지만 <code>partially</code>는 바꾸고 싶지 않다면 <code>전체 단어 매칭?</code> 옵션을 사용해야 합니다.",
+      "description": "전체 단어 매칭"
   },
   "wildcards_and_regex": {
-    "message": "<code>부분</code> 단어를 교체하지만 <code>부분적으로</code>를 교체하지 않아야 하는 경우 <code>전체 단어 일치?</code> 옵션을 사용해야 합니다.",
-    "description": "Explanation about wild cards and regular expressions"
+      "message": "와일드카드 및 정규 표현식",
+      "description": "와일드카드 및 정규 표현식에 대한 설명"
   },
   "wildcards_and_regex_p1": {
-    "message": "와일드 카드 및 정규 표현식",
-    "description": "Explanation about wild cards and regular expressions"
+      "message": "만약 부분적인 검색어와 일치시키려면 정규 표현식 확인란을 선택하고 와일드카드를 지정해야 합니다. 이 기능을 사용하려면 매우 기본적인 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>정규 표현식</a> 지식이 필요합니다. 테스트를 위해 <a href='https://regexpal.com' target='_blank'>regexpal</a>을 추천합니다.",
+      "description": "와일드카드 및 정규 표현식에 대한 설명"
   },
   "Before": {
-    "message": "일부 검색 용어와 일치하려면 정규 표현식 확인란을 선택하고 와일드 카드를 지정해야 합니다. 이 기능을 사용하려면 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>정규 표현식</a>에 대한 매우 기본적인 지식이 필요합니다. 테스트를 위해 <a href='https://regexpal.com' target='_blank'>regexpal</a>을 권장합니다.",
-    "description": ""
+      "message": "이전",
+      "description": ""
   },
   "After": {
-    "message": "이전",
-    "description": ""
+      "message": "이후",
+      "description": ""
   },
   "Replacing_wordpress": {
-    "message": "이후",
-    "description": ""
+      "message": "WordPress에서 텍스트 교체",
+      "description": ""
   },
   "Replacing_wordpress_p1": {
-    "message": "WordPress에서 텍스트 교체",
-    "description": ""
+      "message": "2023년 3월 기준으로 WordPress는 현재 버전 6.6에 있습니다. 이 확장 프로그램이 만들어진 이후에는 게시 편집기가 크게 변경되었으며 WordPress에서 텍스트를 교체하려면 새로운 설정이 필요합니다.",
+      "description": ""
   },
   "Replacing_wordpress_setup_w6": {
-    "message": "2023년 3월 현재, WordPress는 버전 6.6에 해당합니다. 이 확장이 작성된 이후 게시글 편집기가 크게 변경되었으며 WordPress에서 텍스트를 교체하려면 새로운 설정이 필요합니다.",
-    "description": ""
+      "message": "WordPress 6+를 위한 설정",
+      "description": ""
   },
   "Replacing_wordpress_setup_w5": {
-    "message": "WordPress 6+를 위한 설정",
-    "description": ""
+      "message": "WordPress 5 및 이전 버전을 위한 설정",
+      "description": ""
   },
   "Save_apply": {
-    "message": "WordPress 5 및 이하 버전을 위한 설정",
-    "description": "Save and apply on page reload"
+      "message": "페이지 새로 고침 시 저장 및 적용",
+      "description": "페이지 새로 고침 시 저장 및 적용"
   },
   "Save_apply_p1": {
-    "message": "페이지 다시로드 시 저장 및 적용",
-    "description": "Save and apply on page reload"
+      "message": "<code>페이지 새로 고침 시 저장 및 적용</code> 확인란을 선택하여 검색어를 저장하고 이후 페이지 새로 고침에서 적용할 수 있습니다. 이는 브라우저를 새로 고치고 다시 엽니다.",
+      "description": "페이지 새로 고침 시 저장 및 적용"
   },
   "Save_apply_multi": {
-    "message": "검색을 저장하고 페이지를 다시로드할 때 적용하려면 <code>저장 및 페이지 다시로드 시 적용</code> 확인란을 선택할 수 있습니다. 이러한 설정은 브라우저에서 유지되고 다시 열립니다.",
-    "description": "Multiple Matching Rules"
+      "message": "여러 일치 규칙",
+      "description": "여러 일치 규칙"
   },
   "Save_apply_multi_p1": {
-    "message": "여러 규칙 일치",
-    "description": "Multiple Matching Rules"
+      "message": "동일한 페이지에 여러 규칙이 적용되는 경우 규칙은 가장 구체적인 것부터 가장 일반적인 것까지 순서대로 적용됩니다. 예를 들면:",
+      "description": "여러 일치 규칙"
   },
   "Save_apply_multi_p2": {
-    "message": "같은 페이지에 여러 규칙이 적용되는 경우 규칙은 <b>가장</b> 구체적인 것부터 <b>덜</b> 구체적인 것으로 순서대로 적용됩니다. 예를 들어:",
-    "description": "Multiple Matching Rules"
+      "message": "이는 첫 번째 규칙에 의해 적용된 모든 변경 사항이 다음 규칙에 공급됨을 의미합니다. 위 예에서는 텍스트 <code>예시</code>가 <code>http://www.example.com/a/deeper/nested/page</code>와 일치하는 규칙에 의해 바뀌었습니다. 따라서 다음 규칙은 아무런 영향을 미치지 않습니다.",
+      "description": "여러 일치 규칙"
   },
   "Save_apply_multi_p3": {
-    "message": "이것은 첫 번째 규칙에 의해 적용된 모든 변경 사항이 후속 규칙에 입력됨을 의미합니다. 위의 예에서 <code>예제</code> 텍스트는 <code>http://www.example.com/a/deeper/nested/page</code>와 일치하는 규칙에 의해 대체되었을 것입니다. 따라서 후속 규칙은 아무런 영향을 미치지 않을 것입니다.",
-    "description": "Multiple Matching Rules"
+    "message": "확장 프로그램 팝업에서 <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> 링크를 클릭하여 저장된 규칙을 편집할 수 있습니다. <code>URL Pattern</code> 필드는 여러 다른 웹사이트에 동일한 규칙을 적용할 수 있도록 하는 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>정규 표현식</a>입니다.",
+    "description": "여러 일치 규칙"
   },
   "ReportingIssues": {
-    "message": "확장 팝업에서 <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> 링크를 클릭하여 저장된 규칙을 편집할 수 있습니다. <code>URL 패턴</code> 필드는 여러 다른 웹 사이트에 동일한 규칙을 적용할 수 있도록 하는 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>정규 표현식</a>입니다.",
-    "description": ""
+      "message": "문제 보고",
+      "description": ""
   },
   "ReportingIssuesWarning": {
-    "message": "문제 보고",
-    "description": ""
+      "message": "설치 후 텍스트를 교체하려는 페이지를 새로 고침하십시오(REPLACE).",
+      "description": ""
   },
   "ReportingIssuesInfo": {
-    "message": "설치 후 텍스트를 교체하려는 페이지를 <b>새로 고침</b>해야 함을 기억하세요.",
-    "description": ""
+      "message": "확장 프로그램을 사용한 후 페이지가 손상된 경우, 페이지를 새로 고침한 다음, 검색 및 교체를 수행하기 전에 <code>Input fields only?</code>를 확인해 보세요.",
+      "description": ""
   },
   "ReportingIssues_p1": {
-    "message": "확장을 사용한 후 페이지가 망가진 경우, 페이지를 다시로드하고 검색 및 교체를 수행하기 전에 <code>입력 필드만?</code>와 <code>가시적인 콘텐츠만?</code> 확인란을 선택하십시오.",
-    "description": ""
+      "message": "버그를 발견하면 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank' >Chrome 확장 프로그램 스토어</a > 또는 <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>에서 자세한 보고서를 제공해 주세요.",
+      "description": ""
   },
   "Rate_on_store": {
-    "message": "버그를 발견하면 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank' >Chrome 확장 스토어</a > 또는 <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>에서 자세한 보고서를 제공하십시오.",
-    "description": ""
+      "message": "확장 프로그램이 도움이 되었다면 Chrome 스토어에서 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a>로 평가해 주세요!",
+      "description": ""
   },
   "no_saved_instances": {
-    "message": "이 확장이 도움이 된다면 Chrome 스토어에서 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a>로 평가해 주십시오!",
-    "description": "message to tell user that no rules were found"
+      "message": "저장된 인스턴스 없음",
+      "description": "규칙을 찾을 수 없음을 사용자에게 알리는 메시지"
   },
   "matches": {
-    "message": "저장된 인스턴스 없음",
-    "description": "message to tell user how many instances of the search term were found"
+      "message": "일치",
+      "description": "검색어의 일치 인스턴스 수를 사용자에게 알리는 메시지"
   }
 }

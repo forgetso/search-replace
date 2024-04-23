@@ -226,8 +226,8 @@ async function loadContent(contentType: ContentType) {
             hideElement(aboutSection)
             hideElement(historySection)
             // Add color in setting button
-            unactiveButton(historyBtn)
-            unactiveButton(aboutBtn)
+            inactiveButton(historyBtn)
+            inactiveButton(aboutBtn)
             activeButton(settingBtn)
             await loadLanguageOptions()
             break
@@ -239,9 +239,9 @@ async function loadContent(contentType: ContentType) {
             hideElement(settingSection)
             hideElement(historySection)
             // Add color in about button
-            unactiveButton(historyBtn)
+            inactiveButton(historyBtn)
             activeButton(aboutBtn)
-            unactiveButton(settingBtn)
+            inactiveButton(settingBtn)
             break
         case ContentType.History: // pressed history icon
             hideElement(replaceNext)
@@ -252,8 +252,8 @@ async function loadContent(contentType: ContentType) {
             hideElement(aboutSection)
             // Add color in history button
             activeButton(historyBtn)
-            unactiveButton(aboutBtn)
-            unactiveButton(settingBtn)
+            inactiveButton(aboutBtn)
+            inactiveButton(settingBtn)
             break
         case ContentType.SearchForm: // default
             showElement(replaceNext)
@@ -263,9 +263,9 @@ async function loadContent(contentType: ContentType) {
             hideElement(historySection)
             hideElement(aboutSection)
             // Remove color of button
-            unactiveButton(historyBtn)
-            unactiveButton(aboutBtn)
-            unactiveButton(settingBtn)
+            inactiveButton(historyBtn)
+            inactiveButton(aboutBtn)
+            inactiveButton(settingBtn)
             break
     }
 }
@@ -290,7 +290,7 @@ function activeButton(element) {
     }
 }
 
-function unactiveButton(element) {
+function inactiveButton(element) {
     if (element) {
         element.classList.remove('icon-selected')
     }

@@ -13,6 +13,7 @@ import {
     getAvailableLanguages,
     getTranslation,
     manifest,
+    localizeElements,
     tabConnect,
 } from './util'
 
@@ -67,7 +68,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     })
 
     // Localize HTML elements
-    // localizeElements(langData)
+    localizeElements(langData, () => {})
 })
 
 function addFormSubmitListeners() {

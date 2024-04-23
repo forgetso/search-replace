@@ -1,338 +1,338 @@
 {
   "ext_name": {
-    "message": "البحث والاستبدال",
-    "description": "ext_name"
+      "message": "البحث والاستبدال",
+      "description": "ext_name"
   },
   "ext_description": {
-    "message": "البحث عن نص على صفحة الويب واستبداله بنص مختلف.",
-    "description": "ext_description"
+      "message": "البحث عن نص على صفحة الويب واستبداله بنص مختلف.",
+      "description": "ext_description"
   },
   "options": {
-    "message": "الخيارات",
-    "description": "options"
+      "message": "الخيارات",
+      "description": "options"
   },
   "saved_rules": {
-    "message": "القواعد المحفوظة",
-    "description": "Options Tab"
+      "message": "القواعد المحفوظة",
+      "description": "Options Tab"
   },
   "select_language": {
-    "message": "اختر لغة:",
-    "description": "Options Tab"
+      "message": "اختر لغة:",
+      "description": "Options Tab"
   },
   "settings": {
-    "message": "الإعدادات",
-    "description": "Settings"
+      "message": "الإعدادات",
+      "description": "Settings"
   },
   "about": {
-    "message": "حول",
-    "description": "about"
+      "message": "حول",
+      "description": "about"
   },
   "back": {
-    "message": "عودة",
-    "description": "Back"
+      "message": "رجوع",
+      "description": "Back"
   },
   "version": {
-    "message": "الإصدار",
-    "description": "version"
+      "message": "الإصدار",
+      "description": "version"
   },
   "RuleID": {
-    "message": "معرف القاعدة",
-    "description": "options"
+      "message": "معرف القاعدة",
+      "description": "options"
   },
   "URLPattern": {
-    "message": "نمط العنوان (URL)",
-    "description": "options"
+      "message": "نمط الرابط",
+      "description": "options"
   },
   "SearchTerm": {
-    "message": "مصطلح البحث",
-    "description": "options"
+      "message": "مصطلح البحث",
+      "description": "options"
   },
   "ReplaceTerm": {
-    "message": "مصطلح الاستبدال",
-    "description": "options"
+      "message": "مصطلح الاستبدال",
+      "description": "options"
   },
   "Delete": {
-    "message": "حذف",
-    "description": "options"
+      "message": "حذف",
+      "description": "options"
   },
   "Save": {
-    "message": "حفظ",
-    "description": "options"
+      "message": "حفظ",
+      "description": "options"
   },
   "matchCase": {
-    "message": "مطابقة حالة الأحرف",
-    "description": "checkbox matchCase"
+      "message": "مطابقة الحالة",
+      "description": "checkbox matchCase"
   },
   "inputFieldsOnly": {
-    "message": "حقول الإدخال فقط",
-    "description": "checkbox inputFieldsOnly"
+      "message": "الحقول المدخلة فقط",
+      "description": "checkbox inputFieldsOnly"
   },
   "hiddenContent": {
-    "message": "محتوى مخفي",
-    "description": "checkbox hiddenContent"
+      "message": "المحتوى المخفي",
+      "description": "checkbox hiddenContent"
   },
   "wholeWord": {
-    "message": "مطابقة الكلمة كاملة",
-    "description": "checkbox wholeWord"
+      "message": "مطابقة الكلمة بالكامل",
+      "description": "checkbox wholeWord"
   },
   "isRegex": {
-    "message": "تعبير منتظم (التعبيرات العادية)",
-    "description": "checkbox isRegex"
+      "message": "تعبير منتظم",
+      "description": "checkbox isRegex"
   },
   "replaceHTML": {
-    "message": "استبدال HTML",
-    "description": "checkbox replaceHTML"
+      "message": "استبدال HTML",
+      "description": "checkbox replaceHTML"
   },
   "replaceAll": {
-    "message": "استبدال الكل",
-    "description": "checkbox replaceAll"
+      "message": "استبدال الكل",
+      "description": "checkbox replaceAll"
   },
   "saveApplyPageReload": {
-    "message": "حفظ وتطبيق عند إعادة تحميل الصفحة",
-    "description": "checkbox save"
+      "message": "حفظ وتطبيق عند إعادة تحميل الصفحة",
+      "description": "checkbox save"
   },
   "Searchfor": {
-    "message": "البحث عن",
-    "description": "popup"
+      "message": "البحث عن",
+      "description": "popup"
   },
   "Swap": {
-    "message": "تبديل ⇅",
-    "description": "popup"
+      "message": "تبديل ⇅",
+      "description": "popup"
   },
   "Replacewith": {
-    "message": "الاستبدال بـ",
-    "description": "popup"
+      "message": "استبدال بـ",
+      "description": "popup"
   },
   "Matchcase": {
-    "message": "مطابقة حالة الأحرف",
-    "description": "popup"
+      "message": "مطابقة الحالة",
+      "description": "popup"
   },
   "Inputfields": {
-    "message": "حقول الإدخال فقط",
-    "description": "popup"
+      "message": "الحقول المدخلة فقط",
+      "description": "popup"
   },
   "Hiddencontent": {
-    "message": "محتوى مخفي",
-    "description": "popup"
+      "message": "المحتوى المخفي",
+      "description": "popup"
   },
   "Matchwhole": {
-    "message": "مطابقة الكلمة كاملة",
-    "description": "popup"
+      "message": "مطابقة الكلمة بالكامل",
+      "description": "popup"
   },
   "Regularexpression": {
-    "message": "تعبير منتظم (التعبيرات العادية)",
-    "description": "popup"
+      "message": "تعبير منتظم",
+      "description": "popup"
   },
   "Saveandapply": {
-    "message": "الاستبدال التالي",
-    "description": "popup"
+      "message": "حفظ وتطبيق عند إعادة تحميل الصفحة",
+      "description": "popup"
   },
   "ReplaceNext": {
-    "message": "استبدال الكل",
-    "description": "popup"
+      "message": "استبدال القادم",
+      "description": "popup"
   },
   "ReplaceAll": {
-    "message": "السجل",
-    "description": "popup"
+      "message": "استبدال الكل",
+      "description": "popup"
   },
   "History": {
-    "message": "مسح",
-    "description": "popup"
+      "message": "السجل",
+      "description": "popup"
   },
   "Clear": {
-    "message": "تعديل الإعدادات",
-    "description": "popup"
+      "message": "مسح",
+      "description": "popup"
   },
   "EditSettings": {
-    "message": "المساعدة",
-    "description": "popup"
+      "message": "تعديل الإعدادات",
+      "description": "popup"
   },
   "Help": {
-    "message": "صفحة المساعدة للبحث والاستبدال",
-    "description": ""
+      "message": "مساعدة",
+      "description": ""
   },
   "help_title": {
-    "message": "عنوان الصفحة (URL)",
-    "description": "help"
+      "message": "صفحة المساعدة للبحث والاستبدال",
+      "description": "help"
   },
   "URL": {
-    "message": "بحث",
-    "description": ""
+      "message": "الرابط",
+      "description": ""
   },
   "Search": {
-    "message": "استبدال",
-    "description": ""
+      "message": "البحث",
+      "description": ""
   },
   "Replace": {
-    "message": "الأولوية",
-    "description": ""
+      "message": "الاستبدال",
+      "description": ""
   },
   "Priority": {
-    "message": "مثال",
-    "description": ""
+      "message": "الأولوية",
+      "description": ""
   },
   "Example": {
-    "message": "تم تطبيقه أولاً",
-    "description": ""
+      "message": "مثال",
+      "description": ""
   },
   "applied_first": {
-    "message": "تم تطبيقه في النهاية",
-    "description": ""
+      "message": "تم تطبيقه أولاً",
+      "description": ""
   },
   "applied_last": {
-    "message": "الاستبدال التالي مقابل الاستبدال الكل",
-    "description": ""
+      "message": "تم تطبيقه في النهاية",
+      "description": ""
   },
   "next_vs_all": {
-    "message": "لاستبدال أول حدوث لمصطلح البحث، اضغط على <code>الاستبدال التالي</code>. يمكنك الاستمرار في الضغط على الزر حتى لا تعود هناك مزيد من الحوادث.",
-    "description": "Replace Next vs. Replace All"
+      "message": "استبدال القادم مقابل استبدال الكل",
+      "description": "Replace Next vs. Replace All"
   },
   "next_vs_all_p1": {
-    "message": "لاستبدال جميع حوادث مصطلح البحث، اضغط على <code>استبدال الكل</code>.",
+    "message": "لاستبدال أول حدوث لمصطلح البحث، اضغط على <code>استبدال القادم</code>. يمكنك الاستمرار في الضغط على الزر حتى لا تظهر مزيد من الحالات.",
     "description": "Replace Next vs. Replace All"
   },
   "next_vs_all_p2": {
-    "message": "لا يوجد وظيفة التراجع حاليًا. إذا ارتكبت خطأً، يمكنك إعادة تحميل الصفحة لاستعادة النص الأصلي. ومع ذلك، ستفقد أي تغييرات غير محفوظة في محررات النص وحقول إدخال النص.",
-    "description": "Replace Next vs. Replace All"
+      "message": "لاستبدال جميع حالات مصطلح البحث، اضغط على <code>استبدال الكل</code>.",
+      "description": "Replace Next vs. Replace All"
   },
   "next_vs_all_p3": {
-    "message": "استبدال النص في المحررات وحقول الإدخال",
-    "description": "Replace Next vs. Replace All"
+      "message": "حالياً لا يوجد وظيفة التراجع. إذا ارتكبت خطأ، يمكنك إعادة تحميل الصفحة لاستعادة النص الأصلي. ومع ذلك، ستفقد أي تغييرات غير محفوظة في محررات النص وفي حقول الإدخال النصي.",
+      "description": "Replace Next vs. Replace All"
   },
   "replace_editors": {
-    "message": "لاستبدال النص في محررات النص أو حقول الإدخال يجب عليك التحقق من خانة <code>حقول الإدخال فقط؟</code>. في غير ذلك، سيتم استبدال النص بجميع النصوص في HTML بأكمله، مما قد يؤدي إلى تلف الصفحة. لتجنب تغيير حقول الإدخال المخفية، يجب أيضًا التحقق من خانة <code>المحتوى المرئي فقط؟</code>.",
-    "description": "Explanation about replacing text in editors and text fields"
+      "message": "استبدال النص في المحررات وحقول النص",
+      "description": "Explanation about replacing text in editors and text fields"
   },
   "replace_editors_p1": {
-    "message": "لتغيير النص في محررات النص أو حقول الإدخال يجب عليك التحقق من خانة <code>حقول الإدخال فقط؟</code>.",
-    "description": "Explanation about replacing text in editors and text fields"
+      "message": "لاستبدال النص في محررات النص أو حقول الإدخال يجب عليك تحديد خانة الاختيار <code>الحقول المدخلة فقط؟</code>.",
+      "description": "Explanation about replacing text in editors and text fields"
   },
   "replace_editors_p2": {
-    "message": "الإعداد",
-    "description": "Explanation about replacing text in editors and text fields"
+      "message": "لاستبدال النص في محررات النص أو حقول الإدخال يجب عليك تحديد خانة الاختيار <code>الحقول المدخلة فقط؟</code>. خلاف ذلك، سيتم استبدال النص المبحوث في جميع أنحاء HTML، مما قد يؤدي إلى كسر الصفحة. لتجنب تغيير حقول الإدخال المخفية، يجب أيضًا تحديد خانة الاختيار <code>العناصر المرئية فقط؟</code>.",
+      "description": "Explanation about replacing text in editors and text fields"
   },
   "Setup": {
-    "message": "استبدال النص في أي مكان على الصفحة",
-    "description": "help"
+      "message": "الإعداد",
+      "description": "help"
   },
   "Replacing_anywhere": {
-    "message": "لاستبدال النص الذي لا يكون موجودًا داخل محرر النص ولا يكون موجودًا داخل حقل النص، اترك خانة <code>حقول الإدخال فقط؟</code> و <code>المحتوى المرئي فقط؟</code> غير محددة <b>.",
-    "description": "Explanation about replacing text anywhere on the page"
+      "message": "استبدال النص في أي مكان على الصفحة",
+      "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p1": {
-    "message": "لاستبدال النص الموجود داخل HTML، والموجود داخل محرر النصوص، والموجود داخل حقل النص، يجب عليك تحديد خانة الاختيار <code>هل تريد استبدال HTML؟</code>.",
-    "description": "Explanation about replacing text anywhere on the page"
+      "message": "للاستبدال النص الذي يتم العثور عليه داخل عناصر HTML، داخل محرر نص وداخل حقل نص، يجب عليك تحديد خانة الاختيار <code>استبدال HTML؟</code>.",
+      "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p2": {
-    "message": "تحذير: هذا الإعداد سيؤدي إلى تعديل HTML الصفحة وقد يتسبب في تلف الصفحة. يمكنك استعادة الصفحة بإعادة تحميلها، ولكنك ستفقد أي تغييرات غير محفوظة في محررات النص وحقول إدخال النص.",
-    "description": "Explanation about replacing text anywhere on the page"
+      "message": "للاستبدال النص الذي لا يتم العثور عليه داخل محرر نص ولا داخل حقل نص، اترك خانات الاختيار <code>الحقول المدخلة فقط؟</code> و <code>تغيير المحتوى المرئي فقط؟</code> <b>غير محددة</b>.",
+      "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_warning": {
-    "message": "مطابقة حالة النص",
-    "description": "Explanation about replacing text anywhere on the page"
+      "message": "تحذير: هذا الإعداد سيؤدي إلى تغيير HTML الصفحة وقد يكسر الصفحة. يمكنك استعادة الصفحة عن طريق إعادة تحميلها، ولكن ستفقد أي تغييرات غير محفوظة في محررات النص وفي حقول الإدخال النصي.",
+      "description": "Explanation about replacing text anywhere on the page"
   },
   "Matching_case": {
-    "message": "إذا كنت بحاجة لاستبدال <code>هذا</code> وليس <code>هذا</code> فيجب عليك استخدام خيار مطابقة الحالة.",
+    "message": "مطابقة حالة النص",
     "description": "Explanation about matching the case of text"
   },
   "Matching_case_p1": {
-    "message": "سيئاً: هذا الإعداد سيتطابق مع <code>شقة</code> ولكن لن يتطابق مع <code>شقة</code>. سيتم استبدال <code>شقة</code> بـ <code>شقة</code> في حقول النص المرئي على الصفحة.",
-    "description": "Explanation about matching the case of text"
+      "message": "إذا كنت بحاجة إلى استبدال <code>هذا</code> ولكن ليس <code>هذا</code> فعليك استخدام خيار مطابقة الحالة.",
+      "description": "Explanation about matching the case of text"
   },
   "Matching_case_p2": {
-    "message": "مطابقة الكلمة كاملة",
-    "description": "Explanation about matching the case of text"
+      "message": "سيطابق الإعداد التالي <code>Condo</code> ولكن ليس <code>condo</code>. سيقوم بتبديل <code>Condo</code> بـ <code>apartment</code> في حقول النص المرئية على الصفحة.",
+      "description": "Explanation about matching the case of text"
   },
   "Matching_whole": {
-    "message": "إذا كنت بحاجة لاستبدال كلمة <code>جزئي</code> وليس <code>جزئياً</code> فيجب عليك استخدام خيار <code>مطابقة الكلمة كاملة؟</code>.",
-    "description": "Matching whole words"
+      "message": "مطابقة الكلمات بأكملها",
+      "description": "Matching whole words"
   },
   "Matching_whole_p1": {
-    "message": "بطاقات وتعبيرات منتظمة",
-    "description": "Matching whole words"
+      "message": "إذا كنت بحاجة إلى استبدال الكلمة <code>جزئي</code> ولكن ليس <code>جزئيا</code> فعليك استخدام خيار <code>هل تطابق الكلمة بأكملها؟</code>.",
+      "description": "Matching whole words"
   },
   "wildcards_and_regex": {
-    "message": "إذا كنت بحاجة لمطابقة جزء من مصطلح البحث فيجب عليك التحقق من خانة التعبيرات العادية وتحديد بطاقة واحدة. ستحتاج إلى معرفة أساسية جداً عن <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>التعبيرات العادية</a> لاستخدام هذه الميزة. نوصي باستخدام <a href='https://regexpal.com' target='_blank'>regexpal</a> للاختبار",
-    "description": "Explanation about wild cards and regular expressions"
+      "message": "البطاقات البديلة والتعبيرات العادية",
+      "description": "Explanation about wild cards and regular expressions"
   },
   "wildcards_and_regex_p1": {
-    "message": "قبل",
-    "description": "Explanation about wild cards and regular expressions"
+      "message": "إذا كنت بحاجة إلى تطابق مصطلح بحث جزئي فعليك تحديد خانة الاختيار للتعابير العادية وتحديد بطاقة بديلة. ستحتاج إلى معرفة أساسية جدًا بالتعابير العادية لاستخدام هذه الميزة. أنصح باستخدام <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regexpal</a> للاختبار.",
+      "description": "Explanation about wild cards and regular expressions"
   },
   "Before": {
-    "message": "بعد",
-    "description": ""
+      "message": "قبل",
+      "description": ""
   },
   "After": {
-    "message": "استبدال النص في ووردبريس",
-    "description": ""
+      "message": "بعد",
+      "description": ""
   },
   "Replacing_wordpress": {
-    "message": "ووردبريس حاليًا في الإصدار 6.6، اعتبارًا من مارس 2023. تغير محرر المشاركة بشكل كبير منذ إنشاء هذا التمديد ويتطلب إعداد جديد لاستبدال النص في ووردبريس.",
-    "description": ""
+      "message": "استبدال النص في ووردبريس",
+      "description": ""
   },
   "Replacing_wordpress_p1": {
-    "message": "إعداد لووردبريس 6+",
-    "description": ""
+      "message": "ووردبريس حاليا على الإصدار 6.6، اعتبارًا من مارس 2023. لقد تغير محرر المنشورات بشكل كبير منذ إنشاء هذه الامتداد وهناك إعداد جديد مطلوب لاستبدال النص في ووردبريس.",
+      "description": ""
   },
   "Replacing_wordpress_setup_w6": {
-    "message": "إعداد لووردبريس 5 وما قبل",
-    "description": ""
+      "message": "الإعداد لووردبريس 6+",
+      "description": ""
   },
   "Replacing_wordpress_setup_w5": {
-    "message": "حفظ وتطبيق عند إعادة تحميل الصفحة",
-    "description": ""
+      "message": "الإعداد لووردبريس 5 وما دون",
+      "description": ""
   },
   "Save_apply": {
-    "message": "يمكنك تحديد خانة <code>حفظ وتطبيق عند إعادة تحميل الصفحة</code> لحفظ عملية البحث وتطبيقها عند إعادة تحميل الصفحات اللاحقة. سيتم الاحتفاظ بهذه الإعدادات وإعادة فتح المتصفح.",
-    "description": "Save and apply on page reload"
+    "message": "حفظ وتطبيق عند إعادة تحميل الصفحة",
+    "description": "حفظ وتطبيق عند إعادة تحميل الصفحة"
   },
   "Save_apply_p1": {
-    "message": "قواعد متعددة للمطابقة",
-    "description": "Save and apply on page reload"
+      "message": "يمكنك تحديد خانة <code>حفظ وتطبيق عند إعادة تحميل الصفحة</code> لحفظ عملية البحث وتطبيقها عند إعادة تحميل الصفحات اللاحقة. سيتم الاحتفاظ بهذه الإعدادات وإعادة فتح المتصفح.",
+      "description": "حفظ وتطبيق عند إعادة تحميل الصفحة"
   },
   "Save_apply_multi": {
-    "message": "إذا تطابقت قواعد متعددة مع نفس الصفحة، ستتم مطابقتها بترتيب من <b>الأكثر</b> تحديدًا إلى <b>الأقل</b> تحديدًا. على سبيل المثال:",
-    "description": "Multiple Matching Rules"
+      "message": "قواعد متعددة للمطابقة",
+      "description": "قواعد متعددة للمطابقة"
   },
   "Save_apply_multi_p1": {
-    "message": "هذا يعني أن أي تغييرات تم تطبيقها بواسطة القاعدة الأولى ستتم إدخالها في القواعد اللاحقة. في المثال أعلاه، سيتم استبدال النص <code>مثال</code> بواسطة القاعدة المطابقة <code>http://www.example.com/a/deeper/nested/page</code>. سيكون للقواعد اللاحقة بالتالي أي تأثير.",
-    "description": "Multiple Matching Rules"
+      "message": "إذا تطابقت قواعد متعددة مع نفس الصفحة، ستتم مطابقتها بترتيب من <b>الأكثر</b> تحديدًا إلى <b>الأقل</b> تحديدًا. على سبيل المثال:",
+      "description": "قواعد متعددة للمطابقة"
   },
   "Save_apply_multi_p2": {
-    "message": "يمكنك تعديل القواعد المحفوظة بالنقر على الرابط <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> في القائمة المنبثقة للتمديد. حقل <code>نمط العنوان (URL)</code> هو تعبير منتظم <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>التعبيرات العادية</a>، مما يسمح لك باستخدام نفس القاعدة على العديد من مواقع الويب المختلفة.",
-    "description": "Multiple Matching Rules"
+      "message": "هذا يعني أن أي تغييرات تم تطبيقها بواسطة القاعدة الأولى ستتم إدخالها في القواعد اللاحقة. في المثال أعلاه، سيتم استبدال النص <code>مثال</code> بواسطة القاعدة المطابقة <code>http://www.example.com/a/deeper/nested/page</code>. سيكون للقواعد اللاحقة بالتالي أي تأثير.",
+      "description": "قواعد متعددة للمطابقة"
   },
   "Save_apply_multi_p3": {
-    "message": "الإبلاغ عن المشكلات",
-    "description": "Multiple Matching Rules"
+      "message": "يمكنك تعديل القواعد المحفوظة بالنقر على الرابط <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> في القائمة المنبثقة للتمديد. حقل <code>نمط العنوان (URL)</code> هو تعبير منتظم <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>التعبيرات العادية</a>، مما يسمح لك باستخدام نفس القاعدة على العديد من مواقع الويب المختلفة.",
+      "description": "قواعد متعددة للمطابقة"
   },
   "ReportingIssues": {
-    "message": "تذكر أن تقوم بـ<b>تحديث</b> الصفحة التي ترغب في استبدال النص فيها بعد التثبيت.",
-    "description": ""
+      "message": "تقديم تقارير المشكلات",
+      "description": ""
   },
   "ReportingIssuesWarning": {
-    "message": "إذا واجهت مشكلة، يُرجى تقديم تقرير مفصل على <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank' >متجر تطبيقات Chrome</a > أو على <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>.",
-    "description": ""
+      "message": "تذكر أن تقوم بـ<b>تحديث</b> الصفحة التي ترغب في استبدال النص فيها بعد التثبيت.",
+      "description": ""
   },
   "ReportingIssuesInfo": {
-    "message": "يرجى تقييم <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> على متجر Chrome إذا كان التمديد يساعدك!",
+    "message": "إذا تلفت الصفحة بعد استخدام التمديد، جرب تحديث الصفحة، ثم قم بالتحقق من <code>Input fields only?</code> قبل القيام بعملية البحث والاستبدال.",
     "description": ""
   },
   "ReportingIssues_p1": {
-    "message": "لا توجد حالات محفوظة",
-    "description": ""
+      "message": "إذا وجدت خطأ، يرجى تقديم تقرير مفصل على <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank' >متجر تطبيقات Chrome</a > أو على <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>.",
+      "description": ""
   },
   "Rate_on_store": {
-    "message": "المطابقات",
-    "description": ""
+      "message": "يرجى تقييم <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> على متجر Chrome إذا كان التمديد يساعدك!",
+      "description": ""
   },
   "no_saved_instances": {
-    "description": "message to tell user that no rules were found",
-    "message": "لا توجد حالات محفوظة"
+      "message": "لا توجد حالات محفوظة",
+      "description": "رسالة لإخبار المستخدم أنه لم يتم العثور على قواعد"
   },
   "matches": {
-    "description": "message to tell user how many instances of the search term were found",
-    "message": "اعواد الكبريت"
+      "message": "مطابقات",
+      "description": "رسالة لإخبار المستخدم عدد مرات تواجد مصطلح البحث"
   }
 }

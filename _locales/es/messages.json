@@ -316,7 +316,7 @@
         "description": ""
     },
     "ReportingIssuesInfo": {
-        "message": "Si la página se ha dañado después de usar la extensión, intenta recargar la página y luego marca las casillas <code>Solo Campos de Entrada</code> y <code>Solo Cambiar Contenido Visible</code> antes de realizar una búsqueda y reemplazo.",
+        "message": "Si la página se ha dañado después de usar la extensión, intenta recargar la página y luego marca las casillas <code>Solo Campos de Entrada</code> antes de realizar una búsqueda y reemplazo.",
         "description": ""
     },
     "ReportingIssues_p1": {

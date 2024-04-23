@@ -19,7 +19,7 @@
     "content_scripts": [
         {
             "all_frames": true,
-            "js": ["searchreplace.js", "options.js", "popup.js", "util.js", "elements.js"],
+            "js": ["searchreplace.js", "options.js", "popup.js", "help.js", "util.js", "elements.js"],
             "matches": ["http://*/*", "https://*/*", "file:///*"]
         }
     ],

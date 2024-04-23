@@ -1,0 +1,42 @@
+name: Cypress Tests
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - '**.ts'
+      - '**.js'
+      - '.github/workflows/cypress.yml'
+
+env:
+  CARGO_TERM_COLOR: always
+  ENVIRONMENT: development
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Clone search and replace
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          repository: forgetso/search-replace
+          path: search-replace
+
+      - name: Install dependencies
+        run: |
+          cd search-replace
+          ls .
+          npm install
+
+      - name: Run search and replace tests
+        run: |
+          cd search-replace
+          npm run start 1>server.log 2>&1 &
+          npm run cypress:run

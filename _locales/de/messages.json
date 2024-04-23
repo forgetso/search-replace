@@ -316,7 +316,7 @@
         "description": ""
     },
     "ReportingIssuesInfo": {
-        "message": "Wenn die Seite nach Verwendung der Erweiterung beschädigt ist, versuchen Sie, die Seite zu aktualisieren und aktivieren Sie dann die Kontrollkästchen <code>Nur Eingabefelder</code> und <code>Nur sichtbaren Inhalt ändern</code>, bevor Sie eine Suche und einen Ersatz durchführen.",
+        "message": "Wenn die Seite nach Verwendung der Erweiterung beschädigt ist, versuchen Sie, die Seite zu aktualisieren und aktivieren Sie dann die Kontrollkästchen <code>Nur Eingabefelder</code> bevor Sie eine Suche und einen Ersatz durchführen.",
         "description": ""
     },
     "ReportingIssues_p1": {

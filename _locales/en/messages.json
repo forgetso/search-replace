@@ -316,7 +316,7 @@
         "description": ""
     },
     "ReportingIssuesInfo": {
-        "message": "If the page has broken after using the extension, try refreshing the page, and then checking <code>Input fields only?</code> and <code>Only change visible content?</code> before performing a search and replace.",
+        "message": "If the page has broken after using the extension, try refreshing the page, and then checking <code>Input fields only?</code> before performing a search and replace.",
         "description": ""
     },
     "ReportingIssues_p1": {
