@@ -27,6 +27,10 @@
         "message": "Über",
         "description": "about"
     },
+    "back": {
+      "message": "Rücken",
+      "description": "Back"
+    },
     "version": {
         "message": "Version",
         "description": "version"
@@ -200,7 +204,7 @@
         "description": "Erklärung zum Ersetzen von Text in Editoren und Textfeldern"
     },
     "replace_editors_p1": {
-        "message": "Um Text in Texteditoren oder Eingabefeldern zu ersetzen, sollten Sie das Kontrollkästchen <code>Nur Eingabefelder</code> aktivieren. Andernfalls wird der Suchtext im gesamten HTML ersetzt, was möglicherweise die Seite beschädigen kann. Um das Ändern von versteckten Eingabefeldern zu vermeiden, sollten Sie auch das Kontrollkästchen <code>Nur sichtbare Elemente</code> aktivieren.",
+        "message": "Um Text in Texteditoren oder Eingabefeldern zu ersetzen, sollten Sie das Kontrollkästchen <code>Nur Eingabefelder</code> aktivieren.",
         "description": "Erklärung zum Ersetzen von Text in Editoren und Textfeldern"
     },
     "replace_editors_p2": {
@@ -216,7 +220,7 @@
         "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
     },
     "Replacing_anywhere_p1": {
-        "message": "Um Text zu ersetzen, der nicht in einem Texteditor enthalten ist und sich nicht in einem Textfeld befindet, deaktivieren Sie die Kontrollkästchen <code>Nur Eingabefelder</code> und <code>Nur sichtbaren Inhalt ändern</code>.",
+        "message": "Um Text zu ersetzen, der in einem HTML-Code, in einem Texteditor oder in einem Textfeld enthalten ist, sollten Sie das Kontrollkästchen <code>HTML ersetzen?</code> aktivieren.",
         "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
     },
     "Replacing_anywhere_p2": {
@@ -300,7 +304,7 @@
         "description": "Mehrere Übereinstimmungsregeln"
     },
     "Save_apply_multi_p3": {
-        "message": "Sie können die gespeicherten Regeln bearbeiten, indem Sie auf den Link <a href='options.html'>Regeln bearbeiten</a> in der Erweiterungspopup klicken. Das <code>URL-Muster</code> Feld ist ein <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regulärer Ausdruck</a>, der es Ihnen ermöglicht, dieselbe Regel auf viele verschiedene Websites anzuwenden.",
+        "message": "Sie können die gespeicherten Regeln bearbeiten, indem Sie auf den Link <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> in der Erweiterungspopup klicken. Das <code>URL-Muster</code> Feld ist ein <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regulärer Ausdruck</a>, der es Ihnen ermöglicht, dieselbe Regel auf viele verschiedene Websites anzuwenden.",
         "description": "Mehrere Übereinstimmungsregeln"
     },
     "ReportingIssues": {
@@ -312,7 +316,7 @@
         "description": ""
     },
     "ReportingIssuesInfo": {
-        "message": "Wenn die Seite nach Verwendung der Erweiterung beschädigt ist, versuchen Sie, die Seite zu aktualisieren und aktivieren Sie dann die Kontrollkästchen <code>Nur Eingabefelder</code> und <code>Nur sichtbaren Inhalt ändern</code>, bevor Sie eine Suche und einen Ersatz durchführen.",
+        "message": "Wenn die Seite nach Verwendung der Erweiterung beschädigt ist, versuchen Sie, die Seite zu aktualisieren und aktivieren Sie dann die Kontrollkästchen <code>Nur Eingabefelder</code> bevor Sie eine Suche und einen Ersatz durchführen.",
         "description": ""
     },
     "ReportingIssues_p1": {

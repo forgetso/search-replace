@@ -77,7 +77,7 @@ export async function listenerAdmin(msg: SearchReplaceBackgroundMessage, port: c
                     ...instance.options,
                     // Last historical searchReplace will give us the value of replaceAll - e.g. the button the user
                     // clicked on the popup
-                    replaceAll: msg.storage ? msg.storage.history[0].options.replaceAll : false,
+                    replaceAll: msg.storage ? msg.storage.instance.options.replaceAll : false,
                 },
                 url,
             }

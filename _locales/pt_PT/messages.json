@@ -27,6 +27,10 @@
     "message": "Sobre",
     "description": "about"
   },
+  "back": {
+    "message": "costas",
+    "description": "Back"
+  },
   "version": {
     "message": "Versão",
     "description": "version"
@@ -200,7 +204,7 @@
     "description": "Explanation about replacing text in editors and text fields"
   },
   "replace_editors_p1": {
-    "message": "Para substituir texto em editores de texto ou caixas de entrada, você deve marcar a caixa <code>Apenas campos de entrada?</code>. Caso contrário, o texto de pesquisa será substituído em todo o HTML, o que pode quebrar a página. Para evitar a alteração de campos de entrada ocultos, você também deve marcar a caixa <code>Apenas elementos visíveis?</code>.",
+    "message": "Para substituir texto em editores de texto ou caixas de entrada, você deve marcar a caixa <code>Apenas campos de entrada?</code>.",
     "description": "Explanation about replacing text in editors and text fields"
   },
   "replace_editors_p2": {
@@ -216,7 +220,7 @@
     "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p1": {
-    "message": "Para substituir texto que não está contido em um editor de texto e não está contido em um campo de entrada de texto, deixe as caixas <code>Apenas campos de entrada?</code> e <code>Apenas alterar conteúdo visível?</code> <b>não marcadas</b>.",
+    "message": "Para substituir o texto contido em um HTML, contido em um editor de texto e contido em um campo de texto, você deve marcar a caixa de seleção <code>Substituir HTML?</code>.",
     "description": "Explanation about replacing text anywhere on the page"
   },
   "Replacing_anywhere_p2": {
@@ -300,7 +304,7 @@
     "description": "Multiple Matching Rules"
   },
   "Save_apply_multi_p3": {
-    "message": "Você pode editar as regras salvas clicando no link <a href='options.html'>Editar Regras</a> na janela pop-up da extensão. O campo <code>Padrão de URL</code> é uma <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expressão regular</a>, que permite que você aplique a mesma regra a muitos sites diferentes.",
+    "message": "Você pode editar as regras salvas clicando no link <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> na janela pop-up da extensão. O campo <code>Padrão de URL</code> é uma <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expressão regular</a>, que permite que você aplique a mesma regra a muitos sites diferentes.",
     "description": "Multiple Matching Rules"
   },
   "ReportingIssues": {
@@ -312,7 +316,7 @@
     "description": ""
   },
   "ReportingIssuesInfo": {
-    "message": "Se a página estiver quebrada após o uso da extensão, tente atualizar a página e, em seguida, marcar as caixas <code>Apenas campos de entrada?</code> e <code>Apenas alterar conteúdo visível?</code> antes de realizar uma pesquisa e substituição.",
+    "message": "Se a página estiver quebrada após o uso da extensão, tente atualizar a página e, em seguida, marcar as caixas <code>Apenas campos de entrada?</code> antes de realizar uma pesquisa e substituição.",
     "description": ""
   },
   "ReportingIssues_p1": {
