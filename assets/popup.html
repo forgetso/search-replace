@@ -1,126 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link href="bootstrap.min.css" rel="stylesheet" />
-        <script src="bootstrap.min.js"></script>
-        <style>
-            html {
-                height: fit-content;
-            }
 
-            body,
-            body div table {
-                font-family: 'Open Sans', sans-serif;
-                background-color: #eee;
-                font-size: 13px;
-                text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-                width: 240px;
-                height: fit-content;
-                color: #444;
-            }
+<head>
+    <meta charset="UTF-8" />
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+    <script src="bootstrap.min.js"></script>
+    <title>Search and Replace</title>
+</head>
 
-            textarea {
-                height: calc(1.5em + 0.75rem + calc(var(--bs-border-width)));
-                overflow-y: hidden;
-            }
+<body>
+    <div id="loader" class="text-center">
+        <img src="ajax-loader.gif" width="40" height="40" name="loading" alt="searching and replacing..." />
+    </div>
+    <div id="content" class="container-fluid">
+        <div id="header" class="row">
+            <div class="d-flex justify-content-between py-3 bg-white shadow-sm">
+                <div class="display-flow">
+                    <img src="icon.png" width="16" height="16" alt="search and replace logo" />
+                    <span class="mx-1 fw-bold" data-locale="ext_name">Search
+                        and
+                        Replace</span>
+                </div>
+                <form class="d-flex flex-wrap">
+                    <!--Search and Replace History
+                        This is an expandable list of previously searched and replaced terms. Users can click on a term to populate the
+                        search and replace fields.
+                    -->
+                    <!-- Help Link -->
+                    <div id="help" class="form-group mx-1">
+                        <a class="fs-10" href="#">
+                            <i>
+                                <svg width="18" height="18" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_4_52)">
+                                        <path
+                                            d="M6 0.75C4.96165 0.75 3.94662 1.05791 3.08326 1.63478C2.2199 2.21166 1.54699 3.0316 1.14963 3.99091C0.752275 4.95022 0.648307 6.00582 0.85088 7.02422C1.05345 8.04262 1.55347 8.97808 2.28769 9.71231C3.02192 10.4465 3.95738 10.9466 4.97578 11.1491C5.99418 11.3517 7.04978 11.2477 8.00909 10.8504C8.9684 10.453 9.78834 9.7801 10.3652 8.91674C10.9421 8.05339 11.25 7.03835 11.25 6C11.25 4.60761 10.6969 3.27226 9.71231 2.28769C8.72775 1.30312 7.39239 0.75 6 0.75ZM6 10.5C5.10999 10.5 4.23996 10.2361 3.49994 9.74161C2.75992 9.24715 2.18314 8.54434 1.84254 7.72208C1.50195 6.89981 1.41284 5.99501 1.58647 5.12209C1.7601 4.24918 2.18869 3.44736 2.81802 2.81802C3.44736 2.18868 4.24918 1.7601 5.1221 1.58647C5.99501 1.41283 6.89981 1.50195 7.72208 1.84254C8.54434 2.18314 9.24715 2.75991 9.74162 3.49993C10.2361 4.23996 10.5 5.10998 10.5 6C10.5 7.19347 10.0259 8.33807 9.18198 9.18198C8.33807 10.0259 7.19348 10.5 6 10.5Z"
+                                            fill="#2D2D2D" />
+                                        <path
+                                            d="M6 9.375C6.31066 9.375 6.5625 9.12316 6.5625 8.8125C6.5625 8.50184 6.31066 8.25 6 8.25C5.68934 8.25 5.4375 8.50184 5.4375 8.8125C5.4375 9.12316 5.68934 9.375 6 9.375Z"
+                                            fill="#2D2D2D" />
+                                        <path
+                                            d="M6.375 3H5.8125C5.59076 2.9995 5.3711 3.04281 5.16614 3.12744C4.96118 3.21207 4.77496 3.33635 4.61816 3.49315C4.46136 3.64995 4.33708 3.83617 4.25245 4.04113C4.16782 4.24609 4.12451 4.46575 4.125 4.6875V4.875H4.875V4.6875C4.875 4.43886 4.97378 4.2004 5.14959 4.02458C5.32541 3.84877 5.56386 3.75 5.8125 3.75H6.375C6.62364 3.75 6.8621 3.84877 7.03792 4.02458C7.21373 4.2004 7.3125 4.43886 7.3125 4.6875C7.3125 4.93614 7.21373 5.17459 7.03792 5.35041C6.8621 5.52622 6.62364 5.625 6.375 5.625H5.625V7.3125H6.375V6.375C6.82256 6.375 7.25178 6.19721 7.56825 5.88074C7.88471 5.56427 8.0625 5.13505 8.0625 4.6875C8.0625 4.23994 7.88471 3.81072 7.56825 3.49425C7.25178 3.17779 6.82256 3 6.375 3Z"
+                                            fill="#2D2D2D" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_4_52">
+                                            <rect width="12" height="12" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
 
-            button {
-                width: 100%;
-            }
+                            </i>
+                        </a>
+                    </div>
+                    <!-- history Link -->
+                    <div id="history" class="form-group mx-1 collapsible icon-selected">
+                        <a class="fs-10" href="#"><i>
+                                <svg width="18" height="18" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M2.53961 2.5345C4.43711 0.639503 7.52211 0.659503 9.43111 2.569C11.3411 4.479 11.3611 7.5655 9.46311 9.463C7.56561 11.3605 4.47911 11.341 2.56911 9.431C2.03186 8.89597 1.62593 8.24369 1.3832 7.52537C1.14046 6.80706 1.06753 6.04225 1.17011 5.291C1.18357 5.19241 1.23565 5.1032 1.31488 5.043C1.39411 4.9828 1.49402 4.95654 1.59261 4.97C1.69121 4.98346 1.78042 5.03554 1.84061 5.11477C1.90081 5.19401 1.92707 5.29391 1.91361 5.3925C1.82653 6.02916 1.88827 6.67733 2.09397 7.2861C2.29966 7.89487 2.64372 8.44765 3.09911 8.901C4.72161 10.523 7.33311 10.5325 8.93311 8.933C10.5326 7.333 10.5231 4.7215 8.90111 3.099C7.27961 1.478 4.66961 1.4675 3.06961 3.065L3.44361 3.0665C3.49286 3.06673 3.54158 3.07666 3.58698 3.09572C3.63239 3.11478 3.6736 3.14259 3.70826 3.17758C3.74292 3.21256 3.77035 3.25403 3.78899 3.29961C3.80762 3.3452 3.81709 3.39401 3.81686 3.44325C3.81663 3.4925 3.8067 3.54122 3.78765 3.58663C3.76859 3.63204 3.74077 3.67325 3.70579 3.70791C3.6708 3.74256 3.62934 3.76999 3.58375 3.78863C3.53817 3.80726 3.48936 3.81673 3.44011 3.8165L2.16711 3.8105C2.06826 3.80998 1.97362 3.77044 1.90377 3.7005C1.83391 3.63055 1.79451 3.53585 1.79411 3.437L1.78761 2.165C1.78735 2.11576 1.79679 2.06694 1.81539 2.02134C1.83399 1.97575 1.8614 1.93426 1.89603 1.89925C1.93067 1.86424 1.97186 1.8364 2.01726 1.81731C2.06265 1.79823 2.11137 1.78827 2.16061 1.788C2.20986 1.78774 2.25867 1.79718 2.30427 1.81578C2.34987 1.83439 2.39135 1.86179 2.42636 1.89642C2.46137 1.93106 2.48921 1.97225 2.5083 2.01765C2.52739 2.06305 2.53735 2.11176 2.53761 2.161L2.53961 2.5345ZM5.99961 3.6245C6.09907 3.6245 6.19445 3.66401 6.26478 3.73434C6.3351 3.80466 6.37461 3.90005 6.37461 3.9995V5.8445L7.51511 6.9845C7.55094 7.01908 7.57953 7.06044 7.59921 7.10619C7.61888 7.15193 7.62925 7.20113 7.6297 7.25092C7.63016 7.30072 7.6207 7.3501 7.60186 7.39619C7.58303 7.44229 7.5552 7.48417 7.52001 7.5194C7.48482 7.55462 7.44296 7.58249 7.39688 7.60137C7.35081 7.62024 7.30143 7.62975 7.25164 7.62934C7.20185 7.62894 7.15264 7.61861 7.10687 7.59898C7.06111 7.57935 7.01972 7.5508 6.98511 7.515L5.62511 6.155V4C5.62511 3.90055 5.66462 3.80516 5.73495 3.73484C5.80527 3.66451 5.90066 3.625 6.00011 3.625"
+                                        fill="#2D2D2D" />
+                                </svg>
 
-            a {
-                color: dodgerblue;
-            }
-
-            #loader {
-                display: none;
-            }
-
-            #historyHeader {
-                color: dodgerblue;
-                text-decoration: underline;
-            }
-
-            #historyHeader:hover {
-                cursor: pointer;
-            }
-
-            #historyContent {
-                display: none;
-            }
-
-            #historyList {
-                padding-inline-start: 0;
-            }
-
-            #historyList li {
-                list-style-type: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            #historyList li:hover {
-                color: dodgerblue;
-                cursor: pointer;
-                background-color: #ccc;
-            }
-
-            .historyRow-0 {
-                background-color: #f5f5f5;
-            }
-
-            .historyRow-1 {
-                background-color: #eee;
-            }
-
-            #clearHistory {
-                width: 50%;
-                margin: 0 auto;
-            }
-
-            #swapTerms {
-                text-align: right;
-            }
-        </style>
-        <title>Search and Replace</title>
-    </head>
-
-    <body>
-        <div class="alert alert-info text-center m-2" id="ad">
-            <span>Ad:</span>
-            <a href="https://prosopo.io/?utm_source=search_and_replace&utm_medium=extension&utm_campaign=popup_link&term=need+bot+protection&utm_content=textlink" target="_blank" class="link-body-emphasis bold">
-                Need bot protection?
-            </a>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="ad-close"></button>
+                            </i>
+                        </a>
+                    </div>
+                    <!-- about Link -->
+                    <div id="about" class="form-group mx-1">
+                        <a class="fs-10" href="#">
+                            <i>
+                                <svg width="18" height="18" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M5.5 4.5H6.5V3.5H5.5M6 10C3.795 10 2 8.205 2 6C2 3.795 3.795 2 6 2C8.205 2 10 3.795 10 6C10 8.205 8.205 10 6 10ZM6 1C5.34339 1 4.69321 1.12933 4.08658 1.3806C3.47995 1.63188 2.92876 2.00017 2.46447 2.46447C1.52678 3.40215 1 4.67392 1 6C1 7.32608 1.52678 8.59785 2.46447 9.53553C2.92876 9.99983 3.47995 10.3681 4.08658 10.6194C4.69321 10.8707 5.34339 11 6 11C7.32608 11 8.59785 10.4732 9.53553 9.53553C10.4732 8.59785 11 7.32608 11 6C11 5.34339 10.8707 4.69321 10.6194 4.08658C10.3681 3.47995 9.99983 2.92876 9.53553 2.46447C9.07124 2.00017 8.52005 1.63188 7.91342 1.3806C7.30679 1.12933 6.65661 1 6 1ZM5.5 8.5H6.5V5.5H5.5V8.5Z"
+                                        fill="#2D2D2D" />
+                                </svg>
+                            </i>
+                        </a>
+                    </div>
+                    <!-- Setting Link -->
+                    <div id="setting" class="form-group mx-1">
+                        <a class="fs-10" href="#">
+                            <i><svg width="18" height="18" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_4_43)">
+                                        <path
+                                            d="M10.125 6.285V5.71125L10.845 5.08125C10.9777 4.96427 11.0648 4.80413 11.0909 4.62915C11.1169 4.45416 11.0803 4.27559 10.9875 4.125L10.1025 2.625C10.0367 2.5111 9.94215 2.41649 9.82829 2.35067C9.71442 2.28485 9.58525 2.25013 9.45372 2.25C9.37222 2.24938 9.29115 2.26204 9.21372 2.2875L8.30247 2.595C8.14515 2.49045 7.98103 2.39649 7.81122 2.31375L7.61997 1.36875C7.58568 1.1961 7.49176 1.04102 7.35464 0.930638C7.21753 0.820261 7.04596 0.761627 6.86997 0.765H5.11497C4.93898 0.761627 4.76742 0.820261 4.6303 0.930638C4.49319 1.04102 4.39926 1.1961 4.36497 1.36875L4.17372 2.31375C4.0027 2.39647 3.83734 2.49043 3.67872 2.595L2.78622 2.2725C2.70796 2.25211 2.62691 2.24451 2.54622 2.25C2.4147 2.25013 2.28553 2.28485 2.17166 2.35067C2.05779 2.41649 1.96323 2.5111 1.89747 2.625L1.01247 4.125C0.924943 4.27537 0.892417 4.4515 0.920466 4.62321C0.948515 4.79493 1.03539 4.95155 1.16622 5.06625L1.87497 5.715V6.28875L1.16622 6.91875C1.0317 7.03425 0.942443 7.19367 0.914297 7.36873C0.886151 7.54379 0.920934 7.72315 1.01247 7.875L1.89747 9.375C1.96323 9.4889 2.05779 9.58351 2.17166 9.64933C2.28553 9.71515 2.4147 9.74986 2.54622 9.75C2.62773 9.75062 2.70879 9.73796 2.78622 9.7125L3.69747 9.405C3.8548 9.50955 4.01891 9.6035 4.18872 9.68625L4.37997 10.6312C4.41426 10.8039 4.50819 10.959 4.6453 11.0694C4.78242 11.1797 4.95398 11.2384 5.12997 11.235H6.89997C7.07596 11.2384 7.24753 11.1797 7.38464 11.0694C7.52176 10.959 7.61568 10.8039 7.64997 10.6312L7.84122 9.68625C8.01225 9.60352 8.17761 9.50957 8.33622 9.405L9.24372 9.7125C9.32115 9.73796 9.40222 9.75062 9.48372 9.75C9.61525 9.74986 9.74442 9.71515 9.85829 9.64933C9.97215 9.58351 10.0667 9.4889 10.1325 9.375L10.9875 7.875C11.075 7.72463 11.1075 7.5485 11.0795 7.37679C11.0514 7.20507 10.9646 7.04845 10.8337 6.93375L10.125 6.285ZM9.45372 9L8.16747 8.565C7.86637 8.82004 7.52225 9.0194 7.15122 9.15375L6.88497 10.5H5.11497L4.84872 9.16875C4.48063 9.03059 4.13837 8.83157 3.83622 8.58L2.54622 9L1.66122 7.5L2.68122 6.6C2.61188 6.21182 2.61188 5.81443 2.68122 5.42625L1.66122 4.5L2.54622 3L3.83247 3.435C4.13357 3.17996 4.4777 2.9806 4.84872 2.84625L5.11497 1.5H6.88497L7.15122 2.83125C7.51931 2.96941 7.86158 3.16843 8.16372 3.42L9.45372 3L10.3387 4.5L9.31872 5.4C9.38806 5.78818 9.38806 6.18557 9.31872 6.57375L10.3387 7.5L9.45372 9Z"
+                                            fill="#2D2D2D" />
+                                        <path
+                                            d="M6 8.25C5.55499 8.25 5.11998 8.11804 4.74997 7.87081C4.37996 7.62357 4.09157 7.27217 3.92127 6.86104C3.75097 6.4499 3.70642 5.9975 3.79323 5.56105C3.88005 5.12459 4.09434 4.72368 4.40901 4.40901C4.72368 4.09434 5.12459 3.88005 5.56105 3.79323C5.9975 3.70642 6.4499 3.75097 6.86104 3.92127C7.27217 4.09157 7.62357 4.37996 7.87081 4.74997C8.11804 5.11998 8.25 5.55499 8.25 6C8.25301 6.29631 8.19687 6.59024 8.08486 6.86459C7.97285 7.13893 7.80723 7.38816 7.5977 7.5977C7.38816 7.80723 7.13893 7.97285 6.86459 8.08486C6.59024 8.19687 6.29631 8.25301 6 8.25ZM6 4.5C5.80176 4.49538 5.60463 4.53102 5.42056 4.60477C5.23648 4.67852 5.06928 4.78884 4.92906 4.92906C4.78884 5.06928 4.67852 5.23648 4.60477 5.42056C4.53102 5.60463 4.49538 5.80176 4.5 6C4.49538 6.19825 4.53102 6.39537 4.60477 6.57944C4.67852 6.76352 4.78884 6.93073 4.92906 7.07094C5.06928 7.21116 5.23648 7.32148 5.42056 7.39523C5.60463 7.46898 5.80176 7.50462 6 7.5C6.19825 7.50462 6.39537 7.46898 6.57944 7.39523C6.76352 7.32148 6.93073 7.21116 7.07094 7.07094C7.21116 6.93073 7.32148 6.76352 7.39523 6.57944C7.46898 6.39537 7.50462 6.19825 7.5 6C7.50462 5.80176 7.46898 5.60463 7.39523 5.42056C7.32148 5.23648 7.21116 5.06928 7.07094 4.92906C6.93073 4.78884 6.76352 4.67852 6.57944 4.60477C6.39537 4.53102 6.19825 4.49538 6 4.5Z"
+                                            fill="#2D2D2D" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_4_43">
+                                            <rect width="12" height="12" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </i>
+                        </a>
+                    </div>
+                    <!-- Save Link -->
+                    <div id="saveRules" class="form-group mx-1">
+                        <a class="fs-10" href="#">
+                            <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 28 28">
+                                    <path fill="currentColor"
+                                        d="M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z" />
+                                </svg>
+                            </i>
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div id="loader">
-            <img src="ajax-loader.gif" width="16" height="16" name="loading" alt="searching and replacing..." />
-        </div>
-        <div id="content" class="container-fluid mt-2">
-            <div class="row">
+        <div class="row bg-white">
+            <div id="body" class="background-img">
                 <form id="searchReplaceForm">
                     <div class="first-row form-group">
-                        <label for="searchTerm" data-locale="Searchfor">Search for</label>
-                        <textarea
-                            class="data_field form-control rounded-1"
-                            name="searchTerm"
-                            id="searchTerm"
-                            type="text"
-                        ></textarea>
+                        <label class="text-color fw-bold" for="searchTerm" data-locale="Searchfor">Search
+                            for</label>
+                        <textarea class="data_field form-control rounded-1" name="searchTerm" id="searchTerm"
+                            type="text"></textarea>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row justify-content-between pt-3">
                         <div class="col-6" id="searchTermCount"></div>
-                        <div class="col-6 link-body-emphasis" id="swapTerms" data-locale="Swap">Swap ⇅</div>
+                        <div class="col-6 text-end">
+                            <button id="swapTerms" class="col-6 rounded-2 text-center border-0 bg-button"
+                                data-locale="Swap">
+                                <img src="ph_swap-fill.svg" alt="Swap Icon" class="me-1">Swap</button>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="replaceTerm" data-locale="Replacewith">Replace with</label>
-                        <textarea
-                            class="data_field form-control rounded-1"
-                            name="replaceTerm"
-                            id="replaceTerm"
-                            type="text"
-                        ></textarea>
+                        <label class="text-color fw-bold" for="replaceTerm" data-locale="Replacewith">Replace
+                            with</label>
+                        <textarea class="data_field form-control rounded-1 " name="replaceTerm" id="replaceTerm"
+                            type="text"></textarea>
                     </div>
                     <div class="form-group" id="hints">
                         <p></p>
@@ -130,108 +147,93 @@
                         <input name="matchCase" id="matchCase" type="checkbox" class="form-check-input" />
                     </div>
                     <div class="form-check">
-                        <label for="inputFieldsOnly" class="form-check-label" data-locale="Inputfields"
-                            >Input fields only</label
-                        >?
+                        <label for="inputFieldsOnly" class="form-check-label" data-locale="Inputfields">Input fields
+                            only</label>?
                         <input name="inputFieldsOnly" id="inputFieldsOnly" type="checkbox" class="form-check-input" />
                     </div>
                     <div class="form-check">
-                        <label for="hiddenContent" class="form-check-label" data-locale="Hiddencontent"
-                            >Hidden content</label
-                        >?
+                        <label for="hiddenContent" class="form-check-label" data-locale="Hiddencontent">Hidden
+                            content</label>?
                         <input name="hiddenContent" id="hiddenContent" type="checkbox" class="form-check-input" />
                     </div>
                     <div class="form-check">
-                        <label for="wholeWord" class="form-check-label" data-locale="Matchwhole">Match whole word</label
-                        >?
+                        <label for="wholeWord" class="form-check-label" data-locale="Matchwhole">Match whole
+                            word</label>?
                         <input name="wholeWord" id="wholeWord" type="checkbox" class="form-check-input" />
                     </div>
                     <div class="form-check">
-                        <label for="isRegex" class="form-check-label" data-locale="Regularexpression"
-                            >Regular expression</label
-                        >?
+                        <label for="isRegex" class="form-check-label" data-locale="Regularexpression">Regular
+                            expression</label>?
                         <input name="isRegex" id="isRegex" type="checkbox" class="form-check-input" />
                     </div>
                     <div class="form-check">
-                        <label for="replaceHTML" class="form-check-label" data-locale="replaceHTML"
-                        >Replace HTML</label
-                        >?
+                        <label for="replaceHTML" class="form-check-label" data-locale="replaceHTML">Replace
+                            HTML</label>?
                         <input name="replaceHTML" id="replaceHTML" type="checkbox" class="form-check-input" />
                     </div>
                     <div class="form-check mb-3">
-                        <label for="save" class="form-check-label" data-locale="saveApplyPageReload"
-                            >Save and apply on page reload?</label
-                        >
+                        <label for="save" class="form-check-label" data-locale="saveApplyPageReload">Save and apply on
+                            page
+                            reload?</label>
                         <input name="save" id="save" type="checkbox" class="form-check-input" />
                     </div>
-                    <div class="form-group">
-                        <button
-                            name="replaceNext"
-                            id="replaceNext"
-                            class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle"
-                            type="submit"
-                            data-locale="ReplaceNext"
-                        >
-                            Replace Next
-                        </button>
-                    </div>
-                    <div class="form-group">
-                        <button
-                            name="replaceAll"
-                            id="replaceAll"
-                            class="btn btn-light mb-2 rounded-1 border-1 border-dark-subtle"
-                            type="submit"
-                            data-locale="ReplaceAll"
-                        >
-                            Replace All
-                        </button>
-                    </div>
                 </form>
-            </div>
-
-            <div class="row text-center">
-                <form>
-                    <!--Search and Replace History
-            This is an expandable list of previously searched and replaced terms. Users can click on a term to populate the
-            search and replace fields.
-    -->
-                    <div
-                        id="history"
-                        class="form-group mt-1 mb-2 collapsible border border-1 border-dark-subtle rounded-1"
-                    >
-                        <div id="historyHeader">
-                            <a class="fs-6" href="#" data-locale="History">History</a>
-                        </div>
-                        <div id="historyContent">
-                            <ul id="historyList"></ul>
-                            <button
-                                class="btn btn-light btn-sm rounded-1 border-1 border-dark-subtle mb-2"
-                                id="clearHistory"
-                                data-locale="Clear"
-                            >
-                                Clear
-                            </button>
+                <div id="settingSection">
+                    <div id="back" class="border-0 py-2 fw-bold cursor-point d-flex">
+                        <img src="basil_arrow-left-outline.svg" width="16" alt="back icon"><span
+                            data-locale="back">Back</span>
+                    </div>
+                    <h5 class="text-color" data-locale="settings">Settings</h5>
+                    <p data-locale="select_language">Select a language</p>
+                    <select id="languageSelect" class="form-select"></select>
+                </div>
+                <div id="aboutSection">
+                    <div id="back" class="border-0 py-2 fw-bold cursor-point d-flex">
+                        <img src="basil_arrow-left-outline.svg" width="16" alt="back icon"><span
+                            data-locale="back">Back</span>
+                    </div>
+                    <h5 class="text-color" data-locale="about">About</h5>
+                    <p><span data-locale="ext_name">Search and Replace</span><span id="version_number"></span></p>
+                    <p data-locale="ext_description">Search for text on a webpage and replace it with different text.
+                    </p>
+                </div>
+                <div id="historySection">
+                    <div id="back" class="border-0 py-2 fw-bold cursor-point d-flex">
+                        <img src="basil_arrow-left-outline.svg" width="16" alt="back icon"><span
+                            data-locale="back">Back</span>
+                    </div>
+                    <h5 class="text-color" data-locale="History">History</h5>
+                    <div id="historyContent">
+                        <ul id="historyList"></ul>
+                        <div class="text-end">
+                            <button class="btn btn-light btn-sm rounded-1 border-1 border-dark-subtle mb-2 bg-button"
+                                id="clearHistory" data-locale="Clear">Clear</button>
                         </div>
                     </div>
-                    <!-- Options Link -->
-                    <div id="options" class="form-group mt-1 mb-2 border border-1 border-dark-subtle rounded-1">
-                        <a class="fs-6" href="#" data-locale="EditSettings">Edit Settings</a>
-                    </div>
-                    <!-- Help Link -->
-                    <div id="help" class="form-group mt-1 mb-1 border border-1 border-dark-subtle rounded-1">
-                        <a class="fs-6" href="#" data-locale="Help">Help</a>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-
-        <div class="text-center">
-            <a href="#" target="_blank" class="link-body-emphasis" id="github_version"
-                ><span data-locale="version"></span> <span id="version_number"></span
-            ></a>
+        <div id="footer" class="row shadow-top h-footer">
+            <div class="d-flex justify-content-evenly py-2 bg-white">
+                <button name="replaceNext" id="replaceNext" class="col-5 btn btn-light rounded-2 border-1 bg-button "
+                    type="submit" data-locale="ReplaceNext">
+                    Replace Next
+                </button>
+                <button name="replaceAll" id="replaceAll" class="col-5 btn btn-light rounded-2 border-1 bg-button"
+                    type="submit" data-locale="ReplaceAll">
+                    Replace All
+                </button>
+            </div>
         </div>
+    </div>
 
-        <script src="../util.js"></script>
-        <script src="../popup.js"></script>
-    </body>
+    <div class="text-center">
+        <a href="#" target="_blank" class="link-body-emphasis" id="github_version"><span data-locale="version"></span>
+            <span id="version_number"></span></a>
+    </div>
+
+    <script src="../util.js"></script>
+    <script src="../popup.js"></script>
+</body>
+
 </html>
