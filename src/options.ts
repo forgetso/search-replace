@@ -148,7 +148,11 @@ function instanceToHTML(instance: SavedSearchReplaceInstance, instanceId: string
     const getString = i18n
 
     return `
+<<<<<<< HEAD
     <div class="col-4 rounded-1 p-3" id="instanceForm${instanceId}">
+=======
+    <div class="col-3 rounded-1 p-3" id="instanceForm${instanceId}">
+>>>>>>> 5e1192564df7c922a739e3669436989fbbd29c48
         <div class="card">
             <div class="card-header fw-bold">
                 ${getString('RuleID')}: ${instanceId}
