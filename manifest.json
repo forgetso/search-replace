@@ -28,7 +28,7 @@
     "name": "Search and Replace",
     "description": "__MSG_ext_description__",
     "manifest_version": 3,
-    "permissions": ["activeTab", "storage", "notifications", "tabs"],
+    "permissions": ["activeTab", "storage", "notifications", "tabs", "scripting"],
     "host_permissions": ["http://*/*", "https://*/*"],
     "update_url": "http://clients2.google.com/service/update2/crx",
     "version":"2.3.0",
