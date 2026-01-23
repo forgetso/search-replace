@@ -220,7 +220,7 @@
         "description": "Explanation about replacing text anywhere on the page"
     },
     "Replacing_anywhere_p1": {
-        "message": "To replace text that is contained within a HTML, contained within a text editor and contained within a text field, you should check the <code>Replace HTML?</code> check box.",
+        "message": "To replace text anywhere on the page, including within the HTML structure itself, check the <code>Replace HTML?</code> option. This allows you to replace text in all elements on the page, including regular text, text editors, input fields, and even HTML tags and attributes.",
         "description": "Explanation about replacing text anywhere on the page"
     },
     "Replacing_anywhere_p2": {
@@ -334,5 +334,25 @@
     "matches": {
         "message": "matches",
         "description": "message to tell user how many instances of the search term were found"
+    },
+    "hidden_content_nav": {
+        "message": "Searching hidden content",
+        "description": "Navigation link for hidden content help section"
+    },
+    "hidden_content_title": {
+        "message": "Searching hidden content",
+        "description": "Title for hidden content help section"
+    },
+    "hidden_content_p1": {
+        "message": "By default, the extension only searches and replaces text that is visible on the page. If you need to search and replace text in hidden elements (such as collapsed sections, hidden divs, or elements with <code>display: none</code>), check the <code>Hidden content?</code> option.",
+        "description": "First paragraph explaining hidden content checkbox"
+    },
+    "hidden_content_p2": {
+        "message": "This is particularly useful when working with dynamic content that may be hidden initially but becomes visible through user interaction, or when you need to modify hidden form fields.",
+        "description": "Second paragraph explaining hidden content use cases"
+    },
+    "hidden_content_note": {
+        "message": "NOTE: When <code>Hidden content?</code> is checked, the extension will search through all elements regardless of their visibility, which may result in a higher match count.",
+        "description": "Note about hidden content behavior"
     }
 }

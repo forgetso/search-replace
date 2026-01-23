@@ -49,6 +49,9 @@
                             <a class="nav-link" data-locale="Matching_whole" href="#whole">Matching whole words</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" data-locale="hidden_content_nav" href="#hidden">Searching hidden content</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" data-locale="wildcards_and_regex" href="#wildcards">Wild Cards and
                                 Regular Expressions</a>
                         </li>
@@ -95,8 +98,10 @@
 
                     <h2 id="anywhere" data-locale="Replacing_anywhere">Replacing text anywhere on the page</h2>
                     <p data-locale="Replacing_anywhere_p1">
-                        To replace text that is contained within a HTML, contained within a text editor and contained
-                        within a text field, you should check the <code>Replace HTML?</code> check box.
+                        To replace text anywhere on the page, including within the HTML structure itself, 
+                        check the <code>Replace HTML?</code> option. This allows you to replace text in 
+                        all elements on the page, including regular text, text editors, input fields, and 
+                        even HTML tags and attributes.
                     </p>
 
                     <div class="alert alert-warning" data-locale="Replacing_anywhere_warning">
@@ -130,6 +135,23 @@
                         should use the <code>Match whole word?</code> option.
                     </p>
                     <p><img src="setup-whole-word.png" class="img-responsive img-thumbnail" /></p>
+                </div>
+                <div class="row mb-2">
+                    <h2 id="hidden" data-locale="hidden_content_title">Searching hidden content</h2>
+                    <p data-locale="hidden_content_p1">
+                        By default, the extension only searches and replaces text that is visible on the page. 
+                        If you need to search and replace text in hidden elements (such as collapsed sections, 
+                        hidden divs, or elements with <code>display: none</code>), check the 
+                        <code>Hidden content?</code> option.
+                    </p>
+                    <p data-locale="hidden_content_p2">
+                        This is particularly useful when working with dynamic content that may be hidden initially 
+                        but becomes visible through user interaction, or when you need to modify hidden form fields.
+                    </p>
+                    <div class="alert alert-info" data-locale="hidden_content_note">
+                        NOTE: When <code>Hidden content?</code> is checked, the extension will search through all 
+                        elements regardless of their visibility, which may result in a higher match count.
+                    </div>
                 </div>
                 <div class="row mb-2">
                     <h2 id="wildcards" data-locale="wildcards_and_regex">Wild Cards and Regular Expressions</h2>
