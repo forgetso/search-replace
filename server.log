@@ -1,0 +1,8 @@
+
+> search_and_replace@2.3.0 start
+> light-server --no-reload -s . -p 9000 -w "**/*.html,**/*.css,**/*.js,**/*.gz"
+
+light-server is listening at http://0.0.0.0:9000
+  serving static dir: .
+
+## WARNING: Ignoring watch expression "**/*.html,**/*.css,**/*.js,**/*.gz", because it doesn't specify a command and live-reloading is disabled.
