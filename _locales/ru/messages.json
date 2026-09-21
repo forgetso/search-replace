@@ -522,5 +522,45 @@
     "history_removed": {
         "message": "(удалено)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "Открывать в",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "Всплывающем окне",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "Боковой панели",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "Боковая панель остаётся открытой, пока вы работаете со страницей.",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "Всплывающее окно или боковая панель",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "По умолчанию расширение открывается во всплывающем окне под кнопкой на панели инструментов. Такое окно закрывается, как только фокус переходит на что-то другое: щелчок по странице, чтобы проверить замену, закрывает его, и слова приходится вводить заново.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "Выберите <code>Боковая панель</code> под значком шестерёнки, чтобы расширение открывалось в боковой панели Chrome. Она остаётся открытой, пока вы работаете со страницей, следует за вами при переключении вкладок, и её можно растянуть шире. Всё остальное работает точно так же, как во всплывающем окне.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "Настройка привязана к вашему профилю Chrome, а сочетание клавиш <code>Ctrl+Shift+S</code> открывает выбранный вариант. Боковая панель требует Chrome 114 или новее; в более старых версиях настройка не отображается.",
+        "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "Открыть в боковой панели",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "Закрыть боковую панель",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

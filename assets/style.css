@@ -76,7 +76,7 @@ a {
     display: flex;
     flex-direction: column;
     gap: var(--sr-space-xs);
-    max-height: 380px;
+    max-height: 330px;
     overflow-y: auto;
     margin: 0;
     padding-inline-start: 0;
@@ -136,6 +136,49 @@ a {
     width: 320px;
 }
 
+/* Side panel.
+   Chrome sizes the toolbar popup to the document, which is why #content carries a fixed width.
+   The panel is the other way round: it is as tall as the browser window and the user can drag
+   its edge, so the same document has to fill whatever it is given instead of sitting in a
+   320px column with grey either side. popup.ts adds .side-panel when the document is loaded
+   with ?surface=sidepanel. */
+body.side-panel,
+body.side-panel #content,
+body.side-panel #loader {
+    width: 100%;
+}
+
+body.side-panel {
+    min-width: 320px;
+}
+
+/* Pins the action buttons to the bottom of the panel rather than leaving them floating halfway
+   up it, which is where they would otherwise sit in a window-height panel */
+body.side-panel #content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body.side-panel .row.bg-surface {
+    flex: 1;
+}
+
+/* The list has the whole height of the panel to play with, so it does not need the cap that
+   keeps it inside the popup's 600px */
+body.side-panel #historyList {
+    max-height: none;
+}
+
+/* Keeps the text columns readable when the panel is dragged out wide */
+body.side-panel #body,
+body.side-panel #header > div,
+body.side-panel #footer > div {
+    max-width: 640px;
+    margin-inline: auto;
+    width: 100%;
+}
+
 /* Was display:table, which shrink-wraps to its content rather than filling the popup width */
 #body {
     display: block;
@@ -147,7 +190,7 @@ a {
    panel now sizes to its content and Chrome sizes the popup to match. */
 .background-img {
     background-color: var(--sr-bg);
-    padding: var(--sr-space-lg) var(--sr-gutter);
+    padding: var(--sr-space-md) var(--sr-gutter);
 }
 
 /* The header, body and footer panels are full-bleed, so each supplies its own gutter. Keeping
@@ -235,6 +278,21 @@ a {
     margin-bottom: var(--sr-space-sm);
 }
 
+/* A labelled control in the Settings panel */
+.setting + .setting {
+    margin-top: var(--sr-space-lg);
+}
+
+.setting__label {
+    display: block;
+    margin-bottom: var(--sr-space-xs);
+}
+
+.setting__hint {
+    margin: var(--sr-space-xs) 0 0;
+    color: var(--sr-muted);
+}
+
 #settingSection h5,
 #aboutSection h5,
 #historySection h5 {
@@ -309,9 +367,8 @@ a {
     border-top-right-radius: 12px;
 }
 
-/* Title block in the header: logo and name on one baseline, never wrapped. It is allowed to
-   shrink so that a long translation of the extension name is trimmed rather than pushing the
-   row of icons past the edge of the popup. */
+/* Title block in the header: logo and name on one baseline, never wrapped. The ellipsis is a
+   safety net for a translation longer than the popup; it has the whole row to itself. */
 .display-flow {
     display: flex;
     align-items: center;
@@ -333,20 +390,62 @@ a {
     font-size: 22px;
 }
 
-/* The header's icon buttons, spaced evenly rather than crowded together, and kept on one row */
-#header form {
+/* Header: the title and the two reference icons on one line, then the panels and actions as a
+   tab strip beneath.
+   The six icons used to share the title's line, which at 320px left them crowded and the title
+   truncated. Splitting them by what they do — help and about only ever open documentation,
+   the rest change what you are looking at — gives the tabs the whole width to spread across. */
+.header-bar {
+    padding-top: var(--sr-space-sm);
+}
+
+.header-title {
+    display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    gap: 6px;
+    justify-content: space-between;
+    gap: var(--sr-space-sm);
 }
 
-/* The markup carries .mx-1, which bootstrap declares !important, so the gap above would be
-   added to it and the five icons would wrap onto a second row */
-#header form > .form-group {
+.header-reference {
+    display: flex;
+    align-items: center;
+    flex: none;
+    gap: var(--sr-space-sm);
+}
+
+.header-tabs {
+    display: flex;
+    margin-top: 6px;
+    /* Full-bleed, cancelling the gutter .header-bar applies, so the strip reads as a tab bar
+       rather than a row of icons floating inside the panel */
+    margin-left: calc(var(--sr-gutter) * -1);
+    margin-right: calc(var(--sr-gutter) * -1);
+    border-top: 1px solid var(--sr-border);
+}
+
+/* Equal shares of the row, so the icons land on a regular rhythm however many there are */
+.header-tabs > .form-group {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    /* The markup carries .mx-1, which bootstrap declares !important */
     margin: 0 !important;
+    padding: 6px 0 4px;
+    border-bottom: 2px solid transparent;
 }
 
-#header form a {
+.header-tabs > .form-group:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* The underline marking the open panel spans the whole tab rather than just the glyph */
+.header-tabs > .icon-selected {
+    border-bottom-color: var(--sr-accent);
+    padding-bottom: 4px;
+}
+
+.header-title a,
+.header-tabs a {
     display: flex;
     align-items: center;
 }

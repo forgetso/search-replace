@@ -522,5 +522,45 @@
     "history_removed": {
         "message": "（削除）",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "開く場所",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "ポップアップ",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "サイドパネル",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "サイドパネルはページでの作業中も開いたままになります。",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "ポップアップかサイドパネルか",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "既定では、この拡張機能はツールバーのボタンの下にポップアップとして開きます。ポップアップは他のものにフォーカスが移った時点で閉じるため、置換を確認しようとページをクリックすると消えてしまい、検索語を入力し直すことになります。",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "歯車アイコンの下で<code>サイドパネル</code>を選ぶと、代わりに Chrome のサイドパネルで開きます。ページでの作業中も開いたままで、タブを切り替えても付いてきて、幅を広げることもできます。それ以外はポップアップとまったく同じように動作します。",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "この設定は Chrome のプロファイルに従い、キーボードショートカット <code>Ctrl+Shift+S</code> は選んだ方を開きます。サイドパネルには Chrome 114 以降が必要で、それより古い場合この設定は表示されません。",
+        "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "サイドパネルで開く",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "サイドパネルを閉じる",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }
