@@ -76,7 +76,7 @@ a {
     display: flex;
     flex-direction: column;
     gap: var(--sr-space-xs);
-    max-height: 340px;
+    max-height: 380px;
     overflow-y: auto;
     margin: 0;
     padding-inline-start: 0;
@@ -390,21 +390,38 @@ body.side-panel #footer > div {
     font-size: 22px;
 }
 
-/* The header's icon buttons sit on their own row under the title.
-   They used to share the line with it, which left six icons and a title fighting over 320px:
-   the icons ended up crowded together and the title was trimmed to "Search and Repl...". On
-   their own row they have the whole width, so they can be spaced properly. */
+/* The header's icon buttons, in two groups: the two that only tell you something (help, about)
+   and the four that do something (history, settings, saved rules, side panel). Six evenly
+   spaced glyphs read as an undifferentiated row; the divider gives the eye somewhere to rest
+   and says which of them change the page.
+   They are 16px rather than 18px so that all six and the untruncated title fit across 320px. */
 .header-actions {
     display: flex;
     align-items: center;
+    flex: none;
     flex-wrap: nowrap;
-    gap: var(--sr-space-md);
-    margin-top: 6px;
 }
 
-/* The markup carries .mx-1, which bootstrap declares !important, so the gap above would be
-   added to it and the icons would spread unevenly */
-.header-actions > .form-group {
+.header-group {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.header-group + .header-group {
+    margin-left: 7px;
+    padding-left: 7px;
+    border-left: 1px solid var(--sr-accent-soft);
+}
+
+.header-actions svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* The markup carries .mx-1, which bootstrap declares !important, so the group gap above would
+   be added to it and the icons would spread unevenly */
+.header-group > .form-group {
     margin: 0 !important;
 }
 
