@@ -10,6 +10,7 @@ import {
     HintPreferences,
     SearchReplaceActions,
     SearchReplaceBackgroundMessage,
+    SearchReplaceCheckboxNames,
     SearchReplaceContentMessage,
     SearchReplaceInstance,
     SearchReplaceOptions,
@@ -56,13 +57,17 @@ window.addEventListener('DOMContentLoaded', async function () {
     const translationFn = createTranslationProxy(langData)
 
     // Update popup version number and GitHub link dynamically with manifest.version
-    const versionNumberElement = document.getElementById('version_number')
-    if (versionNumberElement) {
-        versionNumberElement.innerHTML = manifest.version
+    for (const id of ['version_number', 'github_version_number']) {
+        const versionNumberElement = document.getElementById(id)
+        if (versionNumberElement) {
+            versionNumberElement.textContent = manifest.version
+        }
     }
-    const githubVersionElement = document.getElementById('github_version') as HTMLAnchorElement
-    if (githubVersionElement) {
-        githubVersionElement.href = `${RELEASE_NOTES_URL}/${manifest.version}`
+    for (const id of ['github_version', 'aboutReleaseNotes']) {
+        const releaseNotesElement = document.getElementById(id) as HTMLAnchorElement | null
+        if (releaseNotesElement) {
+            releaseNotesElement.href = `${RELEASE_NOTES_URL}/${manifest.version}`
+        }
     }
 
     // Get the stored values from the background page
@@ -75,8 +80,8 @@ window.addEventListener('DOMContentLoaded', async function () {
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
             recentSearch = recentSearch || history[0]
-            createHistoryListItemElements(history)
         }
+        createHistoryListItemElements(history, translationFn)
         if (recentSearch) {
             restoreSearchReplaceInstance(recentSearch)
         }
@@ -145,6 +150,12 @@ window.addEventListener('DOMContentLoaded', async function () {
             openLink(link)
         })
     }
+
+    // The About panel links to the same help page as the header icon
+    document.getElementById('aboutHelp')?.addEventListener('click', function (event) {
+        event.preventDefault()
+        openLink('help')
+    })
 
     // Handlers for input elements changing value - storeTerms
     for (const elementName in INPUT_ELEMENTS_AND_EVENTS) {
@@ -339,9 +350,11 @@ function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstan
  * @param translationFn
  */
 export function historyItemClickHandler(e: Event) {
-    const target = <HTMLElement>e.target
+    // closest() rather than a tagName check: the entry is built from several spans, so a click
+    // almost always lands on a child of the <li> that carries the data attributes
+    const target = (e.target as HTMLElement | null)?.closest('li')
 
-    if (target.tagName === 'LI') {
+    if (target) {
         const options = CHECKBOXES.reduce<SearchReplaceOptions>((result, checkboxName) => {
             result[checkboxName] = target.getAttribute(`data-${checkboxName}`) === 'true'
             return result
@@ -378,7 +391,7 @@ async function formSubmitHandler(
     const searchReplaceInstance = getInputValues(replaceAll)
     const historyItems = constructSearchReplaceHistory(searchReplaceInstance)
     // create the new history list items
-    createHistoryListItemElements(historyItems)
+    createHistoryListItemElements(historyItems, translationFn)
     // store the new history list items
     await storeTerms(true)
     // do the search replace
@@ -582,27 +595,78 @@ chrome.runtime.onMessage.addListener(function (msg: SearchReplaceResponse) {
     }
 })
 
-function createHistoryListItemElements(history: SearchReplaceInstance[]) {
-    if (history.length > 0) {
-        const historyContent = document.getElementById('historyList')
-        if (historyContent) {
-            historyContent.innerHTML = ''
+/**
+ * The options worth showing on a history entry. `replaceAll` and `save` describe how the search
+ * was run rather than what it matched, so they would only add noise.
+ */
+const HISTORY_OPTIONS = CHECKBOXES.filter(
+    (name) => name !== SearchReplaceCheckboxNames.replaceAll && name !== SearchReplaceCheckboxNames.save
+)
 
-            for (const [index, item] of history.entries()) {
-                const li = document.createElement('li')
-                li.setAttribute(`data-searchTerm`, item[SEARCH_TERM_INPUT_ID])
-                li.setAttribute(`data-replaceTerm`, item[REPLACE_TERM_INPUT_ID])
-                for (const checkbox of CHECKBOXES) {
-                    const checked = checkbox in item.options ? item.options[checkbox] : false
-                    li.setAttribute(`data-${checkbox}`, String(checked))
-                }
-                li.setAttribute('class', `historyRow-${index % 2}`)
-
-                li.innerText = item.searchTerm + ' -> ' + item.replaceTerm
-                historyContent.appendChild(li)
-            }
-        }
+function createHistoryListItemElements(history: SearchReplaceInstance[], translationFn: TranslationProxy) {
+    const historyContent = document.getElementById('historyList')
+    const emptyMessage = document.getElementById('historyEmpty')
+    if (!historyContent) {
+        return
     }
+
+    historyContent.innerHTML = ''
+    if (emptyMessage) {
+        emptyMessage.classList.toggle('d-none', history.length > 0)
+    }
+
+    for (const item of history) {
+        const li = document.createElement('li')
+        li.className = 'history-item'
+        // constructSearchReplaceHistory() and historyItemClickHandler() both read the entry back
+        // out of these attributes, so they have to stay on the <li> itself
+        li.setAttribute(`data-searchTerm`, item[SEARCH_TERM_INPUT_ID])
+        li.setAttribute(`data-replaceTerm`, item[REPLACE_TERM_INPUT_ID])
+        for (const checkbox of CHECKBOXES) {
+            const checked = checkbox in item.options ? item.options[checkbox] : false
+            li.setAttribute(`data-${checkbox}`, String(checked))
+        }
+
+        li.appendChild(historyTerms(item, translationFn))
+
+        const options = HISTORY_OPTIONS.filter((name) => item.options?.[name])
+        if (options.length > 0) {
+            const optionList = document.createElement('div')
+            optionList.className = 'history-item__options'
+            optionList.textContent = options.map((name) => translationFn(name)).join(' · ')
+            li.appendChild(optionList)
+        }
+
+        historyContent.appendChild(li)
+    }
+}
+
+/** The "search term → replace term" line of a history entry */
+function historyTerms(item: SearchReplaceInstance, translationFn: TranslationProxy) {
+    const terms = document.createElement('div')
+    terms.className = 'history-item__terms'
+
+    const searchTerm = document.createElement('span')
+    searchTerm.className = 'history-item__term'
+    searchTerm.textContent = item.searchTerm
+
+    const arrow = document.createElement('span')
+    arrow.className = 'history-item__arrow'
+    arrow.setAttribute('aria-hidden', 'true')
+    arrow.textContent = '→'
+
+    const replaceTerm = document.createElement('span')
+    replaceTerm.className = 'history-item__term'
+    if (item.replaceTerm) {
+        replaceTerm.textContent = item.replaceTerm
+    } else {
+        // An empty replacement deletes the matched text, which reads as a blank line otherwise
+        replaceTerm.classList.add('history-item__term--empty')
+        replaceTerm.textContent = translationFn('history_removed')
+    }
+
+    terms.append(searchTerm, arrow, replaceTerm)
+    return terms
 }
 
 function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement) {

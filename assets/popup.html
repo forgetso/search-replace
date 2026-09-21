@@ -191,9 +191,33 @@
                             data-locale="back">Back</span>
                     </div>
                     <h5 class="text-color" data-locale="about">About</h5>
-                    <p><span data-locale="ext_name">Search and Replace</span>&nbsp&nbsp<span id="version_number"></span></p>
+                    <div class="about-identity">
+                        <img src="icon-128.png" width="36" height="36" alt="" />
+                        <div>
+                            <div class="fw-bold" data-locale="ext_name">Search and Replace</div>
+                            <div class="about-version"><span data-locale="version">Version</span>
+                                <span id="version_number"></span></div>
+                        </div>
+                    </div>
                     <p data-locale="ext_description">Search for text on a webpage and replace it with different text.
                     </p>
+                    <dl class="about-meta">
+                        <dt data-locale="about_author_label">Author</dt>
+                        <dd>Chris Taylor &mdash;
+                            <a href="https://prosopo.io" target="_blank" rel="noopener">prosopo.io</a>
+                        </dd>
+                        <dt data-locale="about_licence_label">Licence</dt>
+                        <dd>Apache-2.0</dd>
+                    </dl>
+                    <ul class="about-links">
+                        <li><a id="aboutHelp" href="#" data-locale="Help">Help</a></li>
+                        <li><a id="aboutReleaseNotes" href="#" target="_blank" rel="noopener"
+                                data-locale="about_release_notes">Release notes</a></li>
+                        <li><a href="https://github.com/forgetso/search-replace/issues" target="_blank"
+                                rel="noopener" data-locale="about_report_issue">Report an issue</a></li>
+                        <li><a href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews"
+                                target="_blank" rel="noopener" data-locale="about_rate">Rate this extension</a></li>
+                    </ul>
                 </div>
                 <div id="historySection">
                     <div id="back" class="border-0 py-2 fw-bold cursor-point d-flex">
@@ -202,6 +226,9 @@
                     </div>
                     <h5 class="text-color" data-locale="History">History</h5>
                     <div id="historyContent">
+                        <p id="historyEmpty" class="history-empty" data-locale="no_history">
+                            Your recent searches will appear here.
+                        </p>
                         <ul id="historyList"></ul>
                         <div class="text-end">
                             <button class="btn btn-light btn-sm rounded-1 border-1 border-dark-subtle mb-2 bg-button"
@@ -226,8 +253,9 @@
     </div>
 
     <div class="text-center">
-        <a href="#" target="_blank" class="link-body-emphasis" id="github_version"><span data-locale="version"></span>
-            <span id="version_number"></span></a>
+        <a href="#" target="_blank" class="link-body-emphasis" id="github_version"><span
+                data-locale="version">Version</span>
+            <span id="github_version_number"></span></a>
     </div>
 
     <script src="../popup.js"></script>

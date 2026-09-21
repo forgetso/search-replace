@@ -50,6 +50,32 @@ function updateResults(
     results.set(element, result)
     return results
 }
+/**
+ * Tells the page that an element's contents changed.
+ *
+ * Only a bare `input` event used to be fired, which is enough for React but not for everything
+ * else: Angular's `ngModel`, jQuery's `.change()` handlers and plain `onchange` attributes all
+ * listen for `change` and never saw the replacement, so the site went on using the text the user
+ * had typed rather than the text we put there. That is the shape of the Jira report: the value
+ * in the DOM is right, the application's own copy of it is not, and the two only get
+ * reconciled when something else forces the field to be read again.
+ *
+ * `InputEvent` rather than `Event` because libraries that inspect `inputType` treat a plain
+ * `Event` as a programmatic write to be ignored, and `composed` so that the event still reaches
+ * listeners outside a shadow root.
+ */
+function notifyChanged(target: Element | Node | undefined | null) {
+    if (!target) {
+        return
+    }
+    const input =
+        typeof InputEvent === 'function'
+            ? new InputEvent('input', { bubbles: true, composed: true, inputType: 'insertText' })
+            : new Event('input', { bubbles: true, composed: true })
+    target.dispatchEvent(input)
+    target.dispatchEvent(new Event('change', { bubbles: true, composed: true }))
+}
+
 function setNativeValue(element: HTMLInputElement | HTMLTextAreaElement, value: string) {
     const valueFn = Object.getOwnPropertyDescriptor(element, 'value')
     let valueSetter: ((v: string) => void) | undefined
@@ -99,9 +125,9 @@ function replaceInInputShadow(
                 } else {
                     shadowInput.setAttribute('value', newValue)
                 }
-                shadowInput.dispatchEvent(new Event('input', { bubbles: true }))
+                notifyChanged(shadowInput)
             }
-            shadowRoot.host.dispatchEvent(new Event('input', { bubbles: true }))
+            notifyChanged(shadowRoot.host)
         }
     }
 }
@@ -186,8 +212,9 @@ function replaceInInput(
                 }
 
                 // https://stackoverflow.com/a/53797269/1178971
-                input.dispatchEvent(new Event('input', { bubbles: true }))
+                notifyChanged(input)
 
+                // Fires `blur`, which is what commits the edit in inline-edit widgets
                 input.blur()
             }
         }
@@ -278,7 +305,7 @@ function replaceInNodeOrElement(
     }
     // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
     const replacementCount = config.replaceAll ? occurrences.length : 1
-    nodeElement?.dispatchEvent(new Event('input', { bubbles: true }))
+    notifyChanged(nodeElement)
 
     return { node, replacementCount, replaced: true }
 }
@@ -405,8 +432,9 @@ function nodesUnder(
                 )
                 searchReplaceResult.count.replaced += replaceResult.replacementCount
                 searchReplaceResult.replaced = replaceResult.replaced
-                element.dispatchEvent(new Event('input', { bubbles: true }))
-                node.dispatchEvent(new Event('input', { bubbles: true }))
+                // replaceInNodeOrElement() has already announced the change. Announcing it again
+                // here, once on the element and once on the node, made a single replacement look
+                // like three separate edits to any listener on the way up.
                 if (config.replaceNext && searchReplaceResult.replaced) {
                     config.replace = false
                     break
@@ -503,7 +531,7 @@ function replaceInInputs(
                     )
                     searchReplaceResult.count.replaced += elementResult.replacementCount
                     searchReplaceResult.replaced = elementResult.replaced
-                    input.dispatchEvent(new Event('input', { bubbles: true }))
+                    notifyChanged(input)
                     if (config.replaceNext && searchReplaceResult.replaced) {
                         config.replace = false
                         break

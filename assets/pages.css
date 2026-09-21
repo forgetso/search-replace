@@ -1,0 +1,665 @@
+/* Shared styling for the extension's two full-tab pages, help.html and saveRules.html.
+ *
+ * These pages used to pull in the whole of Bootstrap for a handful of utility classes and then
+ * fight its defaults. They are static documents, so they are cheaper and easier to control as
+ * plain CSS. Bootstrap is still used by the popup.
+ *
+ * The palette deliberately stays in the same greys as the popup (assets/style.css): a page that
+ * documents the popup should not look like a different product. */
+
+:root {
+    --page-bg: #e9e9e9;
+    --page-surface: #f6f6f6;
+    --page-panel: #e2e2e2;
+    --page-sunken: #ededed;
+
+    --page-text: #333;
+    --page-heading: #1f1f1f;
+    --page-muted: #6b6b6b;
+
+    --page-border: #d3d3d3;
+    --page-border-strong: #bcbcbc;
+
+    --page-accent: #2f2f2f;
+    --page-accent-soft: #767676;
+
+    /* Callouts. Desaturated so they sit inside the grey palette rather than shouting over it. */
+    --note-bar: #5a7ca8;
+    --note-bg: #e8eef5;
+    --warn-bar: #b08a3c;
+    --warn-bg: #f6efe0;
+    --tip-bar: #5f8a63;
+    --tip-bg: #e9f1ea;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+    --header-height: 56px;
+    --page-max: 1120px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    /* Anchored headings would otherwise land underneath the sticky header */
+    scroll-padding-top: calc(var(--header-height) + 16px);
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--page-text);
+    background-color: var(--page-bg);
+}
+
+/* ---------------------------------------------------------------- header */
+
+.page-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--page-panel);
+    border-bottom: 1px solid var(--page-border-strong);
+    box-shadow: var(--shadow-sm);
+}
+
+.page-header__inner {
+    max-width: var(--page-max);
+    height: var(--header-height);
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--page-heading);
+}
+
+.brand__name {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+
+.page-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-nav a {
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--page-muted);
+    text-decoration: none;
+}
+
+.page-nav a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--page-heading);
+}
+
+.page-nav a.is-current {
+    color: var(--page-heading);
+    box-shadow: inset 0 -2px 0 var(--page-accent);
+}
+
+/* ------------------------------------------------------------------ page */
+
+.page-main__inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+}
+
+.page-title {
+    margin-bottom: 28px;
+}
+
+.page-title h1 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--page-heading);
+}
+
+.page-title__lede {
+    margin: 8px 0 0;
+    max-width: 68ch;
+    font-size: 16px;
+    color: var(--page-muted);
+}
+
+/* Sidebar + content. Collapses to a single column on narrow windows, where the contents list
+   becomes an ordinary block at the top of the page rather than a sticky rail. */
+.page-layout {
+    display: grid;
+    grid-template-columns: 232px minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+}
+
+@media (max-width: 860px) {
+    .page-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+}
+
+/* --------------------------------------------------------------- contents */
+
+.toc {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    max-height: calc(100vh - var(--header-height) - 48px);
+    overflow-y: auto;
+}
+
+@media (max-width: 860px) {
+    .toc {
+        position: static;
+        max-height: none;
+        padding: 16px 20px;
+        background-color: var(--page-surface);
+        border: 1px solid var(--page-border);
+        border-radius: var(--radius-lg);
+    }
+}
+
+.toc__title {
+    margin: 0 0 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--page-accent-soft);
+}
+
+.toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-left: 2px solid var(--page-border);
+}
+
+.toc__list a {
+    display: block;
+    padding: 6px 12px;
+    margin-left: -2px;
+    border-left: 2px solid transparent;
+    font-size: 14px;
+    color: var(--page-muted);
+    text-decoration: none;
+}
+
+.toc__list a:hover {
+    color: var(--page-heading);
+    border-left-color: var(--page-border-strong);
+}
+
+.toc__list a:target,
+.toc__list a.is-current {
+    color: var(--page-heading);
+    font-weight: 600;
+    border-left-color: var(--page-accent);
+}
+
+/* --------------------------------------------------------------- sections */
+
+.section {
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    background-color: var(--page-surface);
+    border: 1px solid var(--page-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 560px) {
+    .section {
+        padding: 20px;
+    }
+}
+
+.section > :first-child {
+    margin-top: 0;
+}
+
+.section > :last-child {
+    margin-bottom: 0;
+}
+
+.section h2 {
+    margin: 0 0 12px;
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--page-heading);
+}
+
+.section h3 {
+    margin: 28px 0 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--page-heading);
+}
+
+.section p {
+    margin: 0 0 12px;
+    max-width: 72ch;
+}
+
+.section ul,
+.section ol {
+    max-width: 72ch;
+    margin: 0 0 12px;
+    padding-left: 22px;
+}
+
+.section li {
+    margin-bottom: 4px;
+}
+
+a {
+    color: var(--page-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--page-border-strong);
+}
+
+a:hover {
+    text-decoration-color: currentColor;
+}
+
+/* An inline reference to a checkbox or button in the popup. Styled as a small key cap so that
+   "check <code>Match case?</code>" reads as an instruction about the UI, not as code. */
+code {
+    padding: 1px 6px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.86em;
+    white-space: nowrap;
+    color: var(--page-heading);
+    background-color: var(--page-sunken);
+    border: 1px solid var(--page-border);
+    border-radius: var(--radius-sm);
+}
+
+/* ---------------------------------------------------------------- figures */
+
+.figure {
+    margin: 16px 0 0;
+}
+
+.figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    background-color: var(--page-bg);
+    border: 1px solid var(--page-border-strong);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.figure figcaption {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--page-muted);
+}
+
+/* Screenshots of the popup are 320 CSS pixels wide, shot at 2x */
+.figure--popup img {
+    width: 320px;
+}
+
+/* Two popup screenshots side by side, wrapping when there is no room */
+.figure-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 16px;
+}
+
+.figure-row .figure {
+    margin-top: 0;
+}
+
+/* --------------------------------------------------------------- callouts */
+
+.callout {
+    position: relative;
+    margin: 16px 0;
+    padding: 12px 16px 12px 18px;
+    max-width: 72ch;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--note-bar);
+    background-color: var(--note-bg);
+    font-size: 14px;
+}
+
+.callout > :first-child {
+    margin-top: 0;
+}
+
+.callout > :last-child {
+    margin-bottom: 0;
+}
+
+.callout__label {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--page-muted);
+}
+
+.callout--warning {
+    border-left-color: var(--warn-bar);
+    background-color: var(--warn-bg);
+}
+
+.callout--tip {
+    border-left-color: var(--tip-bar);
+    background-color: var(--tip-bg);
+}
+
+.callout code {
+    background-color: rgba(255, 255, 255, 0.65);
+}
+
+/* ----------------------------------------------------------------- tables */
+
+.table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.data-table th,
+.data-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--page-border);
+    vertical-align: top;
+}
+
+.data-table th {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--page-muted);
+    background-color: var(--page-sunken);
+    border-bottom-color: var(--page-border-strong);
+    white-space: nowrap;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table td:first-child {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    word-break: break-all;
+}
+
+/* -------------------------------------------------- option reference list */
+
+/* The table of every checkbox in the popup, laid out as rows rather than a real table so that
+   it reflows sensibly on a narrow window. */
+.options-list {
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--page-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.options-list li {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 4px 20px;
+    margin: 0;
+    padding: 12px 16px;
+    background-color: var(--page-surface);
+    border-bottom: 1px solid var(--page-border);
+}
+
+.options-list li:last-child {
+    border-bottom: none;
+}
+
+.options-list li:nth-child(even) {
+    background-color: var(--page-sunken);
+}
+
+.options-list dfn {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--page-heading);
+}
+
+@media (max-width: 560px) {
+    .options-list li {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ------------------------------------------------------------ rules page */
+
+.rule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rule-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--page-surface);
+    border: 1px solid var(--page-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.rule-card form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.rule-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    background-color: var(--page-panel);
+    border-bottom: 1px solid var(--page-border);
+}
+
+.rule-card__id {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--page-muted);
+}
+
+.rule-card__body {
+    flex: 1;
+    padding: 18px;
+}
+
+.rule-card__options {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--page-border);
+}
+
+.rule-card__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 18px;
+    background-color: var(--page-sunken);
+    border-top: 1px solid var(--page-border);
+}
+
+.field + .field {
+    margin-top: 12px;
+}
+
+.field__label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--page-muted);
+}
+
+/* The fields are textareas so that a long URL pattern or search term wraps into view instead of
+   scrolling sideways out of the card; src/options.ts grows them to fit their content. */
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 7px 10px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--page-heading);
+    background-color: #fdfdfd;
+    border: 1px solid var(--page-border-strong);
+    border-radius: var(--radius-sm);
+    /* Patterns are frequently one long unbroken run of characters, which only `anywhere` breaks */
+    overflow-wrap: anywhere;
+    overflow-y: hidden;
+    resize: none;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--page-accent);
+    box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.12);
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+}
+
+.form-check-input {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    accent-color: var(--page-accent);
+}
+
+.form-check-label {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-primary,
+.btn-ghost {
+    padding: 7px 16px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.btn-primary {
+    color: #f5f5f5;
+    background-color: var(--page-accent);
+    border: 1px solid var(--page-accent);
+}
+
+.btn-primary:hover {
+    background-color: #1a1a1a;
+}
+
+.btn-ghost {
+    color: var(--page-muted);
+    background-color: transparent;
+    border: 1px solid var(--page-border-strong);
+}
+
+.btn-ghost:hover {
+    color: #a3352c;
+    border-color: #a3352c;
+    background-color: rgba(163, 53, 44, 0.06);
+}
+
+/* Shown by saveRules.html when there is nothing saved yet */
+.empty-state {
+    padding: 48px 32px;
+    text-align: center;
+    background-color: var(--page-surface);
+    border: 1px dashed var(--page-border-strong);
+    border-radius: var(--radius-lg);
+}
+
+.empty-state p {
+    margin: 0 auto;
+    max-width: 46ch;
+    color: var(--page-muted);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.page-footer {
+    padding: 24px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--page-muted);
+    border-top: 1px solid var(--page-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}

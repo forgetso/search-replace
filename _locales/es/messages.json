@@ -28,8 +28,8 @@
         "description": "about"
     },
     "back": {
-      "message": "Tagasi",
-      "description": "Back"
+        "message": "Tagasi",
+        "description": "Back"
     },
     "version": {
         "message": "Versión",
@@ -207,9 +207,9 @@
         "message": "Para reemplazar texto en editores de texto o campos de entrada, debes marcar la casilla <code>Solo Campos de Entrada</code>.",
         "description": "Explicación sobre cómo reemplazar texto en editores y campos de texto"
     },
-    "replace_editors_p2": {
-        "message": "Para reemplazar texto en editores de texto o campos de entrada, debes marcar la casilla <code>Solo Campos de Entrada</code>. De lo contrario, el texto de búsqueda se reemplazará en todo el HTML, lo que podría romper la página. Para evitar cambiar campos de entrada ocultos, también debes marcar la casilla <code>Solo Elementos Visibles</code>.",
-        "description": "Explicación sobre cómo reemplazar texto en editores y campos de texto"
+    "replace_editors_p3": {
+        "message": "Esto abarca las cajas <code>input</code> y <code>textarea</code> simples, así como editores de texto enriquecido como TinyMCE y CKEditor. Como no se toca nada fuera de esos campos, es la opción más segura en una página complicada y la primera que conviene probar si una sustitución parece haber roto algo.",
+        "description": "Explanation about replacing text in editors and text fields"
     },
     "Setup": {
         "message": "Configuración",
@@ -223,13 +223,13 @@
         "message": "Para reemplazar texto contenido en un HTML, contenido en un editor de texto y contenido en un campo de texto, debe marcar la casilla de verificación <code>¿Reemplazar HTML?</code>.",
         "description": "Explicación sobre cómo reemplazar texto en cualquier lugar de la página"
     },
-    "Replacing_anywhere_p2": {
-        "message": "Para reemplazar texto que no está contenido en un editor de texto ni en un campo de entrada, deja desmarcadas las casillas <code>Solo Campos de Entrada</code> y <code>Solo Cambiar Contenido Visible</code>.",
-        "description": "Explicación sobre cómo reemplazar texto en cualquier lugar de la página"
+    "Replacing_anywhere_caption": {
+        "message": "Reescribiendo cada <code>example.com</code> de la página, incluidas las direcciones de los enlaces.",
+        "description": "Caption for the Replace HTML screenshot"
     },
     "Replacing_anywhere_warning": {
-        "message": "ADVERTENCIA: Esta configuración alterará el HTML de la página y puede romperla. Puedes restaurar la página recargándola, pero perderás los cambios no guardados en editores de texto y campos de entrada de texto.",
-        "description": "Explicación sobre cómo reemplazar texto en cualquier lugar de la página"
+        "message": "Esta configuración modifica el HTML de la página y puede romperla. Puede restaurar la página recargándola, pero perderá los cambios no guardados en los editores de texto y en los campos de entrada de texto.",
+        "description": "Explanation about replacing text anywhere on the page"
     },
     "Matching_case": {
         "message": "Coincidir con el caso del texto",
@@ -259,6 +259,10 @@
         "message": "Si necesitas hacer coincidir un término de búsqueda parcial, debes marcar la casilla de Expresiones Regulares y especificar un comodín. Deberás tener un conocimiento básico de <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expresiones regulares</a> para usar esta función. Te recomiendo <a href='https://regexpal.com' target='_blank'>regexpal</a> para probarlo.",
         "description": "Explicación sobre comodines y expresiones regulares"
     },
+    "wildcards_and_regex_p2": {
+        "message": "En el ejemplo siguiente, <code>1\\d1</code> significa «un 1, luego cualquier dígito, luego un 1», que coincide con 101, 111, 121 y así sucesivamente hasta 191.",
+        "description": "Worked example for the regular expression section"
+    },
     "Before": {
         "message": "Antes",
         "description": ""
@@ -272,24 +276,36 @@
         "description": ""
     },
     "Replacing_wordpress_p1": {
-        "message": "WordPress está actualmente en la versión 6.6, a partir de marzo de 2023. El editor de entradas ha cambiado significativamente desde la creación de esta extensión y se requiere una nueva configuración para reemplazar texto en WordPress.",
-        "description": ""
+        "message": "El editor de bloques de WordPress mantiene su entrada dentro de un marco propio, separado del resto de la página de administración. La extensión mira dentro de ese marco por usted, así que no hacen falta opciones especiales: escriba sus términos y pulse <code>Reemplazar Todo</code>.",
+        "description": "Replacing text in WordPress"
     },
-    "Replacing_wordpress_setup_w6": {
-        "message": "Configuración para WordPress 6+",
-        "description": ""
+    "Replacing_wordpress_p2": {
+        "message": "Si utiliza el editor clásico, o un maquetador cuyos campos son cajas de texto normales, marque primero <code>Solo Campos de Entrada</code>.",
+        "description": "Replacing text in WordPress"
     },
-    "Replacing_wordpress_setup_w5": {
-        "message": "Configuración para WordPress 5 y versiones anteriores",
-        "description": ""
+    "Replacing_wordpress_save": {
+        "message": "La sustitución cambia lo que hay en el editor, no lo que está guardado. Pulse <b>Actualizar</b> en WordPress después para conservarla.",
+        "description": "Reminder to save the post after replacing"
+    },
+    "Replacing_wordpress_caption": {
+        "message": "Editando una entrada en el editor de bloques. No hace falta ninguna opción.",
+        "description": "Caption for the WordPress screenshot"
     },
     "Save_apply": {
         "message": "Guardar y Aplicar al Recargar la Página",
         "description": "Guardar y Aplicar al Recargar la Página"
     },
     "Save_apply_p1": {
-        "message": "Puedes marcar la casilla <code>Guardar y Aplicar al Recargar la Página</code> para guardar tu búsqueda y aplicarla en recargas posteriores de la página. Estas configuraciones se mantendrán al reabrir tu navegador.",
-        "description": "Guardar y Aplicar al Recargar la Página"
+        "message": "Puede marcar la casilla <code>Guardar y Aplicar al Recargar la Página</code> para guardar su búsqueda y aplicarla cada vez que se recargue la página. Seguirá aplicándose incluso después de cerrar y volver a abrir el navegador.",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_editing": {
+        "message": "Editar las reglas guardadas",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_rules_caption": {
+        "message": "Cada regla guardada se puede editar o eliminar aquí.",
+        "description": "Caption for the Saved Rules screenshot"
     },
     "Save_apply_multi": {
         "message": "Reglas de Coincidencia Múltiple",
@@ -304,15 +320,15 @@
         "description": "Reglas de Coincidencia Múltiple"
     },
     "Save_apply_multi_p3": {
-        "message": "Puedes editar las reglas guardadas haciendo clic en el enlace <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> en la ventana emergente de la extensión. El campo <code>Patrón de URL</code> es una <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expresión regular</a>, que te permite aplicar la misma regla a muchos sitios web diferentes.",
-        "description": "Reglas de Coincidencia Múltiple"
+        "message": "Puede editar las reglas guardadas en la página <a href='saveRules.html'>Reglas Guardadas</a>, que abre el icono de guardar del popup. El campo <code>Patrón de URL</code> es una <a href='https://www.regular-expressions.info/quickstart.html' target='_blank' rel='noopener'>expresión regular</a>, lo que le permite aplicar la misma regla a muchos sitios web distintos.",
+        "description": "Multiple Matching Rules"
     },
     "ReportingIssues": {
         "message": "Reportar Problemas",
         "description": ""
     },
     "ReportingIssuesWarning": {
-        "message": "Recuerda RECARGAR la página en la que deseas reemplazar texto después de instalar la extensión.",
+        "message": "Recuerde recargar cualquier página que ya estuviera abierta cuando se instaló o actualizó la extensión. Hasta que se recargue, la extensión no puede acceder a ella.",
         "description": ""
     },
     "ReportingIssuesInfo": {
@@ -327,6 +343,22 @@
         "message": "¡Por favor, califica <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> en la Tienda de Chrome si la extensión te ayuda!",
         "description": ""
     },
+    "Troubleshooting": {
+        "message": "Antes de informar de un problema",
+        "description": "Troubleshooting checklist heading"
+    },
+    "Troubleshooting_reload": {
+        "message": "Recargue la página. Una página que ya estaba abierta cuando se instaló o actualizó la extensión no es accesible hasta que se recarga.",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_restricted": {
+        "message": "Las páginas del navegador como <code>chrome://</code>, la Chrome Web Store y la página de extensiones están vetadas a todas las extensiones, así que allí no se puede reemplazar nada.",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_nomatch": {
+        "message": "Si el recuento se queda en cero, pruebe <code>Contenido oculto</code>, desactive <code>Coincidir Mayúsculas y Minúsculas</code>, o compruebe que el texto no sea una imagen.",
+        "description": "Troubleshooting checklist"
+    },
     "no_saved_instances": {
         "message": "No hay instancias guardadas",
         "description": "message to tell user that no rules were found"
@@ -334,5 +366,161 @@
     "matches": {
         "message": "partidos",
         "description": "message to tell user how many instances of the search term were found"
+    },
+    "hidden_content_nav": {
+        "message": "Buscar contenido oculto",
+        "description": "Navigation link for hidden content help section"
+    },
+    "hidden_content_title": {
+        "message": "Buscar contenido oculto",
+        "description": "Title for hidden content help section"
+    },
+    "hidden_content_p1": {
+        "message": "De forma predeterminada, la extensión solo busca y reemplaza el texto visible en la página. Si necesita buscar y reemplazar texto en elementos ocultos (como secciones plegadas, divs ocultos o elementos con <code>display: none</code>), marque la opción <code>Contenido oculto</code>.",
+        "description": "First paragraph explaining hidden content checkbox"
+    },
+    "hidden_content_p2": {
+        "message": "Esto resulta especialmente útil con contenido dinámico que está oculto al principio pero se vuelve visible mediante la interacción del usuario, o cuando necesita modificar campos de formulario ocultos.",
+        "description": "Second paragraph explaining hidden content use cases"
+    },
+    "hidden_content_note": {
+        "message": "Cuando <code>Contenido oculto</code> está marcado, la extensión examina todos los elementos con independencia de su visibilidad, lo que puede dar un número de coincidencias mayor.",
+        "description": "Note about hidden content behavior"
+    },
+    "pageUnreachable": {
+        "message": "Buscar y Reemplazar no puede acceder a esta página. Recargue la página e inténtelo de nuevo.",
+        "description": "pageUnreachable"
+    },
+    "help_lede": {
+        "message": "Cómo encontrar texto en una página y cambiarlo &mdash; en texto normal, en campos de formulario, en editores y automáticamente en cada visita.",
+        "description": "Introduction under the Help heading"
+    },
+    "Contents": {
+        "message": "Contenido",
+        "description": "Help page sidebar heading"
+    },
+    "Note": {
+        "message": "Nota",
+        "description": "Callout label"
+    },
+    "Tip": {
+        "message": "Consejo",
+        "description": "Callout label"
+    },
+    "Warning": {
+        "message": "Advertencia",
+        "description": "Callout label"
+    },
+    "No_undo": {
+        "message": "Sin deshacer",
+        "description": "Callout label"
+    },
+    "basics_title": {
+        "message": "El popup de un vistazo",
+        "description": "Help section title"
+    },
+    "basics_p1": {
+        "message": "Abra el popup desde la barra de herramientas, o con <code>Ctrl+Mayús+S</code>. Escriba el texto que busca en <code>Buscar por</code> y el texto que quiere en su lugar en <code>Reemplazar con</code>, y después pulse uno de los dos botones de abajo.",
+        "description": "Help section on the popup layout"
+    },
+    "basics_p2": {
+        "message": "El número que aparece bajo la caja <code>Buscar por</code> cuenta las coincidencias que quedan en la página, y se actualiza mientras escribe y mientras reemplaza. La fila de iconos de arriba abre esta página de ayuda, sus búsquedas recientes, el panel Acerca de, el ajuste de idioma y sus reglas guardadas.",
+        "description": "Help section on the popup layout"
+    },
+    "basics_caption": {
+        "message": "Quedan cuatro apariciones de <code>Condo</code> en la página.",
+        "description": "Caption for the popup overview screenshot"
+    },
+    "options_title": {
+        "message": "Qué hace cada opción",
+        "description": "Help section title"
+    },
+    "options_p1": {
+        "message": "Cada casilla del popup restringe o amplía lo que se busca. Se pueden combinar.",
+        "description": "Introduction to the option reference"
+    },
+    "option_matchCase_desc": {
+        "message": "Solo coincide con texto que tenga exactamente las mismas mayúsculas y minúsculas. Sin marcar, <code>Condo</code>, <code>condo</code> y <code>CONDO</code> coinciden todos.",
+        "description": "Option reference"
+    },
+    "option_inputFieldsOnly_desc": {
+        "message": "Limita la búsqueda a cajas de texto, áreas de texto y editores de texto enriquecido, y deja el resto de la página en paz. Úsela siempre que esté editando un formulario, un mensaje o una entrada.",
+        "description": "Option reference"
+    },
+    "option_hiddenContent_desc": {
+        "message": "Incluye elementos que ahora mismo no puede ver: paneles plegados, pestañas inactivas, menús fuera de pantalla y campos de formulario ocultos.",
+        "description": "Option reference"
+    },
+    "option_wholeWord_desc": {
+        "message": "Exige que la coincidencia sea una palabra completa, de modo que <code>partial</code> ya no coincida dentro de <code>partially</code>.",
+        "description": "Option reference"
+    },
+    "option_isRegex_desc": {
+        "message": "Trata el término de búsqueda como una expresión regular en lugar de como texto literal.",
+        "description": "Option reference"
+    },
+    "option_replaceHTML_desc": {
+        "message": "Busca en el código HTML de la página en lugar del texto que usted lee, de modo que las etiquetas, los atributos, las direcciones de enlaces y el texto alternativo también entran en el ámbito.",
+        "description": "Option reference"
+    },
+    "option_save_desc": {
+        "message": "Guarda la búsqueda como una regla y la aplica de nuevo cada vez que abre una página que coincida, incluso después de reiniciar el navegador.",
+        "description": "Option reference"
+    },
+    "hidden_content_caption": {
+        "message": "La misma búsqueda encuentra seis coincidencias en lugar de cuatro una vez incluidos los elementos ocultos.",
+        "description": "Caption for the hidden content screenshot"
+    },
+    "history_title": {
+        "message": "Historial, Intercambio e idioma",
+        "description": "Help section title"
+    },
+    "history_p1": {
+        "message": "El icono del reloj en el popup muestra sus búsquedas recientes. Haga clic en una para devolverla a las dos cajas, o pulse <b>Borrar</b> para vaciar la lista.",
+        "description": "Help section on history"
+    },
+    "history_p2": {
+        "message": "<b>Swap</b>, entre las dos cajas, intercambia los términos de búsqueda y reemplazo &mdash; práctico para deshacer una sustitución que acaba de hacer, siempre que el texto original no se haya escrito en ningún otro lugar de la página.",
+        "description": "Help section on the swap button"
+    },
+    "history_p3": {
+        "message": "El icono del engranaje contiene el ajuste de idioma. La extensión está traducida al alemán, árabe, chino, coreano, español, hindi, inglés, japonés, portugués y ruso; lo que aún no esté traducido se muestra en inglés.",
+        "description": "Help section on the language setting"
+    },
+    "saved_rules_lede": {
+        "message": "Estas búsquedas se ejecutan automáticamente cada vez que abre una página cuya dirección coincide con su patrón de URL. El patrón es una expresión regular, así que una sola regla puede cubrir todo un sitio.",
+        "description": "Introduction on the Saved Rules page"
+    },
+    "no_saved_instances_hint": {
+        "message": "Marque «Guardar y Aplicar al Recargar la Página» en el popup para crear una.",
+        "description": "Empty state on the Saved Rules page"
+    },
+    "about_author_label": {
+        "message": "Autor",
+        "description": "About panel"
+    },
+    "about_licence_label": {
+        "message": "Licencia",
+        "description": "About panel"
+    },
+    "about_release_notes": {
+        "message": "Notas de la versión",
+        "description": "About panel"
+    },
+    "about_report_issue": {
+        "message": "Informar de un problema",
+        "description": "About panel"
+    },
+    "about_rate": {
+        "message": "Valorar esta extensión",
+        "description": "About panel"
+    },
+    "no_history": {
+        "message": "Sus búsquedas recientes aparecerán aquí.",
+        "description": "Empty state of the History panel"
+    },
+    "history_removed": {
+        "message": "(eliminado)",
+        "description": "Shown in the History panel when the replacement term is empty"
     }
 }
