@@ -80,24 +80,24 @@ describe('Reported match counts', () => {
         })
     })
 
-    // Replacing in HTML rewrites the whole subtree of the outermost matching element, so it
-    // reaches script contents and hidden text regardless of the "Hidden content" setting. These
-    // two tests pin that known limitation; see the note in searchreplace.invariants.test.ts.
-    it('leaves a top level script alone', () => {
-        // A script that is a direct child of body is safe: body is the root of the walk and is
-        // never itself the element whose innerHTML gets rewritten
+    // Replacing in HTML used to rewrite the whole subtree of the outermost matching element, so
+    // where a script or some hidden text ended up being replaced was decided by where it
+    // happened to sit in the tree. It is now decided by the options, which is what these three
+    // tests cover. Script contents are in scope for Replace HTML wherever they are; hidden text
+    // is in scope only when Hidden content is set.
+    it('replaces inside a top level script when replacing HTML', () => {
         cy.window().then((window) => {
             cy.wrap(
                 run('searchReplace', window, { replaceHTML: true }).then(() => {
                     const script = window.document.getElementById('page-script')
-                    expect(script?.textContent).to.contain(SEARCH)
-                    expect(script?.textContent).to.not.contain(REPLACE)
+                    expect(script?.textContent).to.contain(REPLACE)
+                    expect(script?.textContent).to.not.contain(SEARCH)
                 })
             )
         })
     })
 
-    it('KNOWN LIMITATION: Replace HTML rewrites a script sharing a container with matching text', () => {
+    it('replaces inside a nested script too, wherever it sits', () => {
         cy.window().then((window) => {
             cy.wrap(
                 run('searchReplace', window, { replaceHTML: true }).then(() => {
@@ -108,10 +108,33 @@ describe('Reported match counts', () => {
         })
     })
 
-    it('KNOWN LIMITATION: Replace HTML rewrites text hidden by a stylesheet', () => {
+    it('leaves a script alone when not replacing HTML', () => {
+        cy.window().then((window) => {
+            cy.wrap(
+                run('searchReplace', window).then(() => {
+                    const script = window.document.getElementById('page-script')
+                    expect(script?.textContent).to.contain(SEARCH)
+                    expect(script?.textContent).to.not.contain(REPLACE)
+                })
+            )
+        })
+    })
+
+    it('leaves text hidden by a stylesheet alone unless Hidden content is set', () => {
         cy.window().then((window) => {
             cy.wrap(
                 run('searchReplace', window, { replaceHTML: true }).then(() => {
+                    const hidden = window.document.querySelectorAll('.promo')
+                    hidden.forEach((el) => expect(el.textContent).to.equal(SEARCH))
+                })
+            )
+        })
+    })
+
+    it('rewrites text hidden by a stylesheet when Hidden content is set', () => {
+        cy.window().then((window) => {
+            cy.wrap(
+                run('searchReplace', window, { replaceHTML: true, hiddenContent: true }).then(() => {
                     const hidden = window.document.querySelectorAll('.promo')
                     hidden.forEach((el) => expect(el.textContent).to.equal(REPLACE))
                 })
