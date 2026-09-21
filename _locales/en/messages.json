@@ -28,8 +28,8 @@
         "description": "about"
     },
     "back": {
-      "message": "Back",
-      "description": "Back"
+        "message": "Back",
+        "description": "Back"
     },
     "version": {
         "message": "Version",
@@ -354,5 +354,9 @@
     "hidden_content_note": {
         "message": "NOTE: When <code>Hidden content?</code> is checked, the extension will search through all elements regardless of their visibility, which may result in a higher match count.",
         "description": "Note about hidden content behavior"
+    },
+    "pageUnreachable": {
+        "message": "Search and Replace cannot reach this page. Reload the page and try again.",
+        "description": "pageUnreachable"
     }
 }

@@ -94,6 +94,12 @@ export interface ChromeMock {
     executedScripts: { tabId: number; files: string[] }[]
     /** Tab ids for which `chrome.scripting.executeScript` should reject, as restricted pages do */
     blockedTabIds: Set<number>
+    /** Tab ids with no content script listening, as a page loaded before the extension has */
+    tabsWithoutContentScript: Set<number>
+    /** Tab ids where injecting does not help, e.g. the tab navigated away mid-flight */
+    injectionDoesNotHelp: Set<number>
+    /** Set to make `chrome.tabs.sendMessage` reject with something other than a missing receiver */
+    tabMessageError?: Error
     chrome: typeof chrome
 }
 
@@ -107,6 +113,9 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
     const tabs: { id?: number; url?: string }[] = [{ id: 1, url: 'https://example.com/' }]
     const executedScripts: { tabId: number; files: string[] }[] = []
     const blockedTabIds = new Set<number>()
+    const tabsWithoutContentScript = new Set<number>()
+    const injectionDoesNotHelp = new Set<number>()
+    const state: { tabMessageError?: Error } = {}
 
     function respondTo(message: unknown): unknown {
         const action = (message as { action?: string } | undefined)?.action
@@ -145,6 +154,13 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
         tabs: {
             query: () => Promise.resolve(tabs),
             sendMessage: (tabId: number, message: unknown) => {
+                if (state.tabMessageError) {
+                    return Promise.reject(state.tabMessageError)
+                }
+                if (tabsWithoutContentScript.has(tabId)) {
+                    // Mirrors Chrome's wording when no content script is listening
+                    return Promise.reject(new Error('Could not establish connection. Receiving end does not exist.'))
+                }
                 sentTabMessages.push({ tabId, message })
                 return Promise.resolve()
             },
@@ -159,6 +175,10 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
                     return Promise.reject(new Error('Cannot access contents of the page'))
                 }
                 executedScripts.push({ tabId: injection.target.tabId, files: injection.files })
+                if (!injectionDoesNotHelp.has(injection.target.tabId)) {
+                    // Injecting gives the tab a listener, so a retry now succeeds
+                    tabsWithoutContentScript.delete(injection.target.tabId)
+                }
                 return Promise.resolve([])
             },
         },
@@ -180,6 +200,14 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
         tabs,
         executedScripts,
         blockedTabIds,
+        tabsWithoutContentScript,
+        injectionDoesNotHelp,
+        get tabMessageError() {
+            return state.tabMessageError
+        },
+        set tabMessageError(error: Error | undefined) {
+            state.tabMessageError = error
+        },
         // The mock deliberately implements only the surface this codebase uses
         chrome: mock as unknown as typeof chrome,
     }

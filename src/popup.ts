@@ -28,6 +28,7 @@ import {
     manifest,
     tabConnect,
 } from './util'
+import { deliverToContentScript } from './popup/deliver'
 import { getRemainingMatchCount } from './popup/count'
 
 // Enum for content types
@@ -382,6 +383,11 @@ async function formSubmitHandler(
     await storeTerms(true)
     // do the search replace
     await contentScriptCall(action, searchReplaceInstance, historyItems)
+    if (!reachedContentScript) {
+        // No reply is coming, so take the spinner down and say why
+        removeLoader()
+        setPageUnreachableHint(translationFn)
+    }
 }
 
 /** Send the search and replace instance to the content script for processing, clearing any saved responses first.
@@ -408,11 +414,26 @@ export async function contentScriptCall(
             url: tab.url,
             instanceId,
         }
-        await chrome.tabs.sendMessage(tab.id, message)
+        // Injects the content script and retries if the page does not have one. Never rejects
+        // for a missing content script, so a page the extension cannot reach leaves the popup
+        // usable instead of hanging on a spinner.
+        const delivery = await deliverToContentScript(tab.id, message)
+        if (delivery === 'no-content-script') {
+            reachedContentScript = false
+            return undefined
+        }
+        reachedContentScript = true
         url = tab.url
     }
     return url
 }
+
+/**
+ * Whether the last contentScriptCall reached a content script. The response arrives
+ * asynchronously through chrome.runtime.onMessage, so the popup has to remember that the
+ * request never got anywhere in order to stop waiting for a reply.
+ */
+let reachedContentScript = true
 
 /** The callback function for the content script
  * @param msg {SearchReplaceResponse}
@@ -465,6 +486,24 @@ function setHints(hints?: Hint[]) {
             }
         }
     }
+}
+
+/**
+ * Tell the user the page cannot be reached, in the same place hints appear. Reached when a page
+ * has no content script and one cannot be injected — a chrome:// page, the Web Store, a PDF, or
+ * a file:// URL without file access.
+ */
+function setPageUnreachableHint(translationFn: TranslationProxy) {
+    const hintsElement = document.getElementById('hints')
+    if (!hintsElement) {
+        return
+    }
+    hintsElement.innerHTML = ''
+    const alert = document.createElement('div')
+    alert.className = 'hint alert alert-warning'
+    alert.setAttribute('role', 'alert')
+    alert.innerText = translationFn('pageUnreachable')
+    hintsElement.appendChild(alert)
 }
 
 function removeLoader() {
