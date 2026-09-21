@@ -522,5 +522,37 @@
     "history_removed": {
         "message": "(entfernt)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "Öffnen in",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "Popup",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "Seitenleiste",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "Die Seitenleiste bleibt geöffnet, während Sie auf der Seite arbeiten.",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "Popup oder Seitenleiste",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "Standardmäßig öffnet sich die Erweiterung als Popup unter der Symbolleisten-Schaltfläche. Ein Popup schließt sich, sobald etwas anderes den Fokus erhält: Ein Klick in die Seite, um eine Ersetzung zu prüfen, lässt es verschwinden, und die Begriffe müssen erneut eingegeben werden.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "Wählen Sie unter dem Zahnradsymbol <code>Seitenleiste</code>, um die Erweiterung stattdessen in der Seitenleiste von Chrome zu öffnen. Sie bleibt geöffnet, während Sie auf der Seite arbeiten, folgt Ihnen von Tab zu Tab und lässt sich breiter ziehen. Alles andere funktioniert genau wie im Popup.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "Die Einstellung folgt Ihrem Chrome-Profil, und das Tastenkürzel <code>Strg+Umschalt+S</code> öffnet jeweils die gewählte Variante. Die Seitenleiste erfordert Chrome 114 oder neuer; in älteren Versionen wird die Einstellung nicht angezeigt.",
+        "description": "Help section on the side panel"
     }
 }

@@ -522,5 +522,37 @@
     "history_removed": {
         "message": "（已删除）",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "打开方式",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "弹出窗口",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "侧边栏",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "你在页面上操作时，侧边栏会一直保持打开。",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "弹出窗口还是侧边栏",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "默认情况下，扩展会在工具栏按钮下方以弹出窗口的形式打开。只要焦点转到别处，弹出窗口就会关闭——点击页面查看替换结果会让它消失，搜索词也得重新输入。",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "在齿轮图标下选择<code>侧边栏</code>，扩展就会改在 Chrome 的侧边栏中打开。你在页面上操作时它会一直开着，切换标签页时也会跟随，还可以拖宽。其余一切都和弹出窗口中完全一样。",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "该设置随你的 Chrome 配置文件同步，键盘快捷键 <code>Ctrl+Shift+S</code> 会打开你所选择的那一种。侧边栏需要 Chrome 114 或更高版本；更早的版本不会显示此设置。",
+        "description": "Help section on the side panel"
     }
 }

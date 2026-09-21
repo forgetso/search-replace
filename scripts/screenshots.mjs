@@ -316,6 +316,42 @@ async function popupHarness(shot) {
     return body.replace('</body>', harness)
 }
 
+/** The Settings panel, showing the popup-or-side-panel preference */
+async function settingsHarness() {
+    const popup = await readFile(resolve(assets, 'popup.html'), 'utf8')
+    const body = popup
+        .replace('<script src="../popup.js"></script>', '')
+        .replace(/<div class="text-center">[\s\S]*?<\/div>\s*<\/body>/, '</body>')
+
+    const harness = `
+    <style>
+        html, body { margin: 0; padding: 0; width: ${POPUP_WIDTH}px; overflow: hidden; }
+    </style>
+    <script>
+        document.getElementById('loader').remove()
+        for (const id of ['searchReplaceForm', 'aboutSection', 'historySection', 'footer']) {
+            document.getElementById(id).classList.add('d-none')
+        }
+        document.getElementById('history').classList.remove('icon-selected')
+        document.getElementById('setting').classList.add('icon-selected')
+
+        // Mirrors loadLanguageOptions() and loadOpenInOptions() in popup.ts
+        const languageSelect = document.getElementById('languageSelect')
+        for (const name of ['English', 'Deutsch', 'Español']) {
+            const option = document.createElement('option')
+            option.textContent = name
+            languageSelect.appendChild(option)
+        }
+        document.getElementById('openInSetting').classList.remove('d-none')
+        document.getElementById('openInSelect').value = 'sidePanel'
+
+        document.documentElement.dataset.shotTarget = '#content'
+    </script>
+    </body>`
+
+    return body.replace('</body>', harness)
+}
+
 /**
  * The saved rules page. The card markup mirrors instanceToHTML() in src/options.ts, which
  * cannot be imported here because it is TypeScript and needs the chrome.* APIs to run.
@@ -489,6 +525,10 @@ async function main() {
     try {
         for (const shot of POPUP_SHOTS.filter((s) => wanted(s.name))) {
             await shoot(shot.name, await popupHarness(shot), POPUP_WIDTH)
+        }
+
+        if (wanted('setup-side-panel')) {
+            await shoot('setup-side-panel', await settingsHarness(), POPUP_WIDTH)
         }
 
         if (wanted('saved-rules')) {

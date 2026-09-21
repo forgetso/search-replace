@@ -182,8 +182,21 @@
                             data-locale="back">Back</span>
                     </div>
                     <h5 class="text-color" data-locale="settings">Settings</h5>
-                    <p data-locale="select_language">Select a language</p>
-                    <select id="languageSelect" class="form-select"></select>
+                    <div class="setting">
+                        <label class="setting__label" for="languageSelect"
+                            data-locale="select_language">Select a language</label>
+                        <select id="languageSelect" class="form-select"></select>
+                    </div>
+                    <div class="setting d-none" id="openInSetting">
+                        <label class="setting__label" for="openInSelect" data-locale="open_in">Open in</label>
+                        <select id="openInSelect" class="form-select">
+                            <option value="popup" data-locale="open_in_popup">Popup</option>
+                            <option value="sidePanel" data-locale="open_in_side_panel">Side panel</option>
+                        </select>
+                        <p class="setting__hint" data-locale="open_in_hint">
+                            The side panel stays open while you work on the page.
+                        </p>
+                    </div>
                 </div>
                 <div id="aboutSection">
                     <div id="back" class="border-0 py-2 fw-bold cursor-point d-flex">

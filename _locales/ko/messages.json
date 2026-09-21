@@ -522,5 +522,37 @@
     "history_removed": {
         "message": "(삭제됨)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "열기 위치",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "팝업",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "사이드 패널",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "사이드 패널은 페이지에서 작업하는 동안 계속 열려 있습니다.",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "팝업 또는 사이드 패널",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "기본적으로 이 확장 프로그램은 도구 모음 버튼 아래에 팝업으로 열립니다. 팝업은 다른 곳으로 포커스가 옮겨가는 순간 닫히므로, 바꾼 결과를 확인하려고 페이지를 클릭하면 사라지고 검색어를 다시 입력해야 합니다.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "톱니바퀴 아이콘 아래에서 <code>사이드 패널</code>을 선택하면 Chrome의 사이드 패널에서 열립니다. 페이지에서 작업하는 동안 계속 열려 있고, 탭을 옮겨도 따라오며, 넓게 늘릴 수도 있습니다. 그 밖의 모든 것은 팝업과 똑같이 동작합니다.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "이 설정은 Chrome 프로필을 따라가며, 키보드 단축키 <code>Ctrl+Shift+S</code>는 선택한 쪽을 엽니다. 사이드 패널은 Chrome 114 이상이 필요하고, 그보다 낮은 버전에서는 이 설정이 표시되지 않습니다.",
+        "description": "Help section on the side panel"
     }
 }

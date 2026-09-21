@@ -522,5 +522,37 @@
     "history_removed": {
         "message": "(removed)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "Open in",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "Popup",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "Side panel",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "The side panel stays open while you work on the page.",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "Popup or side panel",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "By default the extension opens as a popup under the toolbar button. A popup closes as soon as anything else takes the focus, so clicking into the page to check a replacement dismisses it and the terms have to be typed again.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "Choose <code>Side panel</code> under the cog icon to open in Chrome's side panel instead. It stays open while you work on the page, follows you from tab to tab, and can be dragged wider. Everything else works exactly as it does in the popup.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "The setting follows your Chrome profile, and the keyboard shortcut <code>Ctrl+Shift+S</code> opens whichever one you have chosen. The side panel needs Chrome 114 or newer; on anything older the setting is not shown.",
+        "description": "Help section on the side panel"
     }
 }

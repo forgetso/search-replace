@@ -136,6 +136,49 @@ a {
     width: 320px;
 }
 
+/* Side panel.
+   Chrome sizes the toolbar popup to the document, which is why #content carries a fixed width.
+   The panel is the other way round: it is as tall as the browser window and the user can drag
+   its edge, so the same document has to fill whatever it is given instead of sitting in a
+   320px column with grey either side. popup.ts adds .side-panel when the document is loaded
+   with ?surface=sidepanel. */
+body.side-panel,
+body.side-panel #content,
+body.side-panel #loader {
+    width: 100%;
+}
+
+body.side-panel {
+    min-width: 320px;
+}
+
+/* Pins the action buttons to the bottom of the panel rather than leaving them floating halfway
+   up it, which is where they would otherwise sit in a window-height panel */
+body.side-panel #content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body.side-panel .row.bg-surface {
+    flex: 1;
+}
+
+/* The list has the whole height of the panel to play with, so it does not need the cap that
+   keeps it inside the popup's 600px */
+body.side-panel #historyList {
+    max-height: none;
+}
+
+/* Keeps the text columns readable when the panel is dragged out wide */
+body.side-panel #body,
+body.side-panel #header > div,
+body.side-panel #footer > div {
+    max-width: 640px;
+    margin-inline: auto;
+    width: 100%;
+}
+
 /* Was display:table, which shrink-wraps to its content rather than filling the popup width */
 #body {
     display: block;
@@ -233,6 +276,21 @@ a {
     align-items: center;
     gap: var(--sr-space-xs);
     margin-bottom: var(--sr-space-sm);
+}
+
+/* A labelled control in the Settings panel */
+.setting + .setting {
+    margin-top: var(--sr-space-lg);
+}
+
+.setting__label {
+    display: block;
+    margin-bottom: var(--sr-space-xs);
+}
+
+.setting__hint {
+    margin: var(--sr-space-xs) 0 0;
+    color: var(--sr-muted);
 }
 
 #settingSection h5,

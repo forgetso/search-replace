@@ -100,7 +100,23 @@ export interface ChromeMock {
     injectionDoesNotHelp: Set<number>
     /** Set to make `chrome.tabs.sendMessage` reject with something other than a missing receiver */
     tabMessageError?: Error
+    /** Calls recorded from the action, sidePanel and windows APIs */
+    surface: SurfaceCalls
     chrome: typeof chrome
+}
+
+/** What the popup-or-side-panel code did to the browser, for background/surface.ts's tests */
+export interface SurfaceCalls {
+    /** Every `chrome.action.setPopup` call, in order */
+    setPopup: string[]
+    /** Every `chrome.sidePanel.setPanelBehavior` call, in order */
+    panelBehaviour: boolean[]
+    /** Every `chrome.sidePanel.setOptions` call, in order */
+    panelOptions: { path?: string; enabled?: boolean }[]
+    /** Window ids passed to `chrome.sidePanel.open` */
+    opened: (number | undefined)[]
+    /** How many times `chrome.action.openPopup` was called */
+    openPopupCalls: number
 }
 
 export function createChromeMock(options: { version?: string } = {}): ChromeMock {
@@ -116,6 +132,13 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
     const tabsWithoutContentScript = new Set<number>()
     const injectionDoesNotHelp = new Set<number>()
     const state: { tabMessageError?: Error } = {}
+    const surface: SurfaceCalls = {
+        setPopup: [],
+        panelBehaviour: [],
+        panelOptions: [],
+        opened: [],
+        openPopupCalls: 0,
+    }
 
     function respondTo(message: unknown): unknown {
         const action = (message as { action?: string } | undefined)?.action
@@ -166,6 +189,7 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
             },
             create: () => Promise.resolve({}),
             onUpdated: createEvent(),
+            onActivated: createEvent(),
         },
         scripting: {
             executeScript: (injection: { target: { tabId: number }; files: string[] }) => {
@@ -181,6 +205,38 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
                 }
                 return Promise.resolve([])
             },
+        },
+        action: {
+            setPopup: (details: { popup: string }) => {
+                surface.setPopup.push(details.popup)
+                return Promise.resolve()
+            },
+            openPopup: () => {
+                surface.openPopupCalls++
+                return Promise.resolve()
+            },
+        },
+        // Present only where the test arranges it, so that the Chrome-114-and-older path can be
+        // exercised by deleting it
+        sidePanel: {
+            setOptions: (options: { path?: string; enabled?: boolean }) => {
+                surface.panelOptions.push(options)
+                return Promise.resolve()
+            },
+            setPanelBehavior: (behavior: { openPanelOnActionClick?: boolean }) => {
+                surface.panelBehaviour.push(behavior.openPanelOnActionClick === true)
+                return Promise.resolve()
+            },
+            open: (options: { windowId?: number }) => {
+                surface.opened.push(options.windowId)
+                return Promise.resolve()
+            },
+        },
+        windows: {
+            getCurrent: () => Promise.resolve({ id: 7 }),
+        },
+        commands: {
+            onCommand: createEvent(),
         },
         i18n: {
             getAcceptLanguages: (callback: (languages: string[]) => void) => callback(['en']),
@@ -202,6 +258,7 @@ export function createChromeMock(options: { version?: string } = {}): ChromeMock
         blockedTabIds,
         tabsWithoutContentScript,
         injectionDoesNotHelp,
+        surface,
         get tabMessageError() {
             return state.tabMessageError
         },

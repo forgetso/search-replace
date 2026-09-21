@@ -522,5 +522,37 @@
     "history_removed": {
         "message": "(eliminado)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "Abrir en",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "Ventana emergente",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "Panel lateral",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "El panel lateral permanece abierto mientras trabaja en la página.",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "Ventana emergente o panel lateral",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "De forma predeterminada la extensión se abre como una ventana emergente bajo el botón de la barra de herramientas. Una ventana emergente se cierra en cuanto cualquier otra cosa recibe el foco, así que hacer clic en la página para comprobar una sustitución la descarta y hay que volver a escribir los términos.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "Elija <code>Panel lateral</code> bajo el icono del engranaje para abrirla en el panel lateral de Chrome. Permanece abierto mientras trabaja en la página, le sigue de pestaña en pestaña y se puede ensanchar. Todo lo demás funciona exactamente igual que en la ventana emergente.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "El ajuste sigue a su perfil de Chrome, y el atajo de teclado <code>Ctrl+Mayús+S</code> abre el que haya elegido. El panel lateral necesita Chrome 114 o posterior; en versiones anteriores el ajuste no se muestra.",
+        "description": "Help section on the side panel"
     }
 }

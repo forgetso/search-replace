@@ -522,5 +522,37 @@
     "history_removed": {
         "message": "(removido)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "Abrir em",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "Janela pop-up",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "Painel lateral",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "O painel lateral permanece aberto enquanto trabalha na página.",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "Janela pop-up ou painel lateral",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "Por predefinição a extensão abre como uma janela pop-up por baixo do botão da barra de ferramentas. Uma pop-up fecha assim que outra coisa recebe o foco, por isso clicar na página para verificar uma substituição fá-la desaparecer e os termos têm de ser escritos de novo.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "Escolha <code>Painel lateral</code> sob o ícone da roda dentada para abrir no painel lateral do Chrome. Fica aberto enquanto trabalha na página, acompanha-o de separador em separador e pode ser alargado. Tudo o resto funciona exatamente como na pop-up.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "A definição acompanha o seu perfil do Chrome, e o atalho de teclado <code>Ctrl+Shift+S</code> abre aquele que tiver escolhido. O painel lateral requer o Chrome 114 ou mais recente; em versões anteriores a definição não é apresentada.",
+        "description": "Help section on the side panel"
     }
 }

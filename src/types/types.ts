@@ -217,3 +217,6 @@ export type ReplaceFunctionReturnType = {
 }
 
 export type PartitionResult = [(HTMLInputElement | HTMLTextAreaElement)[], HTMLElement[]]
+
+/** Where the extension opens when the toolbar button is used. See background/surface.ts. */
+export type OpenIn = 'popup' | 'sidePanel'
