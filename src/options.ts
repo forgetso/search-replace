@@ -13,7 +13,7 @@ import { createTranslationProxy, getTranslation, localizeElements, manifest, tab
 
 window.addEventListener('DOMContentLoaded', async function () {
     const langData = await getTranslation()
-    const getString = createTranslationProxy(langData)
+    const languageProxy = createTranslationProxy(langData)
 
     // Add poller to refresh the page if storage changes detected
     chrome.storage.onChanged.addListener(function (changes, namespace) {
@@ -26,14 +26,9 @@ window.addEventListener('DOMContentLoaded', async function () {
     const port = tabConnect()
     port.postMessage({ action: 'recover' })
 
-    const aboutContainer = document.getElementById('aboutSection')
-    if (aboutContainer) {
-        aboutContainer.innerHTML = `
-        <div>
-        <p class="h5">${getString('ext_name')} <code>${manifest.version}</code></p>
-        <p>${getString('ext_description')}</p>
-        </div>
-        `
+    const versionNumber = document.getElementById('version_number')
+    if (versionNumber) {
+        versionNumber.textContent = manifest.version
     }
 
     const savedInstancesContainer = document.getElementById('savedInstances')
@@ -41,24 +36,45 @@ window.addEventListener('DOMContentLoaded', async function () {
     // Restore the SavedInstances from storage
     port.onMessage.addListener(function (storageItems: SearchReplacePopupStorage) {
         const saved: SavedInstances = storageItems.storage.saved || ({} as SavedInstances)
-        const languageProxy = createTranslationProxy(langData)
+        if (!savedInstancesContainer) {
+            return
+        }
         if (Object.keys(saved).length > 0) {
             // create a list of the saved search replace instances
-
-            if (savedInstancesContainer) {
-                savedInstancesContainer.innerHTML = instancesToHTML(saved, languageProxy)
-                addFormSubmitListeners()
-            }
+            savedInstancesContainer.innerHTML = `<ul class="rule-grid">${instancesToHTML(saved, languageProxy)}</ul>`
+            addFormSubmitListeners()
+            autoGrowFields(savedInstancesContainer)
         } else {
-            if (savedInstancesContainer) {
-                savedInstancesContainer.innerHTML = `<p>${languageProxy('no_saved_instances')}</p>`
-            }
+            savedInstancesContainer.innerHTML = `
+                <div class="empty-state">
+                    <p>${languageProxy('no_saved_instances')}</p>
+                    <p>${languageProxy('no_saved_instances_hint')}</p>
+                </div>`
         }
     })
 
     // Localize HTML elements
     localizeElements(langData)
 })
+
+/** Sizes each field to its content, and keeps it sized as the value is edited */
+function autoGrowFields(container: HTMLElement) {
+    for (const field of container.querySelectorAll('textarea')) {
+        const grow = () => {
+            field.style.height = 'auto'
+            field.style.height = `${field.scrollHeight}px`
+        }
+        grow()
+        field.addEventListener('input', grow)
+        // A textarea is used for wrapping, not for multi-line values: a newline in a URL pattern
+        // or a search term would be saved along with it and never match anything
+        field.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault()
+            }
+        })
+    }
+}
 
 function addFormSubmitListeners() {
     //add event listener to the save button of each saved instance form
@@ -131,16 +147,33 @@ function instancesToHTML(instances: SavedInstances, i18n: TranslationProxy) {
         .join('')
 }
 
-function checkBoxesToHTML(instance: SavedSearchReplaceInstance, i18n: TranslationProxy) {
+/**
+ * Saved terms are arbitrary user text and end up inside an attribute, so a stray quote would
+ * otherwise close the attribute early and swallow the rest of the card.
+ */
+function escapeHTML(value: string) {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+}
+
+function checkBoxesToHTML(instance: SavedSearchReplaceInstance, instanceId: string, i18n: TranslationProxy) {
     const getString = i18n
 
     const checkboxes = getCheckboxNames().map((name) => {
         const checked = instance.options[name] ? 'checked' : ''
+        // The ids have to carry the instance id: every rule renders the same set of checkboxes,
+        // so a bare `id="matchCase"` would repeat down the page and every label would point at
+        // the first card's checkbox
+        const id = `${name}-${instanceId}`
         return `
-                <div class="form-check">
-                    <label for="${name}" class="form-check-label">${getString(name)}</label>
-                    <input name="${name}" type="checkbox" class="form-check-input data_field" id="${name}" ${checked}>
-                </div>`
+                        <div class="form-check">
+                            <input name="${name}" type="checkbox" class="form-check-input data_field" id="${id}" ${checked}>
+                            <label for="${id}" class="form-check-label">${getString(name)}</label>
+                        </div>`
     })
     return checkboxes.join('')
 }
@@ -149,45 +182,47 @@ function getCheckboxNames() {
     return Object.values(SearchReplaceCheckboxNames).filter((name) => name !== SearchReplaceCheckboxNames.save)
 }
 
+/**
+ * A textarea rather than a text input: URL patterns and search terms are routinely longer than
+ * the card is wide, and an input can only scroll them out of sight one line at a time. The
+ * textarea is grown to fit its content by autoGrowFields() below, so the whole value is visible.
+ */
+function field(instanceId: string, name: string, label: string, value: string) {
+    const id = `${name}-${instanceId}`
+    return `
+                    <div class="field">
+                        <label for="${id}" class="field__label">${label}</label>
+                        <textarea name="${name}" id="${id}" rows="1" class="form-control data_field">${escapeHTML(
+        value
+    )}</textarea>
+                    </div>`
+}
+
 function instanceToHTML(instance: SavedSearchReplaceInstance, instanceId: string, i18n: TranslationProxy) {
     const getString = i18n
 
     return `
-    <div class="col-4 rounded-1 p-3" id="instanceForm${instanceId}">
-        <div class="card">
-            <div class="card-header fw-bold">
-                ${getString('RuleID')}: ${instanceId}
-            </div>
-            <form class="card-body"> 
-                <div class="form-group col">
-                    <label for="url" class="fw-bold">${getString('URLPattern')}</label>
-                    <input type="text" class="form-control data_field" id="url" value="${instance.url}">
+        <li class="rule-card" id="instanceForm${instanceId}">
+            <form>
+                <div class="rule-card__head">
+                    <span class="rule-card__id">${getString('RuleID')} ${instanceId}</span>
                 </div>
-                <div class="form-group col">
-                    <label for="searchTerm" class="fw-bold">${getString('SearchTerm')}</label>
-                    <input type="text" class="form-control rounded-1 data_field" id="searchTerm" value="${
-                        instance.searchTerm
-                    }">
+                <div class="rule-card__body">
+                    ${field(instanceId, 'url', getString('URLPattern'), instance.url)}
+                    ${field(instanceId, 'searchTerm', getString('SearchTerm'), instance.searchTerm)}
+                    ${field(instanceId, 'replaceTerm', getString('ReplaceTerm'), instance.replaceTerm)}
+                    <div class="rule-card__options" role="group" aria-labelledby="options-${instanceId}">
+                        <span class="field__label" id="options-${instanceId}">${getString('options')}</span>
+                        ${checkBoxesToHTML(instance, instanceId, i18n)}
+                    </div>
                 </div>
-                <div class="form-group col">
-                    <label for="replaceTerm" class="fw-bold">${getString('SearchTerm')}</label>
-                    <input type="text" class="form-control rounded-1 data_field" id="replaceTerm" value="${
-                        instance.replaceTerm
-                    }">
+                <div class="rule-card__actions">
+                    <button name="delete" class="btn-ghost" type="submit">${getString('Delete')}</button>
+                    <button name="save" class="btn-primary" type="submit">${getString('Save')}</button>
                 </div>
-                <div class="col">${checkBoxesToHTML(instance, i18n)}</div>
-                <div class="form-group row">
-                    <button name="save" id="save" class="col btn btn-light mb-2 rounded-1 border-1 border-dark-subtle m-2 bg-button" type="submit">${getString(
-                        'Save'
-                    )}</button>
-                    <button name="delete" id="delete" class="col btn btn-danger mb-2 rounded-1 border-1 border-dark-subtle m-2" type="submit">${getString(
-                        'Delete'
-                    )}</button>
-                </div>
-                <input type="hidden" name="instanceId" value="${instanceId}">
+                <input type="hidden" name="instanceId" value="${escapeHTML(instanceId)}">
             </form>
-        </div>
-    </div>`
+        </li>`
 }
 
 export {}

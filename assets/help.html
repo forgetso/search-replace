@@ -1,275 +1,483 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <style>
-        body,
-        body div table {
-            font-family: 'Open Sans Light', sans-serif;
-            background-color: #eee;
-            font-size: 13px;
-            color: #444;
-        }
-    </style>
-    <link href="bootstrap.min.css" rel="stylesheet" />
-    <link href="bootstrap.min.js" rel="stylesheet" />
-    <link href="bootstrap.bundle.min.js" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title data-locale="help_title">Help page for search and replace</title>
     <link rel="icon" type="image/png" href="icon-16.png" />
+    <link href="pages.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div class="container bg-light-subtle">
-        <div class="row pt-3">
-            <div class="d-flex align-items-center pt-3">
-                <img src="icon-128.png" width="32" height="32" alt="search and replace logo" />
-                <span class="mx-2 fw-bold header-text" data-locale="ext_name">Search
-                    and
-                    Replace</span>
+    <header class="page-header">
+        <div class="page-header__inner">
+            <a class="brand" href="help.html">
+                <img src="icon-128.png" width="28" height="28" alt="" />
+                <span class="brand__name" data-locale="ext_name">Search and Replace</span>
+            </a>
+            <nav class="page-nav">
+                <a class="is-current" href="help.html" aria-current="page" data-locale="Help">Help</a>
+                <a href="saveRules.html" data-locale="saved_rules">Saved Rules</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <div class="page-main__inner">
+            <div class="page-title">
+                <h1 data-locale="Help">Help</h1>
+                <p class="page-title__lede" data-locale="help_lede">
+                    How to find text on a page and change it &mdash; in ordinary text, in form fields, in editors,
+                    and automatically on every visit.
+                </p>
             </div>
-            <h3 class="fw-bold pt-5 px-3" data-locale="Help">Help</h3>
-            <div class="row border-bottom py-2"></div>
-            <div class="col-md-3" role="complementary">
-                <nav class="navbar border-bottom border-bottom-dark">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#type" data-locale="next_vs_all">Replace Next vs. Replace All</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#editors" data-locale="replace_editors">Replacing text in editors
-                                and text fields</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="Replacing_anywhere" href="#anywhere">Replacing text
-                                anywhere on the page</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="Matching_case" href="#case">Matching the case of text</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="Matching_whole" href="#whole">Matching whole words</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="hidden_content_nav" href="#hidden">Searching hidden content</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="wildcards_and_regex" href="#wildcards">Wild Cards and
-                                Regular Expressions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="Replacing_wordpress" href="#wordpress">Replacing text in
-                                WordPress</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="Save_apply" href="#save">Save and apply on page reload</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-locale="ReportingIssues" href="#issues">Reporting Issues</a>
-                        </li>
+
+            <div class="page-layout">
+                <aside class="toc" aria-label="Contents">
+                    <p class="toc__title" data-locale="Contents">Contents</p>
+                    <ul class="toc__list">
+                        <li><a href="#basics" data-locale="basics_title">The popup at a glance</a></li>
+                        <li><a href="#type" data-locale="next_vs_all">Replace Next vs. Replace All</a></li>
+                        <li><a href="#options" data-locale="options_title">What each option does</a></li>
+                        <li><a href="#editors" data-locale="replace_editors">Replacing text in editors and text
+                                fields</a></li>
+                        <li><a href="#anywhere" data-locale="Replacing_anywhere">Replacing text anywhere on the
+                                page</a></li>
+                        <li><a href="#case" data-locale="Matching_case">Matching the case of text</a></li>
+                        <li><a href="#whole" data-locale="Matching_whole">Matching whole words</a></li>
+                        <li><a href="#hidden" data-locale="hidden_content_nav">Searching hidden content</a></li>
+                        <li><a href="#wildcards" data-locale="wildcards_and_regex">Wild Cards and Regular
+                                Expressions</a></li>
+                        <li><a href="#wordpress" data-locale="Replacing_wordpress">Replacing text in WordPress</a></li>
+                        <li><a href="#save" data-locale="Save_apply">Save and apply on page reload</a></li>
+                        <li><a href="#history" data-locale="history_title">History, Swap and language</a></li>
+                        <li><a href="#issues" data-locale="ReportingIssues">Reporting Issues</a></li>
                     </ul>
-                </nav>
-            </div>
+                </aside>
 
-            <div class="col-md-9 container py-3" role="main">
-                <div class="row mb-2">
-                    <h2 id="type" data-locale="next_vs_all">Replace Next vs. Replace All</h2>
-                    <p data-locale="next_vs_all_p1">
-                        To replace the first occurrence of the search term, press <code>Replace Next</code>. You can
-                        continue to press the button until there are no more occurrences.
-                    </p>
-                    <p data-locale="next_vs_all_p2">
-                        To replace all occurrences of the search term, press <code>Replace All</code>.
-                    </p>
-                    <p data-locale="next_vs_all_p3">
-                        There is currently no undo function. If you make a mistake, you can reload the page to
-                        restore the original text. However, you will lose any unsaved changes in text editors and in
-                        text input fields.
-                    </p>
-                </div>
-                <div class="row mb-2">
-                    <h2 id="editors" data-locale="replace_editors">Replacing text in editors and text fields</h2>
-                    <p data-locale="replace_editors_p1">
-                        To replace text in text editors or input boxes you should check the
-                        <code>Input fields only?</code> check box.
-                    </p>
-                </div>
-                <div class="row mb-2">
-                    <h3 data-locale="Setup">Setup</h3>
-                    <span><img src="setup-input-fields.png" class="img-thumbnail" /></span>
-
-                    <h2 id="anywhere" data-locale="Replacing_anywhere">Replacing text anywhere on the page</h2>
-                    <p data-locale="Replacing_anywhere_p1">
-                        To replace text anywhere on the page, including within the HTML structure itself, 
-                        check the <code>Replace HTML?</code> option. This allows you to replace text in 
-                        all elements on the page, including regular text, text editors, input fields, and 
-                        even HTML tags and attributes.
-                    </p>
-
-                    <div class="alert alert-warning" data-locale="Replacing_anywhere_warning">
-                        WARNING: This setup will alter the page HTML and may break the page. You can restore the
-                        page by reloading, but you will lose any unsaved changes in text editors and in text input
-                        fields.
-                    </div>
-                    <p>
-                        <img class="img-responsive img-thumbnail" src="setup-entire-page.png"
-                            class="img-responsive img-thumbnail"
-                            alt="Basic setup for replacing wikipedia home page title" />
-                    </p>
-                </div>
-                <div class="row mb-2">
-                    <h2 id="Matching_case" data-locale="Matching_case">Matching the case of text</h2>
-                    <p data-locale="Matching_case_p1">
-                        If you need to replace <code>THIS</code> but not <code>This</code> then you should use the
-                        match case option.
-                    </p>
-                    <p data-locale="Matching_case_p2">
-                        The following setup will match <code>Condo</code> but not <code>condo</code>. It will
-                        replace <code>Condo</code> with <code>apartment</code> in text fields that are visible on
-                        the page.
-                    </p>
-                    <p><img src="setup-match-case.png" class="img-responsive img-thumbnail" /></p>
-                </div>
-                <div class="row mb-2">
-                    <h2 id="whole" data-locale="Matching_whole">Matching whole words</h2>
-                    <p data-locale="Matching_whole_p1">
-                        If you need to replace the word <code>partial</code> but not <code>partially</code> then you
-                        should use the <code>Match whole word?</code> option.
-                    </p>
-                    <p><img src="setup-whole-word.png" class="img-responsive img-thumbnail" /></p>
-                </div>
-                <div class="row mb-2">
-                    <h2 id="hidden" data-locale="hidden_content_title">Searching hidden content</h2>
-                    <p data-locale="hidden_content_p1">
-                        By default, the extension only searches and replaces text that is visible on the page. 
-                        If you need to search and replace text in hidden elements (such as collapsed sections, 
-                        hidden divs, or elements with <code>display: none</code>), check the 
-                        <code>Hidden content?</code> option.
-                    </p>
-                    <p data-locale="hidden_content_p2">
-                        This is particularly useful when working with dynamic content that may be hidden initially 
-                        but becomes visible through user interaction, or when you need to modify hidden form fields.
-                    </p>
-                    <div class="alert alert-info" data-locale="hidden_content_note">
-                        NOTE: When <code>Hidden content?</code> is checked, the extension will search through all 
-                        elements regardless of their visibility, which may result in a higher match count.
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <h2 id="wildcards" data-locale="wildcards_and_regex">Wild Cards and Regular Expressions</h2>
-                    <p data-locale="wildcards_and_regex_p1">
-                        If you need to match a partial search term then you should check the Regular Expressions
-                        check box and specify a wild card. You will need to have a very basic knowledge of
-                        <a href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular
-                            expressions</a>
-                        to use this feature. I recommend
-                        <a href="https://regexpal.com" target="_blank">regexpal</a> for testing
-                    </p>
-                    <h3 data-locale="Before">Before</h3>
-                    <p><img src="start-wildcard.png" class="img-responsive img-thumbnail" /></p>
-                    <h3 data-locale="Setup">Setup</h3>
-                    <p><img src="setup-wildcard.png" class="img-responsive img-thumbnail" /></p>
-                    <h3 data-locale="After">After</h3>
-                    <p><img src="result-wildcard.png" class="img-responsive img-thumbnail" /></p>
-                </div>
-                <div class="row mb-2">
-                    <h2 id="wordpress" data-locale="Replacing_wordpress">Replacing text in WordPress</h2>
-                    <p data-locale="Replacing_wordpress_p1">
-                        WordPress is currently on version 6.6, as of March 2023. The post editor has changed
-                        significantly since this extension was created and a new setup is required to replace text
-                        in WordPress.
-                    </p>
-                    <h3 data-locale="Replacing_wordpress_setup_w6">Setup for WordPress 6+</h3>
-                    <p><img src="setup-wordpress-6.png" class="img-responsive img-thumbnail" /></p>
-                    <h3 data-locale="Replacing_wordpress_setup_w5">Setup for WordPress 5 and below</h3>
-                    <p><img src="setup-entire-page.png" class="img-responsive img-thumbnail" /></p>
-                </div>
-                <div class="row mb-2">
-                    <h2 id="save" data-locale="Save_apply">Save and apply on page reload</h2>
-                    <p data-locale="Save_apply_p1">
-                        You can check the <code>Save and apply on page reload?</code> check box to save your search
-                        and apply it on subsequent page reloads. These will take effect even after you have closed
-                        and re-opened your browser.
-                    </p>
-                    <p><img src="save-reload-page.png" class="img-responsive img-thumbnail" /></p>
-                    <h3 data-locale="Save_apply_multi">Multiple Matching Rules</h3>
-                    <p data-locale="Save_apply_multi_p1">
-                        If multiple rules apply to the same page, the rules will be applied in order of
-                        <b>most</b> specific to <b>least</b> specific. For example:
-                    </p>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th data-locale="URL">URL</th>
-                                <th data-locale="Search">Search</th>
-                                <th data-locale="Replace">Replace</th>
-                                <th data-locale="Priority">Priority</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>http://www.example.com/a/deeper/nested/page</td>
-                                <td data-locale="Example">Example</td>
-                                <td>A</td>
-                                <td>1 - <span data-locale="applied_first">applied first</span></td>
-                            </tr>
-                            <tr>
-                                <td>http://www.example.com/some/subpage</td>
-                                <td data-locale="Example">Example</td>
-                                <td>B</td>
-                                <td>2</td>
-                            </tr>
-                            <tr>
-                                <td>http://www.example.com</td>
-                                <td data-locale="Example">Example</td>
-                                <td>C</td>
-                                <td>3 - <span data-locale="applied_last">applied last</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p data-locale="Save_apply_multi_p2">
-                        This means that any changes applied by the first rule will be fed into the subsequent rules.
-                        In the above example, the text <code>Example</code> will have been replaced by the rule
-                        matching <code>http://www.example.com/a/deeper/nested/page</code>. Subsequent rules will
-                        therefore have no effect.
-                    </p>
-                    <p data-locale="Save_apply_multi_p3">
-                        You can edit the saved rules by clicking on the <a href="saveRules.html"><i>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 28 28">
-                                    <path fill="currentColor"
-                                        d="M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z" />
-                                </svg>
-                            </i></a>
-                        in the extension popup. The <code>URL Pattern</code> field is a
-                        <a href="http://www.regular-expressions.info/quickstart.html" target="_blank">regular
-                            expression</a>, which allows you to apply the same rule to many different websites.
-                    </p>
-                </div>
-                <div class="row mb-2">
-                    <h3 id="issues" data-locale="ReportingIssues">Reporting Issues</h3>
-                    <div>
-                        <div class="alert alert-warning" data-locale="ReportingIssuesWarning">
-                            Remember to REFRESH the page on which you wish to replace text after installing.
+                <div>
+                    <section class="section" id="basics">
+                        <h2 data-locale="basics_title">The popup at a glance</h2>
+                        <p data-locale="basics_p1">
+                            Open the popup from the toolbar, or with <code>Ctrl+Shift+S</code>. Type the text you are
+                            looking for into <code>Search for</code> and the text you want instead into
+                            <code>Replace with</code>, then press one of the two buttons at the bottom.
+                        </p>
+                        <p data-locale="basics_p2">
+                            The number under the <code>Search for</code> box counts the matches left on the page, and
+                            updates as you type and as you replace. The row of icons along the top opens this help
+                            page, your recent searches, the About panel, the language setting, and your saved rules.
+                        </p>
+                        <figure class="figure figure--popup">
+                            <img src="popup-overview.png"
+                                srcset="popup-overview.png 1x, popup-overview@2x.png 2x" width="320"
+                                alt="The Search and Replace popup, with Condo in the search box, apartment in the replace box, and four matches counted" />
+                            <figcaption data-locale="basics_caption">
+                                Four occurrences of <code>Condo</code> are left on the page.
+                            </figcaption>
+                        </figure>
+                        <div class="callout callout--warning">
+                            <span class="callout__label" data-locale="Warning">Warning</span>
+                            <p data-locale="ReportingIssuesWarning">
+                                Remember to reload any page that was already open when the extension was installed or
+                                updated. Until it is reloaded, the extension cannot reach it.
+                            </p>
                         </div>
-                        <div class="alert alert-info" data-locale="ReportingIssuesInfo">
-                            If the page has broken after using the extension, try refreshing the page, and then
-                            checking <code>Input fields only?</code> before performing a search and replace.
+                    </section>
+
+                    <section class="section" id="type">
+                        <h2 data-locale="next_vs_all">Replace Next vs. Replace All</h2>
+                        <p data-locale="next_vs_all_p1">
+                            To replace the first occurrence of the search term, press <code>Replace Next</code>. You
+                            can continue to press the button until there are no more occurrences.
+                        </p>
+                        <p data-locale="next_vs_all_p2">
+                            To replace all occurrences of the search term, press <code>Replace All</code>.
+                        </p>
+                        <div class="callout callout--warning">
+                            <span class="callout__label" data-locale="No_undo">No undo</span>
+                            <p data-locale="next_vs_all_p3">
+                                There is currently no undo function. If you make a mistake, you can reload the page to
+                                restore the original text. However, you will lose any unsaved changes in text editors
+                                and in text input fields.
+                            </p>
                         </div>
+                    </section>
+
+                    <section class="section" id="options">
+                        <h2 data-locale="options_title">What each option does</h2>
+                        <p data-locale="options_p1">
+                            Every checkbox in the popup narrows or widens what is searched. They can be combined.
+                        </p>
+                        <ul class="options-list">
+                            <li>
+                                <dfn data-locale="Matchcase">Match case</dfn>
+                                <span data-locale="option_matchCase_desc">
+                                    Only matches text with exactly the same capitalisation. Leave it unchecked and
+                                    <code>Condo</code>, <code>condo</code> and <code>CONDO</code> all match.
+                                </span>
+                            </li>
+                            <li>
+                                <dfn data-locale="Inputfields">Input fields only</dfn>
+                                <span data-locale="option_inputFieldsOnly_desc">
+                                    Limits the search to text boxes, text areas and rich text editors, and leaves the
+                                    rest of the page alone. Use it whenever you are editing a form, a message or a
+                                    post.
+                                </span>
+                            </li>
+                            <li>
+                                <dfn data-locale="Hiddencontent">Hidden content</dfn>
+                                <span data-locale="option_hiddenContent_desc">
+                                    Includes elements you cannot currently see: collapsed panels, inactive tabs,
+                                    off-screen menus and hidden form fields.
+                                </span>
+                            </li>
+                            <li>
+                                <dfn data-locale="Matchwhole">Match whole word</dfn>
+                                <span data-locale="option_wholeWord_desc">
+                                    Requires the match to be a whole word, so <code>partial</code> no longer matches
+                                    inside <code>partially</code>.
+                                </span>
+                            </li>
+                            <li>
+                                <dfn data-locale="Regularexpression">Regular expression</dfn>
+                                <span data-locale="option_isRegex_desc">
+                                    Treats the search term as a regular expression instead of literal text.
+                                </span>
+                            </li>
+                            <li>
+                                <dfn data-locale="replaceHTML">Replace HTML</dfn>
+                                <span data-locale="option_replaceHTML_desc">
+                                    Searches the page's HTML source rather than the text you can read, so tags,
+                                    attributes, link addresses and alt text are all in scope.
+                                </span>
+                            </li>
+                            <li>
+                                <dfn data-locale="saveApplyPageReload">Save and apply on page reload</dfn>
+                                <span data-locale="option_save_desc">
+                                    Stores the search as a rule and applies it again every time you open a matching
+                                    page, even after you restart the browser.
+                                </span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="section" id="editors">
+                        <h2 data-locale="replace_editors">Replacing text in editors and text fields</h2>
+                        <p data-locale="replace_editors_p1">
+                            To replace text in text editors or input boxes you should check the
+                            <code>Input fields only?</code> check box.
+                        </p>
+                        <p data-locale="replace_editors_p3">
+                            This covers plain <code>input</code> and <code>textarea</code> boxes as well as rich text
+                            editors such as TinyMCE and CKEditor. Because nothing outside those fields is touched, it
+                            is the safest option on a complicated page, and the one to try first if a replacement
+                            appeared to break something.
+                        </p>
+                        <figure class="figure figure--popup">
+                            <img src="setup-input-fields.png"
+                                srcset="setup-input-fields.png 1x, setup-input-fields@2x.png 2x" width="320"
+                                alt="The popup with the Input fields only checkbox ticked" />
+                            <figcaption data-locale="Setup">Setup</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="section" id="anywhere">
+                        <h2 data-locale="Replacing_anywhere">Replacing text anywhere on the page</h2>
+                        <p data-locale="Replacing_anywhere_p1">
+                            To replace text anywhere on the page, including within the HTML structure itself, check
+                            the <code>Replace HTML?</code> option. This allows you to replace text in all elements on
+                            the page, including regular text, text editors, input fields, and even HTML tags and
+                            attributes.
+                        </p>
+                        <div class="callout callout--warning">
+                            <span class="callout__label" data-locale="Warning">Warning</span>
+                            <p data-locale="Replacing_anywhere_warning">
+                                This setup alters the page HTML and may break the page. You can restore the page by
+                                reloading, but you will lose any unsaved changes in text editors and in text input
+                                fields.
+                            </p>
+                        </div>
+                        <figure class="figure figure--popup">
+                            <img src="setup-replace-html.png"
+                                srcset="setup-replace-html.png 1x, setup-replace-html@2x.png 2x" width="320"
+                                alt="The popup with the Replace HTML checkbox ticked, replacing example.com with example.org" />
+                            <figcaption data-locale="Replacing_anywhere_caption">
+                                Rewriting every <code>example.com</code> on the page, link addresses included.
+                            </figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="section" id="case">
+                        <h2 data-locale="Matching_case">Matching the case of text</h2>
+                        <p data-locale="Matching_case_p1">
+                            If you need to replace <code>THIS</code> but not <code>This</code> then you should use the
+                            match case option.
+                        </p>
+                        <p data-locale="Matching_case_p2">
+                            The following setup will match <code>Condo</code> but not <code>condo</code>. It will
+                            replace <code>Condo</code> with <code>apartment</code> in text fields that are visible on
+                            the page.
+                        </p>
+                        <figure class="figure figure--popup">
+                            <img src="setup-match-case.png"
+                                srcset="setup-match-case.png 1x, setup-match-case@2x.png 2x" width="320"
+                                alt="The popup with the Match case checkbox ticked" />
+                            <figcaption data-locale="Setup">Setup</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="section" id="whole">
+                        <h2 data-locale="Matching_whole">Matching whole words</h2>
+                        <p data-locale="Matching_whole_p1">
+                            If you need to replace the word <code>partial</code> but not <code>partially</code> then
+                            you should use the <code>Match whole word?</code> option.
+                        </p>
+                        <figure class="figure figure--popup">
+                            <img src="setup-whole-word.png"
+                                srcset="setup-whole-word.png 1x, setup-whole-word@2x.png 2x" width="320"
+                                alt="The popup with the Match whole word checkbox ticked" />
+                            <figcaption data-locale="Setup">Setup</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="section" id="hidden">
+                        <h2 data-locale="hidden_content_title">Searching hidden content</h2>
+                        <p data-locale="hidden_content_p1">
+                            By default, the extension only searches and replaces text that is visible on the page. If
+                            you need to search and replace text in hidden elements (such as collapsed sections, hidden
+                            divs, or elements with <code>display: none</code>), check the <code>Hidden content?</code>
+                            option.
+                        </p>
+                        <p data-locale="hidden_content_p2">
+                            This is particularly useful when working with dynamic content that may be hidden initially
+                            but becomes visible through user interaction, or when you need to modify hidden form
+                            fields.
+                        </p>
+                        <div class="callout">
+                            <span class="callout__label" data-locale="Note">Note</span>
+                            <p data-locale="hidden_content_note">
+                                When <code>Hidden content?</code> is checked, the extension searches every element
+                                regardless of its visibility, which may result in a higher match count.
+                            </p>
+                        </div>
+                        <figure class="figure figure--popup">
+                            <img src="setup-hidden-content.png"
+                                srcset="setup-hidden-content.png 1x, setup-hidden-content@2x.png 2x" width="320"
+                                alt="The popup with the Hidden content checkbox ticked, counting six matches" />
+                            <figcaption data-locale="hidden_content_caption">
+                                The same search finds six matches instead of four once hidden elements are included.
+                            </figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="section" id="wildcards">
+                        <h2 data-locale="wildcards_and_regex">Wild Cards and Regular Expressions</h2>
+                        <p data-locale="wildcards_and_regex_p1">
+                            If you need to match a partial search term then you should check the Regular Expressions
+                            check box and specify a wild card. You will need to have a very basic knowledge of
+                            <a href="https://www.regular-expressions.info/quickstart.html" target="_blank"
+                                rel="noopener">regular expressions</a> to use this feature. I recommend
+                            <a href="https://regexpal.com" target="_blank" rel="noopener">regexpal</a> for testing
+                        </p>
+                        <p data-locale="wildcards_and_regex_p2">
+                            In the example below, <code>1\d1</code> means &ldquo;a 1, then any digit, then a
+                            1&rdquo;, which matches 101, 111, 121 and so on up to 191.
+                        </p>
+                        <figure class="figure figure--popup">
+                            <img src="setup-regex.png"
+                                srcset="setup-regex.png 1x, setup-regex@2x.png 2x" width="320"
+                                alt="The popup with the Regular expression checkbox ticked, searching for 1\d1" />
+                            <figcaption data-locale="Setup">Setup</figcaption>
+                        </figure>
+                        <div class="figure-row">
+                            <figure class="figure">
+                                <img src="regex-before.png"
+                                srcset="regex-before.png 1x, regex-before@2x.png 2x" width="608"
+                                    alt="A grid of numbers with 101, 111, 121 and so on highlighted" />
+                                <figcaption data-locale="Before">Before</figcaption>
+                            </figure>
+                            <figure class="figure">
+                                <img src="regex-after.png"
+                                srcset="regex-after.png 1x, regex-after@2x.png 2x" width="608"
+                                    alt="The same grid of numbers, with every highlighted number now reading 101" />
+                                <figcaption data-locale="After">After</figcaption>
+                            </figure>
+                        </div>
+                    </section>
+
+                    <section class="section" id="wordpress">
+                        <h2 data-locale="Replacing_wordpress">Replacing text in WordPress</h2>
+                        <p data-locale="Replacing_wordpress_p1">
+                            The WordPress block editor keeps your post inside a frame of its own, separate from the
+                            rest of the admin page. The extension looks inside that frame for you, so no special
+                            options are needed: type your terms and press <code>Replace All</code>.
+                        </p>
+                        <p data-locale="Replacing_wordpress_p2">
+                            If you are using the classic editor, or a page builder whose fields are ordinary text
+                            boxes, check <code>Input fields only?</code> first.
+                        </p>
+                        <div class="callout callout--tip">
+                            <span class="callout__label" data-locale="Tip">Tip</span>
+                            <p data-locale="Replacing_wordpress_save">
+                                The replacement changes what is in the editor, not what is stored. Press
+                                <b>Update</b> in WordPress afterwards to keep it.
+                            </p>
+                        </div>
+                        <figure class="figure figure--popup">
+                            <img src="setup-wordpress.png"
+                                srcset="setup-wordpress.png 1x, setup-wordpress@2x.png 2x" width="320"
+                                alt="The popup replacing Hello world with Something else in a WordPress post, with no options ticked" />
+                            <figcaption data-locale="Replacing_wordpress_caption">
+                                Editing a post in the block editor. No options are needed.
+                            </figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="section" id="save">
+                        <h2 data-locale="Save_apply">Save and apply on page reload</h2>
+                        <p data-locale="Save_apply_p1">
+                            You can check the <code>Save and apply on page reload?</code> check box to save your
+                            search and apply it on subsequent page reloads. These will take effect even after you have
+                            closed and re-opened your browser.
+                        </p>
+                        <figure class="figure figure--popup">
+                            <img src="setup-save-rule.png"
+                                srcset="setup-save-rule.png 1x, setup-save-rule@2x.png 2x" width="320"
+                                alt="The popup with the Save and apply on page reload checkbox ticked" />
+                            <figcaption data-locale="Setup">Setup</figcaption>
+                        </figure>
+
+                        <h3 data-locale="Save_apply_editing">Editing saved rules</h3>
+                        <p data-locale="Save_apply_multi_p3">
+                            You can edit the saved rules on the <a href="saveRules.html">Saved Rules</a> page, which
+                            the save icon in the popup opens. The <code>URL Pattern</code> field is a
+                            <a href="https://www.regular-expressions.info/quickstart.html" target="_blank"
+                                rel="noopener">regular expression</a>, which allows you to apply the same rule to many
+                            different websites.
+                        </p>
+                        <figure class="figure">
+                            <img src="saved-rules.png"
+                                srcset="saved-rules.png 1x, saved-rules@2x.png 2x" width="720"
+                                alt="The Saved Rules page showing two rule cards, each with a URL pattern, search and replace terms, and options" />
+                            <figcaption data-locale="Save_apply_rules_caption">
+                                Each saved rule can be edited or deleted here.
+                            </figcaption>
+                        </figure>
+
+                        <h3 data-locale="Save_apply_multi">Multiple Matching Rules</h3>
+                        <p data-locale="Save_apply_multi_p1">
+                            If multiple rules apply to the same page, the rules will be applied in order of
+                            <b>most</b> specific to <b>least</b> specific. For example:
+                        </p>
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th data-locale="URL">URL</th>
+                                        <th data-locale="Search">Search</th>
+                                        <th data-locale="Replace">Replace</th>
+                                        <th data-locale="Priority">Priority</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>http://www.example.com/a/deeper/nested/page</td>
+                                        <td data-locale="Example">Example</td>
+                                        <td>A</td>
+                                        <td>1 &ndash; <span data-locale="applied_first">applied first</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>http://www.example.com/some/subpage</td>
+                                        <td data-locale="Example">Example</td>
+                                        <td>B</td>
+                                        <td>2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>http://www.example.com</td>
+                                        <td data-locale="Example">Example</td>
+                                        <td>C</td>
+                                        <td>3 &ndash; <span data-locale="applied_last">applied last</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p data-locale="Save_apply_multi_p2">
+                            This means that any changes applied by the first rule will be fed into the subsequent
+                            rules. In the above example, the text <code>Example</code> will have been replaced by the
+                            rule matching <code>http://www.example.com/a/deeper/nested/page</code>. Subsequent rules
+                            will therefore have no effect.
+                        </p>
+                    </section>
+
+                    <section class="section" id="history">
+                        <h2 data-locale="history_title">History, Swap and language</h2>
+                        <p data-locale="history_p1">
+                            The clock icon in the popup lists your recent searches. Click one to put it back into the
+                            two boxes, or press <b>Clear</b> to empty the list.
+                        </p>
+                        <p data-locale="history_p2">
+                            <b>Swap</b>, between the two boxes, exchanges the search and replace terms &mdash; handy
+                            for undoing a replacement you have just made, as long as the original text has not been
+                            typed anywhere else on the page.
+                        </p>
+                        <p data-locale="history_p3">
+                            The cog icon holds the language setting. The extension is translated into Arabic, Chinese,
+                            English, German, Hindi, Japanese, Korean, Portuguese, Russian and Spanish; anything not
+                            yet translated falls back to English.
+                        </p>
+                    </section>
+
+                    <section class="section" id="issues">
+                        <h2 data-locale="ReportingIssues">Reporting Issues</h2>
+                        <div class="callout">
+                            <span class="callout__label" data-locale="Note">Note</span>
+                            <p data-locale="ReportingIssuesInfo">
+                                If the page has broken after using the extension, try refreshing the page, and then
+                                checking <code>Input fields only?</code> before performing a search and replace.
+                            </p>
+                        </div>
+                        <h3 data-locale="Troubleshooting">Before you report</h3>
+                        <ul>
+                            <li data-locale="Troubleshooting_reload">
+                                Reload the page. A page that was already open when the extension was installed or
+                                updated cannot be reached until it is reloaded.
+                            </li>
+                            <li data-locale="Troubleshooting_restricted">
+                                Browser pages such as <code>chrome://</code>, the Chrome Web Store and the extensions
+                                page are off limits to every extension, so nothing can be replaced there.
+                            </li>
+                            <li data-locale="Troubleshooting_nomatch">
+                                If the count stays at zero, try <code>Hidden content?</code>, turn off
+                                <code>Match case?</code>, or check that the text is not an image.
+                            </li>
+                        </ul>
                         <p data-locale="ReportingIssues_p1">
                             If you find a bug, please provide a detailed report on the
                             <a href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support"
-                                target="_blank">Chrome Extension Store</a>
-                            or on <a href="https://github.com/forgetso/search-replace/issues">GitHub</a>.
+                                target="_blank" rel="noopener">Chrome Extension Store</a>
+                            or on <a href="https://github.com/forgetso/search-replace/issues" target="_blank"
+                                rel="noopener">GitHub</a>.
                         </p>
                         <p data-locale="Rate_on_store">
                             Please rate
-                            <a
-                                href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews">&#9733;&#9733;&#9733;&#9733;&#9733;</a>
+                            <a href="https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews"
+                                target="_blank" rel="noopener">&#9733;&#9733;&#9733;&#9733;&#9733;</a>
                             on Chrome Store if the extension helps you!
                         </p>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="page-footer">
+        <span data-locale="ext_name">Search and Replace</span>
+        <span id="version_number"></span>
+        &middot;
+        <a href="https://prosopo.io" target="_blank" rel="noopener">Prosopo</a>
+    </footer>
 
     <script src="../help.js"></script>
 </body>

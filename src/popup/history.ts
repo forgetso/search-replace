@@ -9,6 +9,7 @@ export function clearHistoryClickHandler(port: chrome.runtime.Port) {
     if (historyList) {
         historyList.innerHTML = ''
     }
+    document.getElementById('historyEmpty')?.classList.remove('d-none')
 }
 
 export function constructSearchReplaceHistory(searchReplaceInstance?: SearchReplaceInstance): SearchReplaceInstance[] {

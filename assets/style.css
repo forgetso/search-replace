@@ -7,6 +7,7 @@
     --sr-text: #444;
     --sr-muted: #6b6b6b;
     --sr-accent: #333;
+    --sr-accent-soft: #9a9a9a;
     --sr-border: #cfcfcf;
     --sr-hover-bg: #ccc;
     --sr-button-bg: #ddd;
@@ -64,22 +65,71 @@ a {
     width: 320px;
 }
 
+/* History list. Each entry used to be a bare "term -> term" string on an alternating white and
+   grey stripe, which neither matched the popup's palette nor coped with a term long enough to
+   run past the edge of the popup. Entries are now cards that wrap. */
+
+/* Chrome caps a popup at 600px and then scrolls the whole thing, header and buttons included.
+   Ten entries are taller than that, so the list scrolls within itself and the rest of the panel
+   stays put. */
 #historyList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sr-space-xs);
+    max-height: 380px;
+    overflow-y: auto;
+    margin: 0;
     padding-inline-start: 0;
 }
 
-#historyList li {
+.history-item {
     list-style-type: none;
-    font-size: 13px;
-    padding: var(--sr-space-sm);
     margin: 0;
-    border-radius: 3px;
+    padding: 6px var(--sr-space-sm);
+    font-size: 13px;
+    background-color: var(--sr-surface);
+    border: 1px solid var(--sr-border);
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-#historyList li:hover {
-    color: var(--sr-accent);
-    cursor: pointer;
+.history-item:hover {
     background-color: var(--sr-hover-bg);
+    border-color: var(--sr-accent-soft);
+}
+
+.history-item__terms {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 6px;
+}
+
+/* A search term can be any length and need not contain a space, so it has to be allowed to break
+   mid-word rather than push the popup wider */
+.history-item__term {
+    overflow-wrap: anywhere;
+    min-width: 0;
+}
+
+.history-item__term--empty {
+    color: var(--sr-muted);
+    font-style: italic;
+}
+
+.history-item__arrow {
+    color: var(--sr-muted);
+}
+
+.history-item__options {
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--sr-muted);
+}
+
+.history-empty {
+    margin: 0 0 var(--sr-space-sm);
+    color: var(--sr-muted);
 }
 
 #content {
@@ -133,33 +183,43 @@ a {
     margin-top: var(--sr-space-sm);
 }
 
+/* The count gives up its space first: it can wrap, where the Swap button label cannot */
 #searchTermCount {
     color: var(--sr-muted);
     text-align: left;
+    min-width: 0;
 }
 
 #swapTerms {
+    flex: none;
     width: auto;
+    max-width: 60%;
     padding: 2px var(--sr-space-sm);
     font-size: 12px;
     line-height: 1.6;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* The option checkboxes read as one group, set apart from the fields above them */
+/* The option checkboxes read as one group, set apart from the fields above them.
+   The spacing is deliberately tight: in German, Spanish and Russian the longer labels wrap onto
+   a second line, and the form was tipping over the 600px at which Chrome starts scrolling the
+   whole popup. */
 .options-group {
-    margin-top: var(--sr-space-lg);
-    padding-top: var(--sr-space-lg);
+    margin-top: var(--sr-space-md);
+    padding-top: var(--sr-space-md);
     border-top: 1px solid var(--sr-border);
 }
 
 .options-group .form-check {
-    margin-bottom: var(--sr-space-xs);
+    margin-bottom: 2px;
     min-height: auto;
 }
 
+/* Bootstrap's .mb-3 on the last checkbox is 16px of dead space above the footer */
 .options-group .form-check:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 
 .options-group .form-check-label {
@@ -182,6 +242,64 @@ a {
     margin-bottom: var(--sr-space-md);
 }
 
+/* About panel */
+
+.about-identity {
+    display: flex;
+    align-items: center;
+    gap: var(--sr-space-md);
+    margin-bottom: var(--sr-space-md);
+}
+
+.about-version {
+    color: var(--sr-muted);
+}
+
+#aboutSection p {
+    margin-bottom: var(--sr-space-md);
+}
+
+/* Author and licence, as label/value pairs rather than prose */
+.about-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sr-space-xs) var(--sr-space-md);
+    margin: 0 0 var(--sr-space-lg);
+    padding-top: var(--sr-space-md);
+    border-top: 1px solid var(--sr-border);
+}
+
+.about-meta dt {
+    color: var(--sr-muted);
+    font-weight: 400;
+}
+
+.about-meta dd {
+    margin: 0;
+}
+
+.about-links {
+    margin: 0;
+    padding: var(--sr-space-md) 0 0;
+    list-style: none;
+    border-top: 1px solid var(--sr-border);
+}
+
+.about-links li {
+    padding: var(--sr-space-xs) 0;
+}
+
+.about-links a,
+.about-meta a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.about-links a:hover,
+.about-meta a:hover {
+    color: #000;
+}
+
 .shadow-top {
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Adjust values as needed */
 }
@@ -191,12 +309,20 @@ a {
     border-top-right-radius: 12px;
 }
 
-/* Title block in the header: logo and name on one baseline, never wrapped */
+/* Title block in the header: logo and name on one baseline, never wrapped. It is allowed to
+   shrink so that a long translation of the extension name is trimmed rather than pushing the
+   row of icons past the edge of the popup. */
 .display-flow {
     display: flex;
     align-items: center;
     gap: var(--sr-space-sm);
+    min-width: 0;
     white-space: nowrap;
+}
+
+.display-flow span {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .cursor-point {
@@ -283,19 +409,27 @@ a {
     gap: var(--sr-space-md);
 }
 
+/* The labels have to be allowed to wrap: "Reemplazar Siguiente" and "Заменить следующее" are
+   wider than half the popup, and nowrap pushed them straight off the right-hand edge. The row
+   stretches its items, so a button that takes two lines makes both buttons taller rather than
+   leaving them mismatched, which is what the nowrap was there to prevent. */
 #replaceNext,
 #replaceAll {
-    flex: 1 1 0;
-    white-space: nowrap;
-    padding: var(--sr-space-sm);
-}
-
-.historyRow-0 {
-    background-color: #f5f5f5;
-}
-
-.historyRow-1 {
-    background-color: #eee;
+    /* `auto` rather than `0` for the basis: the buttons start from the width of their own label
+       and only share the leftover space, so a longer translation is not forced to wrap while
+       there is still room in the row */
+    flex: 1 1 auto;
+    /* Without this the blanket `button { width: 100% }` above makes the auto basis resolve to
+       the full row width for both buttons, so they always shrink back to exact halves */
+    width: auto;
+    min-width: 0;
+    padding: var(--sr-space-sm) var(--sr-space-sm);
+    /* Bootstrap's 16px is oversized next to the popup's 13px body text, and the 6% it gives back
+       is the difference between one line and two for several translations */
+    font-size: 15px;
+    line-height: 1.25;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
 }
 
 #clearHistory {

@@ -1,338 +1,526 @@
 {
-  "ext_name": {
-    "message": "搜索和替换",
-    "description": "ext_name"
-  },
-  "ext_description": {
-    "message": "在网页上查找文本并替换为不同的文本。",
-    "description": "ext_description"
-  },
-  "options": {
-    "message": "选项",
-    "description": "options"
-  },
-  "saved_rules": {
-    "message": "已保存规则",
-    "description": "选项标签"
-  },
-  "select_language": {
-    "message": "选择语言：",
-    "description": "选项标签"
-  },
-  "settings": {
-    "message": "设置",
-    "description": "设置"
-  },
-  "about": {
-    "message": "关于",
-    "description": "about"
-  },
-  "back": {
-    "message": "后背",
-    "description": "Back"
-  },
-  "version": {
-    "message": "版本",
-    "description": "version"
-  },
-  "RuleID": {
-    "message": "规则 ID",
-    "description": "options"
-  },
-  "URLPattern": {
-    "message": "URL 模式",
-    "description": "options"
-  },
-  "SearchTerm": {
-    "message": "搜索词",
-    "description": "options"
-  },
-  "ReplaceTerm": {
-    "message": "替换词",
-    "description": "options"
-  },
-  "Delete": {
-    "message": "删除",
-    "description": "options"
-  },
-  "Save": {
-    "message": "保存",
-    "description": "options"
-  },
-  "matchCase": {
-    "message": "区分大小写",
-    "description": "复选框 区分大小写"
-  },
-  "inputFieldsOnly": {
-    "message": "仅输入字段",
-    "description": "复选框 仅输入字段"
-  },
-  "hiddenContent": {
-    "message": "隐藏内容",
-    "description": "复选框 仅可见内容"
-  },
-  "wholeWord": {
-    "message": "匹配整个单词",
-    "description": "复选框 匹配整个单词"
-  },
-  "isRegex": {
-    "message": "正则表达式",
-    "description": "复选框 正则表达式"
-  },
-  "replaceHTML": {
-    "message": "替换 HTML",
-    "description": "checkbox replaceHTML"
-  },
-  "replaceAll": {
-    "message": "替换所有",
-    "description": "复选框 替换所有"
-  },
-  "saveApplyPageReload": {
-    "message": "保存并在页面重新加载时应用",
-    "description": "复选框 保存"
-  },
-  "Searchfor": {
-    "message": "搜索",
-    "description": "弹出窗口"
-  },
-  "Swap": {
-    "message": "交换 ⇅",
-    "description": "弹出窗口"
-  },
-  "Replacewith": {
-    "message": "替换为",
-    "description": "弹出窗口"
-  },
-  "Matchcase": {
-    "message": "区分大小写",
-    "description": "弹出窗口"
-  },
-  "Inputfields": {
-    "message": "仅输入字段",
-    "description": "弹出窗口"
-  },
-  "Hiddencontent": {
-    "message": "隐藏内容",
-    "description": "弹出窗口"
-  },
-  "Matchwhole": {
-    "message": "匹配整个单词",
-    "description": "弹出窗口"
-  },
-  "Regularexpression": {
-    "message": "正则表达式",
-    "description": "弹出窗口"
-  },
-  "Saveandapply": {
-    "message": "保存并在页面重新加载时应用",
-    "description": "弹出窗口"
-  },
-  "ReplaceNext": {
-    "message": "替换下一个",
-    "description": "弹出窗口"
-  },
-  "ReplaceAll": {
-    "message": "替换所有",
-    "description": "弹出窗口"
-  },
-  "History": {
-    "message": "历史记录",
-    "description": "弹出窗口"
-  },
-  "Clear": {
-    "message": "清除",
-    "description": "弹出窗口"
-  },
-  "EditSettings": {
-    "message": "编辑设置",
-    "description": "弹出窗口"
-  },
-  "Help": {
-    "message": "帮助",
-    "description": ""
-  },
-  "help_title": {
-    "message": "搜索和替换帮助页面",
-    "description": "帮助"
-  },
-  "URL": {
-    "message": "网址",
-    "description": ""
-  },
-  "Search": {
-    "message": "搜索",
-    "description": ""
-  },
-  "Replace": {
-    "message": "替换",
-    "description": ""
-  },
-  "Priority": {
-    "message": "优先级",
-    "description": ""
-  },
-  "Example": {
-    "message": "示例",
-    "description": ""
-  },
-  "applied_first": {
-    "message": "首先应用",
-    "description": ""
-  },
-  "applied_last": {
-    "message": "最后应用",
-    "description": ""
-  },
-  "next_vs_all": {
-    "message": "替换下一个 vs. 替换所有",
-    "description": "替换下一个 vs. 替换所有"
-  },
-  "next_vs_all_p1": {
-    "message": "要替换搜索词的第一个出现，按 <code>替换下一个</code>。您可以继续按此按钮，直到没有更多出现。",
-    "description": "替换下一个 vs. 替换所有"
-  },
-  "next_vs_all_p2": {
-    "message": "要替换搜索词的所有出现，按 <code>替换所有</code>。",
-    "description": "替换下一个 vs. 替换所有"
-  },
-  "next_vs_all_p3": {
-    "message": "目前没有撤销功能。如果出现错误，可以重新加载页面以恢复原始文本。但是，文本编辑器和文本输入字段中的未保存更改将丢失。",
-    "description": "替换下一个 vs. 替换所有"
-  },
-  "replace_editors": {
-    "message": "替换编辑器和文本字段中的文本",
-    "description": "有关替换编辑器和文本字段中的文本的解释"
-  },
-  "replace_editors_p1": {
-    "message": "要替换文本编辑器或输入框中的文本，您应该选中 <code>仅输入字段？</code> 复选框。",
-    "description": "有关替换编辑器和文本字段中的文本的解释"
-  },
-  "replace_editors_p2": {
-    "message": "要替换文本编辑器或输入框中的文本，您应该选中 <code>仅输入字段？</code> 复选框。否则，搜索文本将替换整个 HTML，可能破坏页面。为避免更改隐藏的输入字段，还应选中 <code>仅更改可见元素？</code> 复选框。",
-    "description": "有关替换编辑器和文本字段中的文本的解释"
-  },
-  "Setup": {
-    "message": "设置",
-    "description": "帮助"
-  },
-  "Replacing_anywhere": {
-    "message": "在页面上任意位置替换文本",
-    "description": "在页面上任意位置替换文本的解释"
-  },
-  "Replacing_anywhere_p1": {
-    "message": "要替換 HTML 中、文本編輯器中以及文本字段中包含的文本，您應該選中<code>替換 HTML？。",
-    "description": "在页面上任意位置替换文本的解释"
-  },
-  "Replacing_anywhere_p2": {
-    "message": "要替换不在文本编辑器中并且不在文本字段中的文本，保持 <code>仅输入字段？</code> 和 <code>仅更改可见内容？</code> 复选框 <b>未选中</b>。",
-    "description": "在页面上任意位置替换文本的解释"
-  },
-  "Replacing_anywhere_warning": {
-    "message": "警告：此设置将更改页面的 HTML，可能会破坏页面。您可以通过重新加载页面来恢复页面，但将丢失文本编辑器和文本输入字段中的未保存更改。",
-    "description": "在页面上任意位置替换文本的解释"
-  },
-  "Matching_case": {
-    "message": "匹配文本的大小写",
-    "description": "匹配文本的大小写的解释"
-  },
-  "Matching_case_p1": {
-    "message": "如果您需要替换 <code>THIS</code> 但不替换 <code>This</code>，则应使用区分大小写选项。",
-    "description": "匹配文本的大小写的解释"
-  },
-  "Matching_case_p2": {
-    "message": "以下设置将匹配 <code>Condo</code> 但不匹配 <code>condo</code>。它将在页面上可见的文本字段中将 <code>Condo</code> 替换为 <code>apartment</code>。",
-    "description": "匹配文本的大小写的解释"
-  },
-  "Matching_whole": {
-    "message": "匹配整个单词",
-    "description": "匹配整个单词"
-  },
-  "Matching_whole_p1": {
-    "message": "如果您需要替换单词 <code>partial</code> 但不替换 <code>partially</code>，则应使用 <code>匹配整个单词？</code> 选项。",
-    "description": "匹配整个单词"
-  },
-  "wildcards_and_regex": {
-    "message": "通配符和正则表达式",
-    "description": "通配符和正则表达式的解释"
-  },
-  "wildcards_and_regex_p1": {
-    "message": "如果您需要匹配部分搜索词，您应该选中正则表达式复选框并指定通配符。您需要具备非常基本的 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>正则表达式</a> 知识才能使用此功能。我推荐 <a href='https://regexpal.com' target='_blank'>regexpal</a> 用于测试。",
-    "description": "通配符和正则表达式的解释"
-  },
-  "Before": {
-    "message": "之前",
-    "description": ""
-  },
-  "After": {
-    "message": "之后",
-    "description": ""
-  },
-  "Replacing_wordpress": {
-    "message": "在 WordPress 中替换文本",
-    "description": ""
-  },
-  "Replacing_wordpress_p1": {
-    "message": "截止到 2023 年 3 月，WordPress 的当前版本为 6.6。自此扩展创建以来，发布编辑器发生了重大变化，需要进行新的设置以替换 WordPress 中的文本。",
-    "description": ""
-  },
-  "Replacing_wordpress_setup_w6": {
-    "message": "WordPress 6+ 的设置",
-    "description": ""
-  },
-  "Replacing_wordpress_setup_w5": {
-    "message": "WordPress 5 及以下的设置",
-    "description": ""
-  },
-  "Save_apply": {
-    "message": "保存并在页面重新加载时应用",
-    "description": "保存并在页面重新加载时应用"
-  },
-  "Save_apply_p1": {
-    "message": "您可以选中 <code>保存并在页面重新加载时应用</code> 复选框，以保存您的搜索并在后续页面重新加载时应用它们。这些将在重新打开浏览器时生效。",
-    "description": "保存并在页面重新加载时应用"
-  },
-  "Save_apply_multi": {
-    "message": "多个匹配规则",
-    "description": "多个匹配规则"
-  },
-  "Save_apply_multi_p1": {
-    "message": "如果多个规则适用于同一页面，则规则将按 <b>最具体</b> 到 <b>最不具体</b> 的顺序应用。例如：",
-    "description": "多个匹配规则"
-  },
-  "Save_apply_multi_p2": {
-    "message": "这意味着第一个规则应用的任何更改将传递给后续规则。在上面的示例中，文本 <code>Example</code> 将被匹配 <code>http://www.example.com/a/deeper/nested/page</code> 的规则替换。因此，随后的规则将不会产生任何效果。",
-    "description": "多个匹配规则"
-  },
-  "Save_apply_multi_p3": {
-    "message": "您可以通过单击扩展弹出窗口中的 <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> 链接来编辑已保存的规则。<code>URL 模式</code> 字段是正则表达式，允许您将同一规则应用于许多不同的网站。",
-    "description": "多个匹配规则"
-  },
-  "ReportingIssues": {
-    "message": "报告问题",
-    "description": ""
-  },
-  "ReportingIssuesWarning": {
-    "message": "安装后，请记得在希望替换文本的页面上刷新。",
-    "description": ""
-  },
-  "ReportingIssuesInfo": {
-    "message": "如果在使用扩展后页面出现问题，请尝试刷新页面，然后选中 <code>仅输入字段？</code>复选框后执行搜索和替换。",
-    "description": ""
-  },
-  "ReportingIssues_p1": {
-    "message": "如果发现错误，请在 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank'>Chrome 扩展商店</a> 或 <a href='https://github.com/forgetso/search-replace/issues' target='_blank'>GitHub</a> 上提供详细的报告。",
-    "description": ""
-  },
-  "Rate_on_store": {
-    "message": "如果扩展对您有所帮助，请在 Chrome 商店上给予 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews'>★★★★★</a> 评价！",
-    "description": ""
-  },
-  "no_saved_instances": {
-    "message": "没有保存的实例",
-    "description": "message to tell user that no rules were found"
-  },
-  "matches": {
-    "message": "火柴",
-    "description": "message to tell user how many instances of the search term were found"
-  }
+    "ext_name": {
+        "message": "搜索和替换",
+        "description": "ext_name"
+    },
+    "ext_description": {
+        "message": "在网页上查找文本并替换为不同的文本。",
+        "description": "ext_description"
+    },
+    "options": {
+        "message": "选项",
+        "description": "options"
+    },
+    "saved_rules": {
+        "message": "已保存规则",
+        "description": "选项标签"
+    },
+    "select_language": {
+        "message": "选择语言：",
+        "description": "选项标签"
+    },
+    "settings": {
+        "message": "设置",
+        "description": "设置"
+    },
+    "about": {
+        "message": "关于",
+        "description": "about"
+    },
+    "back": {
+        "message": "后背",
+        "description": "Back"
+    },
+    "version": {
+        "message": "版本",
+        "description": "version"
+    },
+    "RuleID": {
+        "message": "规则 ID",
+        "description": "options"
+    },
+    "URLPattern": {
+        "message": "URL 模式",
+        "description": "options"
+    },
+    "SearchTerm": {
+        "message": "搜索词",
+        "description": "options"
+    },
+    "ReplaceTerm": {
+        "message": "替换词",
+        "description": "options"
+    },
+    "Delete": {
+        "message": "删除",
+        "description": "options"
+    },
+    "Save": {
+        "message": "保存",
+        "description": "options"
+    },
+    "matchCase": {
+        "message": "区分大小写",
+        "description": "复选框 区分大小写"
+    },
+    "inputFieldsOnly": {
+        "message": "仅输入字段",
+        "description": "复选框 仅输入字段"
+    },
+    "hiddenContent": {
+        "message": "隐藏内容",
+        "description": "复选框 仅可见内容"
+    },
+    "wholeWord": {
+        "message": "匹配整个单词",
+        "description": "复选框 匹配整个单词"
+    },
+    "isRegex": {
+        "message": "正则表达式",
+        "description": "复选框 正则表达式"
+    },
+    "replaceHTML": {
+        "message": "替换 HTML",
+        "description": "checkbox replaceHTML"
+    },
+    "replaceAll": {
+        "message": "替换所有",
+        "description": "复选框 替换所有"
+    },
+    "saveApplyPageReload": {
+        "message": "保存并在页面重新加载时应用",
+        "description": "复选框 保存"
+    },
+    "Searchfor": {
+        "message": "搜索",
+        "description": "弹出窗口"
+    },
+    "Swap": {
+        "message": "交换 ⇅",
+        "description": "弹出窗口"
+    },
+    "Replacewith": {
+        "message": "替换为",
+        "description": "弹出窗口"
+    },
+    "Matchcase": {
+        "message": "区分大小写",
+        "description": "弹出窗口"
+    },
+    "Inputfields": {
+        "message": "仅输入字段",
+        "description": "弹出窗口"
+    },
+    "Hiddencontent": {
+        "message": "隐藏内容",
+        "description": "弹出窗口"
+    },
+    "Matchwhole": {
+        "message": "匹配整个单词",
+        "description": "弹出窗口"
+    },
+    "Regularexpression": {
+        "message": "正则表达式",
+        "description": "弹出窗口"
+    },
+    "Saveandapply": {
+        "message": "保存并在页面重新加载时应用",
+        "description": "弹出窗口"
+    },
+    "ReplaceNext": {
+        "message": "替换下一个",
+        "description": "弹出窗口"
+    },
+    "ReplaceAll": {
+        "message": "替换所有",
+        "description": "弹出窗口"
+    },
+    "History": {
+        "message": "历史记录",
+        "description": "弹出窗口"
+    },
+    "Clear": {
+        "message": "清除",
+        "description": "弹出窗口"
+    },
+    "EditSettings": {
+        "message": "编辑设置",
+        "description": "弹出窗口"
+    },
+    "Help": {
+        "message": "帮助",
+        "description": ""
+    },
+    "help_title": {
+        "message": "搜索和替换帮助页面",
+        "description": "帮助"
+    },
+    "URL": {
+        "message": "网址",
+        "description": ""
+    },
+    "Search": {
+        "message": "搜索",
+        "description": ""
+    },
+    "Replace": {
+        "message": "替换",
+        "description": ""
+    },
+    "Priority": {
+        "message": "优先级",
+        "description": ""
+    },
+    "Example": {
+        "message": "示例",
+        "description": ""
+    },
+    "applied_first": {
+        "message": "首先应用",
+        "description": ""
+    },
+    "applied_last": {
+        "message": "最后应用",
+        "description": ""
+    },
+    "next_vs_all": {
+        "message": "替换下一个 vs. 替换所有",
+        "description": "替换下一个 vs. 替换所有"
+    },
+    "next_vs_all_p1": {
+        "message": "要替换搜索词的第一个出现，按 <code>替换下一个</code>。您可以继续按此按钮，直到没有更多出现。",
+        "description": "替换下一个 vs. 替换所有"
+    },
+    "next_vs_all_p2": {
+        "message": "要替换搜索词的所有出现，按 <code>替换所有</code>。",
+        "description": "替换下一个 vs. 替换所有"
+    },
+    "next_vs_all_p3": {
+        "message": "目前没有撤销功能。如果出现错误，可以重新加载页面以恢复原始文本。但是，文本编辑器和文本输入字段中的未保存更改将丢失。",
+        "description": "替换下一个 vs. 替换所有"
+    },
+    "replace_editors": {
+        "message": "替换编辑器和文本字段中的文本",
+        "description": "有关替换编辑器和文本字段中的文本的解释"
+    },
+    "replace_editors_p1": {
+        "message": "要替换文本编辑器或输入框中的文本，您应该选中 <code>仅输入字段？</code> 复选框。",
+        "description": "有关替换编辑器和文本字段中的文本的解释"
+    },
+    "replace_editors_p3": {
+        "message": "这涵盖普通的 <code>input</code> 和 <code>textarea</code> 输入框，也包括 TinyMCE、CKEditor 这类富文本编辑器。由于这些字段之外的内容完全不会被改动，它是复杂页面上最安全的选项，也是替换似乎破坏了页面时应该首先尝试的选项。",
+        "description": "Explanation about replacing text in editors and text fields"
+    },
+    "Setup": {
+        "message": "设置",
+        "description": "帮助"
+    },
+    "Replacing_anywhere": {
+        "message": "在页面上任意位置替换文本",
+        "description": "在页面上任意位置替换文本的解释"
+    },
+    "Replacing_anywhere_p1": {
+        "message": "要替換 HTML 中、文本編輯器中以及文本字段中包含的文本，您應該選中<code>替換 HTML？。",
+        "description": "在页面上任意位置替换文本的解释"
+    },
+    "Replacing_anywhere_caption": {
+        "message": "重写页面上每一处 <code>example.com</code>，包括链接地址。",
+        "description": "Caption for the Replace HTML screenshot"
+    },
+    "Replacing_anywhere_warning": {
+        "message": "此设置会更改页面的 HTML，可能导致页面出错。重新加载页面即可恢复，但文本编辑器和文本输入框中未保存的更改都会丢失。",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Matching_case": {
+        "message": "匹配文本的大小写",
+        "description": "匹配文本的大小写的解释"
+    },
+    "Matching_case_p1": {
+        "message": "如果您需要替换 <code>THIS</code> 但不替换 <code>This</code>，则应使用区分大小写选项。",
+        "description": "匹配文本的大小写的解释"
+    },
+    "Matching_case_p2": {
+        "message": "以下设置将匹配 <code>Condo</code> 但不匹配 <code>condo</code>。它将在页面上可见的文本字段中将 <code>Condo</code> 替换为 <code>apartment</code>。",
+        "description": "匹配文本的大小写的解释"
+    },
+    "Matching_whole": {
+        "message": "匹配整个单词",
+        "description": "匹配整个单词"
+    },
+    "Matching_whole_p1": {
+        "message": "如果您需要替换单词 <code>partial</code> 但不替换 <code>partially</code>，则应使用 <code>匹配整个单词？</code> 选项。",
+        "description": "匹配整个单词"
+    },
+    "wildcards_and_regex": {
+        "message": "通配符和正则表达式",
+        "description": "通配符和正则表达式的解释"
+    },
+    "wildcards_and_regex_p1": {
+        "message": "如果您需要匹配部分搜索词，您应该选中正则表达式复选框并指定通配符。您需要具备非常基本的 <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>正则表达式</a> 知识才能使用此功能。我推荐 <a href='https://regexpal.com' target='_blank'>regexpal</a> 用于测试。",
+        "description": "通配符和正则表达式的解释"
+    },
+    "wildcards_and_regex_p2": {
+        "message": "在下面的例子中，<code>1\\d1</code> 表示“一个 1，接任意数字，再接一个 1”，可以匹配 101、111、121，一直到 191。",
+        "description": "Worked example for the regular expression section"
+    },
+    "Before": {
+        "message": "之前",
+        "description": ""
+    },
+    "After": {
+        "message": "之后",
+        "description": ""
+    },
+    "Replacing_wordpress": {
+        "message": "在 WordPress 中替换文本",
+        "description": ""
+    },
+    "Replacing_wordpress_p1": {
+        "message": "WordPress 的区块编辑器把文章放在一个独立的框架里，与管理页面的其余部分分开。扩展会替你查看该框架内部，因此不需要任何特殊选项：输入搜索词，然后按<code>替换所有</code>即可。",
+        "description": "Replacing text in WordPress"
+    },
+    "Replacing_wordpress_p2": {
+        "message": "如果你使用的是经典编辑器，或者字段为普通文本框的页面构建器，请先勾选<code>仅输入字段</code>。",
+        "description": "Replacing text in WordPress"
+    },
+    "Replacing_wordpress_save": {
+        "message": "替换改变的是编辑器中的内容，而不是已保存的内容。之后请在 WordPress 中按<b>更新</b>以保存。",
+        "description": "Reminder to save the post after replacing"
+    },
+    "Replacing_wordpress_caption": {
+        "message": "在区块编辑器中编辑文章。无需任何选项。",
+        "description": "Caption for the WordPress screenshot"
+    },
+    "Save_apply": {
+        "message": "保存并在页面重新加载时应用",
+        "description": "保存并在页面重新加载时应用"
+    },
+    "Save_apply_p1": {
+        "message": "勾选<code>保存并在页面重新加载时应用</code>复选框，即可保存此次搜索，并在之后每次重新加载页面时自动应用。即使关闭并重新打开浏览器，它依然有效。",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_editing": {
+        "message": "编辑已保存规则",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_rules_caption": {
+        "message": "每条已保存的规则都可以在此编辑或删除。",
+        "description": "Caption for the Saved Rules screenshot"
+    },
+    "Save_apply_multi": {
+        "message": "多个匹配规则",
+        "description": "多个匹配规则"
+    },
+    "Save_apply_multi_p1": {
+        "message": "如果多个规则适用于同一页面，则规则将按 <b>最具体</b> 到 <b>最不具体</b> 的顺序应用。例如：",
+        "description": "多个匹配规则"
+    },
+    "Save_apply_multi_p2": {
+        "message": "这意味着第一个规则应用的任何更改将传递给后续规则。在上面的示例中，文本 <code>Example</code> 将被匹配 <code>http://www.example.com/a/deeper/nested/page</code> 的规则替换。因此，随后的规则将不会产生任何效果。",
+        "description": "多个匹配规则"
+    },
+    "Save_apply_multi_p3": {
+        "message": "你可以在<a href='saveRules.html'>已保存规则</a>页面编辑保存的规则，该页面由弹出窗口中的保存图标打开。<code>URL 模式</code>字段是一个<a href='https://www.regular-expressions.info/quickstart.html' target='_blank' rel='noopener'>正则表达式</a>，因此同一条规则可以应用到许多不同的网站。",
+        "description": "Multiple Matching Rules"
+    },
+    "ReportingIssues": {
+        "message": "报告问题",
+        "description": ""
+    },
+    "ReportingIssuesWarning": {
+        "message": "请记得重新加载在安装或更新扩展时就已打开的页面。在重新加载之前，扩展无法访问这些页面。",
+        "description": ""
+    },
+    "ReportingIssuesInfo": {
+        "message": "如果在使用扩展后页面出现问题，请尝试刷新页面，然后选中 <code>仅输入字段？</code>复选框后执行搜索和替换。",
+        "description": ""
+    },
+    "ReportingIssues_p1": {
+        "message": "如果发现错误，请在 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank'>Chrome 扩展商店</a> 或 <a href='https://github.com/forgetso/search-replace/issues' target='_blank'>GitHub</a> 上提供详细的报告。",
+        "description": ""
+    },
+    "Rate_on_store": {
+        "message": "如果扩展对您有所帮助，请在 Chrome 商店上给予 <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews'>★★★★★</a> 评价！",
+        "description": ""
+    },
+    "Troubleshooting": {
+        "message": "报告问题之前",
+        "description": "Troubleshooting checklist heading"
+    },
+    "Troubleshooting_reload": {
+        "message": "重新加载页面。在安装或更新扩展时就已打开的页面，必须重新加载后才能访问。",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_restricted": {
+        "message": "<code>chrome://</code> 开头的浏览器页面、Chrome 应用商店和扩展程序页面对所有扩展都是禁区，因此无法在那里替换任何内容。",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_nomatch": {
+        "message": "如果计数始终为零，可以尝试<code>隐藏内容</code>、关闭<code>区分大小写</code>，或者确认这段文字是不是图片。",
+        "description": "Troubleshooting checklist"
+    },
+    "no_saved_instances": {
+        "message": "没有保存的实例",
+        "description": "message to tell user that no rules were found"
+    },
+    "matches": {
+        "message": "火柴",
+        "description": "message to tell user how many instances of the search term were found"
+    },
+    "hidden_content_nav": {
+        "message": "搜索隐藏内容",
+        "description": "Navigation link for hidden content help section"
+    },
+    "hidden_content_title": {
+        "message": "搜索隐藏内容",
+        "description": "Title for hidden content help section"
+    },
+    "hidden_content_p1": {
+        "message": "默认情况下，扩展只搜索和替换页面上可见的文本。如果需要在隐藏元素（例如折叠的区块、隐藏的 div，或带有 <code>display: none</code> 的元素）中搜索和替换文本，请勾选<code>隐藏内容</code>选项。",
+        "description": "First paragraph explaining hidden content checkbox"
+    },
+    "hidden_content_p2": {
+        "message": "这在处理起初隐藏、通过用户交互才显示的动态内容时特别有用，或者当你需要修改隐藏的表单字段时。",
+        "description": "Second paragraph explaining hidden content use cases"
+    },
+    "hidden_content_note": {
+        "message": "勾选<code>隐藏内容</code>后，扩展会搜索所有元素而不论其是否可见，匹配数量可能因此变多。",
+        "description": "Note about hidden content behavior"
+    },
+    "pageUnreachable": {
+        "message": "搜索和替换无法访问此页面。请重新加载页面后再试。",
+        "description": "pageUnreachable"
+    },
+    "help_lede": {
+        "message": "如何在页面上查找并修改文字 &mdash; 普通文本、表单字段、编辑器，以及每次访问时自动完成。",
+        "description": "Introduction under the Help heading"
+    },
+    "Contents": {
+        "message": "目录",
+        "description": "Help page sidebar heading"
+    },
+    "Note": {
+        "message": "注意",
+        "description": "Callout label"
+    },
+    "Tip": {
+        "message": "提示",
+        "description": "Callout label"
+    },
+    "Warning": {
+        "message": "警告",
+        "description": "Callout label"
+    },
+    "No_undo": {
+        "message": "无法撤销",
+        "description": "Callout label"
+    },
+    "basics_title": {
+        "message": "弹出窗口一览",
+        "description": "Help section title"
+    },
+    "basics_p1": {
+        "message": "从工具栏或用 <code>Ctrl+Shift+S</code> 打开弹出窗口。在<code>搜索</code>中输入要查找的文字，在<code>替换为</code>中输入想要的文字，然后按下方两个按钮之一。",
+        "description": "Help section on the popup layout"
+    },
+    "basics_p2": {
+        "message": "<code>搜索</code>框下方的数字表示页面上剩余的匹配数量，会随着你输入和替换而更新。顶部的一排图标可分别打开此帮助页、最近的搜索、关于面板、语言设置和已保存的规则。",
+        "description": "Help section on the popup layout"
+    },
+    "basics_caption": {
+        "message": "页面上还剩四处 <code>Condo</code>。",
+        "description": "Caption for the popup overview screenshot"
+    },
+    "options_title": {
+        "message": "各选项的作用",
+        "description": "Help section title"
+    },
+    "options_p1": {
+        "message": "弹出窗口中的每个复选框都会缩小或扩大搜索范围。它们可以组合使用。",
+        "description": "Introduction to the option reference"
+    },
+    "option_matchCase_desc": {
+        "message": "只匹配大小写完全相同的文字。不勾选时，<code>Condo</code>、<code>condo</code> 和 <code>CONDO</code> 都会匹配。",
+        "description": "Option reference"
+    },
+    "option_inputFieldsOnly_desc": {
+        "message": "将搜索限制在文本框、文本区域和富文本编辑器内，页面其余部分保持不变。编辑表单、邮件或文章时都应使用该选项。",
+        "description": "Option reference"
+    },
+    "option_hiddenContent_desc": {
+        "message": "包含你当前看不到的元素：折叠的面板、未激活的标签页、屏幕外的菜单和隐藏的表单字段。",
+        "description": "Option reference"
+    },
+    "option_wholeWord_desc": {
+        "message": "要求匹配的是完整单词，因此 <code>partial</code> 不再会在 <code>partially</code> 中被匹配到。",
+        "description": "Option reference"
+    },
+    "option_isRegex_desc": {
+        "message": "把搜索词当作正则表达式而非字面文本来处理。",
+        "description": "Option reference"
+    },
+    "option_replaceHTML_desc": {
+        "message": "搜索页面的 HTML 源码而不是你读到的文字，因此标签、属性、链接地址和替代文本都在范围之内。",
+        "description": "Option reference"
+    },
+    "option_save_desc": {
+        "message": "把这次搜索保存为规则，并在每次打开匹配的页面时再次应用，即使重启浏览器后也有效。",
+        "description": "Option reference"
+    },
+    "hidden_content_caption": {
+        "message": "把隐藏元素计算在内后，同样的搜索找到六处而不是四处匹配。",
+        "description": "Caption for the hidden content screenshot"
+    },
+    "history_title": {
+        "message": "历史记录、交换和语言",
+        "description": "Help section title"
+    },
+    "history_p1": {
+        "message": "弹出窗口中的时钟图标会列出最近的搜索。点击其中一条即可填回两个输入框，或按<b>清除</b>清空列表。",
+        "description": "Help section on history"
+    },
+    "history_p2": {
+        "message": "两个输入框之间的 <b>Swap</b> 会互换搜索词和替换词 &mdash; 只要原文没有出现在页面的其他地方，用它撤销刚刚做过的替换非常方便。",
+        "description": "Help section on the swap button"
+    },
+    "history_p3": {
+        "message": "齿轮图标中是语言设置。该扩展已翻译成阿拉伯语、德语、俄语、韩语、葡萄牙语、日语、西班牙语、英语、印地语和中文；尚未翻译的内容会以英文显示。",
+        "description": "Help section on the language setting"
+    },
+    "saved_rules_lede": {
+        "message": "每当你打开地址与其 URL 模式匹配的页面时，这些搜索都会自动运行。模式是正则表达式，因此一条规则就能覆盖整个网站。",
+        "description": "Introduction on the Saved Rules page"
+    },
+    "no_saved_instances_hint": {
+        "message": "在弹出窗口中勾选“保存并在页面重新加载时应用”即可创建一条。",
+        "description": "Empty state on the Saved Rules page"
+    },
+    "about_author_label": {
+        "message": "作者",
+        "description": "About panel"
+    },
+    "about_licence_label": {
+        "message": "许可证",
+        "description": "About panel"
+    },
+    "about_release_notes": {
+        "message": "版本说明",
+        "description": "About panel"
+    },
+    "about_report_issue": {
+        "message": "报告问题",
+        "description": "About panel"
+    },
+    "about_rate": {
+        "message": "为此扩展评分",
+        "description": "About panel"
+    },
+    "no_history": {
+        "message": "你最近的搜索会显示在这里。",
+        "description": "Empty state of the History panel"
+    },
+    "history_removed": {
+        "message": "（已删除）",
+        "description": "Shown in the History panel when the replacement term is empty"
+    }
 }

@@ -3,28 +3,47 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title data-locale="options">Save Rules</title>
-
-    <script src="bootstrap.min.js"></script>
-    <link href="bootstrap.bundle.min.js" rel="stylesheet" />
-    <link href="bootstrap.min.css" rel="stylesheet" />
-    <link href="style.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-locale="saved_rules">Saved Rules</title>
     <link rel="icon" type="image/png" href="icon-16.png" />
+    <link href="pages.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div class="container pt-3 ">
-        <div class="d-flex align-items-center pt-3">
-            <img src="icon-128.png" width="32" height="32" alt="search and replace logo" />
-            <span class="mx-2 fw-bold header-text" data-locale="ext_name">Search
-                and
-                Replace</span>
+    <header class="page-header">
+        <div class="page-header__inner">
+            <a class="brand" href="help.html">
+                <img src="icon-128.png" width="28" height="28" alt="" />
+                <span class="brand__name" data-locale="ext_name">Search and Replace</span>
+            </a>
+            <nav class="page-nav">
+                <a href="help.html" data-locale="Help">Help</a>
+                <a class="is-current" href="saveRules.html" aria-current="page" data-locale="saved_rules">Saved
+                    Rules</a>
+            </nav>
         </div>
-        <h3 class="fw-bold pt-5 px-3" data-locale="saved_rules">Saved Rules</h3>
-        <div class="row border-bottom py-2"></div>
-        <div id="savedInstances" class="d-flex flex-row flex-wrap">
+    </header>
+
+    <main class="page-main">
+        <div class="page-main__inner">
+            <div class="page-title">
+                <h1 data-locale="saved_rules">Saved Rules</h1>
+                <p class="page-title__lede" data-locale="saved_rules_lede">
+                    These searches run automatically every time you open a page whose address matches their URL
+                    pattern. The pattern is a regular expression, so one rule can cover a whole site.
+                </p>
+            </div>
+            <div id="savedInstances"></div>
         </div>
-    </div>
+    </main>
+
+    <footer class="page-footer">
+        <span data-locale="ext_name">Search and Replace</span>
+        <span id="version_number"></span>
+        &middot;
+        <a href="https://prosopo.io" target="_blank" rel="noopener">Prosopo</a>
+    </footer>
+
     <script src="../options.js"></script>
 </body>
 

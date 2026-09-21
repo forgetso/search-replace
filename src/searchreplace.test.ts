@@ -214,15 +214,54 @@ describe('replacing', () => {
         expect((document.getElementById('target') as HTMLTextAreaElement).value).toBe('a pin here')
     })
 
-    test('fires an input event so that page frameworks notice the change', async () => {
-        // React, Vue, Knockout and friends only see a value change if it is announced
+    test('fires input and change events so that page frameworks notice the change', async () => {
+        // React, Vue, Knockout and friends only see a value change if it is announced, and
+        // `change` is what Angular's ngModel, jQuery handlers and plain onchange attributes
+        // listen for. Firing only `input` left those sites holding the pre-replacement text.
         setBody('<input id="target" type="text" value="needle">')
         const events: string[] = []
-        document.getElementById('target')?.addEventListener('input', () => events.push('input'))
+        const target = document.getElementById('target')
+        target?.addEventListener('input', () => events.push('input'))
+        target?.addEventListener('change', () => events.push('change'))
 
         await run('searchReplace', { inputFieldsOnly: true })
 
-        expect(events).toEqual(['input'])
+        expect(events).toEqual(['input', 'change'])
+    })
+
+    test('the input event is an InputEvent, which is what edit-aware listeners check for', async () => {
+        setBody('<input id="target" type="text" value="needle">')
+        let received: Event | undefined
+        document.getElementById('target')?.addEventListener('input', (event) => (received = event))
+
+        await run('searchReplace', { inputFieldsOnly: true })
+
+        expect(received).toBeInstanceOf(InputEvent)
+        expect((received as InputEvent).inputType).toBe('insertText')
+    })
+
+    test('the events bubble and cross shadow boundaries', async () => {
+        setBody('<form id="form"><input id="target" type="text" value="needle"></form>')
+        const seen: string[] = []
+        document.getElementById('form')?.addEventListener('input', (event) => {
+            seen.push(`input composed=${(event as InputEvent).composed}`)
+        })
+        document.getElementById('form')?.addEventListener('change', () => seen.push('change'))
+
+        await run('searchReplace', { inputFieldsOnly: true })
+
+        expect(seen).toEqual(['input composed=true', 'change'])
+    })
+
+    test('announces a replacement made outside an input too', async () => {
+        setBody('<div id="target">a needle here</div>')
+        const events: string[] = []
+        document.getElementById('target')?.addEventListener('input', () => events.push('input'))
+        document.getElementById('target')?.addEventListener('change', () => events.push('change'))
+
+        await run('searchReplace')
+
+        expect(events).toEqual(['input', 'change'])
     })
 
     test('leaves the page alone when counting', async () => {

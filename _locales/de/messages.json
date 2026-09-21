@@ -28,8 +28,8 @@
         "description": "about"
     },
     "back": {
-      "message": "Rücken",
-      "description": "Back"
+        "message": "Rücken",
+        "description": "Back"
     },
     "version": {
         "message": "Version",
@@ -207,9 +207,9 @@
         "message": "Um Text in Texteditoren oder Eingabefeldern zu ersetzen, sollten Sie das Kontrollkästchen <code>Nur Eingabefelder</code> aktivieren.",
         "description": "Erklärung zum Ersetzen von Text in Editoren und Textfeldern"
     },
-    "replace_editors_p2": {
-        "message": "Um Text in Texteditoren oder Eingabefeldern zu ersetzen, sollten Sie das Kontrollkästchen <code>Nur Eingabefelder</code> aktivieren. Andernfalls wird der Suchtext im gesamten HTML ersetzt, was möglicherweise die Seite beschädigen kann. Um das Ändern von versteckten Eingabefeldern zu vermeiden, sollten Sie auch das Kontrollkästchen <code>Nur sichtbare Elemente</code> aktivieren.",
-        "description": "Erklärung zum Ersetzen von Text in Editoren und Textfeldern"
+    "replace_editors_p3": {
+        "message": "Das umfasst einfache <code>input</code>- und <code>textarea</code>-Felder ebenso wie Rich-Text-Editoren wie TinyMCE und CKEditor. Da nichts außerhalb dieser Felder angefasst wird, ist dies die sicherste Option auf einer komplizierten Seite und die erste, die Sie versuchen sollten, wenn eine Ersetzung etwas zerstört zu haben scheint.",
+        "description": "Explanation about replacing text in editors and text fields"
     },
     "Setup": {
         "message": "Einstellungen",
@@ -223,13 +223,13 @@
         "message": "Um Text zu ersetzen, der in einem HTML-Code, in einem Texteditor oder in einem Textfeld enthalten ist, sollten Sie das Kontrollkästchen <code>HTML ersetzen?</code> aktivieren.",
         "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
     },
-    "Replacing_anywhere_p2": {
-        "message": "Um Text zu ersetzen, der nicht in einem Texteditor enthalten ist und sich nicht in einem Textfeld befindet, deaktivieren Sie die Kontrollkästchen <code>Nur Eingabefelder</code> und <code>Nur sichtbaren Inhalt ändern</code>.",
-        "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
+    "Replacing_anywhere_caption": {
+        "message": "Jedes <code>example.com</code> auf der Seite wird umgeschrieben, einschließlich der Linkadressen.",
+        "description": "Caption for the Replace HTML screenshot"
     },
     "Replacing_anywhere_warning": {
-        "message": "WARNUNG: Diese Einstellung ändert den HTML-Code der Seite und kann sie beschädigen. Sie können die Seite durch erneutes Laden wiederherstellen, verlieren jedoch alle nicht gespeicherten Änderungen in Texteditoren und Texteingabefeldern.",
-        "description": "Erklärung zum Ersetzen von Text überall auf der Seite"
+        "message": "Diese Einstellung ändert den HTML-Code der Seite und kann sie beschädigen. Sie können die Seite durch erneutes Laden wiederherstellen, verlieren dabei jedoch alle nicht gespeicherten Änderungen in Texteditoren und Texteingabefeldern.",
+        "description": "Explanation about replacing text anywhere on the page"
     },
     "Matching_case": {
         "message": "Groß-/Kleinschreibung beachten",
@@ -259,6 +259,10 @@
         "message": "Wenn Sie einen teilweisen Suchbegriff finden müssen, sollten Sie das Kontrollkästchen für reguläre Ausdrücke aktivieren und einen Platzhalter angeben. Sie benötigen grundlegende Kenntnisse von <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regulären Ausdrücken</a>, um diese Funktion zu verwenden. Ich empfehle <a href='https://regexpal.com' target='_blank'>regexpal</a> zum Testen.",
         "description": "Erklärung zu Platzhaltern und regulären Ausdrücken"
     },
+    "wildcards_and_regex_p2": {
+        "message": "Im folgenden Beispiel bedeutet <code>1\\d1</code> „eine 1, dann eine beliebige Ziffer, dann eine 1“ und trifft damit auf 101, 111, 121 und so weiter bis 191 zu.",
+        "description": "Worked example for the regular expression section"
+    },
     "Before": {
         "message": "Vorher",
         "description": ""
@@ -272,24 +276,36 @@
         "description": ""
     },
     "Replacing_wordpress_p1": {
-        "message": "WordPress ist derzeit in Version 6.6, Stand März 2023. Der Beitrag-Editor hat sich seit der Erstellung dieser Erweiterung erheblich verändert, und es ist eine neue Konfiguration erforderlich, um Text in WordPress zu ersetzen.",
-        "description": ""
+        "message": "Der WordPress-Block-Editor hält Ihren Beitrag in einem eigenen Frame, getrennt vom Rest der Verwaltungsseite. Die Erweiterung schaut für Sie in diesen Frame hinein, sodass keine besonderen Optionen nötig sind: Geben Sie Ihre Begriffe ein und drücken Sie <code>Alle ersetzen</code>.",
+        "description": "Replacing text in WordPress"
     },
-    "Replacing_wordpress_setup_w6": {
-        "message": "Konfiguration für WordPress 6+",
-        "description": ""
+    "Replacing_wordpress_p2": {
+        "message": "Wenn Sie den klassischen Editor oder einen Page Builder mit gewöhnlichen Textfeldern verwenden, aktivieren Sie zuerst <code>Nur Eingabefelder</code>.",
+        "description": "Replacing text in WordPress"
     },
-    "Replacing_wordpress_setup_w5": {
-        "message": "Konfiguration für WordPress 5 und ältere Versionen",
-        "description": ""
+    "Replacing_wordpress_save": {
+        "message": "Die Ersetzung ändert den Inhalt des Editors, nicht den gespeicherten Beitrag. Drücken Sie anschließend in WordPress auf <b>Aktualisieren</b>, um sie zu behalten.",
+        "description": "Reminder to save the post after replacing"
+    },
+    "Replacing_wordpress_caption": {
+        "message": "Bearbeiten eines Beitrags im Block-Editor. Es sind keine Optionen nötig.",
+        "description": "Caption for the WordPress screenshot"
     },
     "Save_apply": {
         "message": "Speichern und bei Seitenneuladen anwenden",
         "description": "Speichern und bei Seitenneuladen anwenden"
     },
     "Save_apply_p1": {
-        "message": "Sie können das Kontrollkästchen <code>Speichern und bei Seitenneuladen anwenden</code> aktivieren, um Ihre Suche zu speichern und bei nachfolgenden Seitenneuladen anzuwenden. Diese werden in Ihrem Browser gespeichert und erneut geöffnet.",
-        "description": "Speichern und bei Seitenneuladen anwenden"
+        "message": "Sie können das Kontrollkästchen <code>Speichern und bei Seitenneuladen anwenden</code> aktivieren, um Ihre Suche zu speichern und bei jedem erneuten Laden der Seite anzuwenden. Das gilt auch dann noch, wenn Sie Ihren Browser geschlossen und wieder geöffnet haben.",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_editing": {
+        "message": "Gespeicherte Regeln bearbeiten",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_rules_caption": {
+        "message": "Jede gespeicherte Regel kann hier bearbeitet oder gelöscht werden.",
+        "description": "Caption for the Saved Rules screenshot"
     },
     "Save_apply_multi": {
         "message": "Mehrere Übereinstimmungsregeln",
@@ -304,15 +320,15 @@
         "description": "Mehrere Übereinstimmungsregeln"
     },
     "Save_apply_multi_p3": {
-        "message": "Sie können die gespeicherten Regeln bearbeiten, indem Sie auf den Link <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> in der Erweiterungspopup klicken. Das <code>URL-Muster</code> Feld ist ein <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>regulärer Ausdruck</a>, der es Ihnen ermöglicht, dieselbe Regel auf viele verschiedene Websites anzuwenden.",
-        "description": "Mehrere Übereinstimmungsregeln"
+        "message": "Sie können die gespeicherten Regeln auf der Seite <a href='saveRules.html'>Gespeicherte Regeln</a> bearbeiten, die das Speichersymbol im Popup öffnet. Das Feld <code>URL-Muster</code> ist ein <a href='https://www.regular-expressions.info/quickstart.html' target='_blank' rel='noopener'>regulärer Ausdruck</a>, mit dem Sie dieselbe Regel auf viele verschiedene Websites anwenden können.",
+        "description": "Multiple Matching Rules"
     },
     "ReportingIssues": {
         "message": "Probleme melden",
         "description": ""
     },
     "ReportingIssuesWarning": {
-        "message": "Denken Sie daran, die Seite, auf der Sie Text ersetzen möchten, nach der Installation der Erweiterung zu AKTUALISIEREN.",
+        "message": "Denken Sie daran, jede Seite neu zu laden, die bereits geöffnet war, als die Erweiterung installiert oder aktualisiert wurde. Bis sie neu geladen wird, kann die Erweiterung sie nicht erreichen.",
         "description": ""
     },
     "ReportingIssuesInfo": {
@@ -327,6 +343,22 @@
         "message": "Bitte bewerten Sie <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> im Chrome Store, wenn Ihnen die Erweiterung hilft!",
         "description": ""
     },
+    "Troubleshooting": {
+        "message": "Bevor Sie ein Problem melden",
+        "description": "Troubleshooting checklist heading"
+    },
+    "Troubleshooting_reload": {
+        "message": "Laden Sie die Seite neu. Eine Seite, die beim Installieren oder Aktualisieren der Erweiterung bereits geöffnet war, ist erst nach einem Neuladen erreichbar.",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_restricted": {
+        "message": "Browserseiten wie <code>chrome://</code>, der Chrome Web Store und die Erweiterungsseite sind für jede Erweiterung gesperrt, dort kann also nichts ersetzt werden.",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_nomatch": {
+        "message": "Wenn die Zählung bei null bleibt, versuchen Sie <code>Versteckter Inhalt</code>, schalten Sie <code>Groß-/Kleinschreibung beachten</code> aus, oder prüfen Sie, ob der Text nicht Teil eines Bildes ist.",
+        "description": "Troubleshooting checklist"
+    },
     "no_saved_instances": {
         "message": "Keine gespeicherten Instanzen",
         "description": "message to tell user that no rules were found"
@@ -334,5 +366,161 @@
     "matches": {
         "message": "streichhölzer",
         "description": "message to tell user how many instances of the search term were found"
+    },
+    "hidden_content_nav": {
+        "message": "Versteckte Inhalte durchsuchen",
+        "description": "Navigation link for hidden content help section"
+    },
+    "hidden_content_title": {
+        "message": "Versteckte Inhalte durchsuchen",
+        "description": "Title for hidden content help section"
+    },
+    "hidden_content_p1": {
+        "message": "Standardmäßig sucht und ersetzt die Erweiterung nur Text, der auf der Seite sichtbar ist. Wenn Sie Text in versteckten Elementen suchen und ersetzen möchten (etwa in eingeklappten Abschnitten, versteckten Divs oder Elementen mit <code>display: none</code>), aktivieren Sie die Option <code>Versteckter Inhalt</code>.",
+        "description": "First paragraph explaining hidden content checkbox"
+    },
+    "hidden_content_p2": {
+        "message": "Das ist besonders nützlich bei dynamischen Inhalten, die zunächst verborgen sind und erst durch eine Benutzeraktion sichtbar werden, oder wenn Sie versteckte Formularfelder ändern müssen.",
+        "description": "Second paragraph explaining hidden content use cases"
+    },
+    "hidden_content_note": {
+        "message": "Wenn <code>Versteckter Inhalt</code> aktiviert ist, durchsucht die Erweiterung jedes Element unabhängig von seiner Sichtbarkeit, was zu einer höheren Trefferzahl führen kann.",
+        "description": "Note about hidden content behavior"
+    },
+    "pageUnreachable": {
+        "message": "Suchen und Ersetzen kann diese Seite nicht erreichen. Laden Sie die Seite neu und versuchen Sie es erneut.",
+        "description": "pageUnreachable"
+    },
+    "help_lede": {
+        "message": "So finden und ändern Sie Text auf einer Seite &mdash; in gewöhnlichem Text, in Formularfeldern, in Editoren und automatisch bei jedem Besuch.",
+        "description": "Introduction under the Help heading"
+    },
+    "Contents": {
+        "message": "Inhalt",
+        "description": "Help page sidebar heading"
+    },
+    "Note": {
+        "message": "Hinweis",
+        "description": "Callout label"
+    },
+    "Tip": {
+        "message": "Tipp",
+        "description": "Callout label"
+    },
+    "Warning": {
+        "message": "Warnung",
+        "description": "Callout label"
+    },
+    "No_undo": {
+        "message": "Kein Rückgängig",
+        "description": "Callout label"
+    },
+    "basics_title": {
+        "message": "Das Popup auf einen Blick",
+        "description": "Help section title"
+    },
+    "basics_p1": {
+        "message": "Öffnen Sie das Popup über die Symbolleiste oder mit <code>Strg+Umschalt+S</code>. Geben Sie den gesuchten Text in <code>Suchen nach</code> ein und den gewünschten Ersatz in <code>Ersetzen durch</code>, und drücken Sie dann eine der beiden Schaltflächen unten.",
+        "description": "Help section on the popup layout"
+    },
+    "basics_p2": {
+        "message": "Die Zahl unter dem Feld <code>Suchen nach</code> zählt die auf der Seite verbliebenen Treffer und wird beim Tippen und beim Ersetzen aktualisiert. Die Symbolreihe oben öffnet diese Hilfeseite, Ihre letzten Suchen, das Info-Fenster, die Spracheinstellung und Ihre gespeicherten Regeln.",
+        "description": "Help section on the popup layout"
+    },
+    "basics_caption": {
+        "message": "Auf der Seite sind noch vier Vorkommen von <code>Condo</code> übrig.",
+        "description": "Caption for the popup overview screenshot"
+    },
+    "options_title": {
+        "message": "Was die einzelnen Optionen bewirken",
+        "description": "Help section title"
+    },
+    "options_p1": {
+        "message": "Jedes Kontrollkästchen im Popup schränkt den Suchbereich ein oder erweitert ihn. Sie lassen sich kombinieren.",
+        "description": "Introduction to the option reference"
+    },
+    "option_matchCase_desc": {
+        "message": "Findet nur Text mit genau derselben Groß- und Kleinschreibung. Ohne Häkchen passen <code>Condo</code>, <code>condo</code> und <code>CONDO</code> alle.",
+        "description": "Option reference"
+    },
+    "option_inputFieldsOnly_desc": {
+        "message": "Beschränkt die Suche auf Textfelder, Textbereiche und Rich-Text-Editoren und lässt den Rest der Seite unberührt. Verwenden Sie sie immer dann, wenn Sie ein Formular, eine Nachricht oder einen Beitrag bearbeiten.",
+        "description": "Option reference"
+    },
+    "option_hiddenContent_desc": {
+        "message": "Bezieht Elemente ein, die Sie gerade nicht sehen können: eingeklappte Bereiche, inaktive Tabs, Menüs außerhalb des Bildschirms und versteckte Formularfelder.",
+        "description": "Option reference"
+    },
+    "option_wholeWord_desc": {
+        "message": "Verlangt, dass der Treffer ein ganzes Wort ist, sodass <code>partial</code> nicht mehr innerhalb von <code>partially</code> gefunden wird.",
+        "description": "Option reference"
+    },
+    "option_isRegex_desc": {
+        "message": "Behandelt den Suchbegriff als regulären Ausdruck statt als wörtlichen Text.",
+        "description": "Option reference"
+    },
+    "option_replaceHTML_desc": {
+        "message": "Durchsucht den HTML-Quelltext der Seite statt des lesbaren Textes, sodass auch Tags, Attribute, Linkadressen und Alt-Texte erfasst werden.",
+        "description": "Option reference"
+    },
+    "option_save_desc": {
+        "message": "Speichert die Suche als Regel und wendet sie bei jedem Öffnen einer passenden Seite erneut an, auch nach einem Neustart des Browsers.",
+        "description": "Option reference"
+    },
+    "hidden_content_caption": {
+        "message": "Dieselbe Suche findet sechs statt vier Treffer, sobald versteckte Elemente einbezogen werden.",
+        "description": "Caption for the hidden content screenshot"
+    },
+    "history_title": {
+        "message": "Verlauf, Tauschen und Sprache",
+        "description": "Help section title"
+    },
+    "history_p1": {
+        "message": "Das Uhrensymbol im Popup listet Ihre letzten Suchen auf. Klicken Sie eine an, um sie wieder in die beiden Felder zu übernehmen, oder drücken Sie <b>Löschen</b>, um die Liste zu leeren.",
+        "description": "Help section on history"
+    },
+    "history_p2": {
+        "message": "<b>Swap</b> zwischen den beiden Feldern vertauscht Such- und Ersetzungsbegriff &mdash; praktisch, um eine gerade vorgenommene Ersetzung rückgängig zu machen, solange der ursprüngliche Text nicht auch anderswo auf der Seite eingegeben wurde.",
+        "description": "Help section on the swap button"
+    },
+    "history_p3": {
+        "message": "Das Zahnradsymbol enthält die Spracheinstellung. Die Erweiterung ist auf Arabisch, Chinesisch, Deutsch, Englisch, Hindi, Japanisch, Koreanisch, Portugiesisch, Russisch und Spanisch übersetzt; noch nicht Übersetztes wird auf Englisch angezeigt.",
+        "description": "Help section on the language setting"
+    },
+    "saved_rules_lede": {
+        "message": "Diese Suchen laufen automatisch jedes Mal, wenn Sie eine Seite öffnen, deren Adresse zu ihrem URL-Muster passt. Das Muster ist ein regulärer Ausdruck, sodass eine Regel eine ganze Website abdecken kann.",
+        "description": "Introduction on the Saved Rules page"
+    },
+    "no_saved_instances_hint": {
+        "message": "Aktivieren Sie „Speichern und bei Seitenneuladen anwenden“ im Popup, um eine anzulegen.",
+        "description": "Empty state on the Saved Rules page"
+    },
+    "about_author_label": {
+        "message": "Autor",
+        "description": "About panel"
+    },
+    "about_licence_label": {
+        "message": "Lizenz",
+        "description": "About panel"
+    },
+    "about_release_notes": {
+        "message": "Versionshinweise",
+        "description": "About panel"
+    },
+    "about_report_issue": {
+        "message": "Problem melden",
+        "description": "About panel"
+    },
+    "about_rate": {
+        "message": "Erweiterung bewerten",
+        "description": "About panel"
+    },
+    "no_history": {
+        "message": "Ihre letzten Suchen erscheinen hier.",
+        "description": "Empty state of the History panel"
+    },
+    "history_removed": {
+        "message": "(entfernt)",
+        "description": "Shown in the History panel when the replacement term is empty"
     }
 }

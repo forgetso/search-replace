@@ -10,6 +10,9 @@ node_modules
 *.zip
 /search_and_replace_*/
 
+# Left behind in assets/ only if scripts/screenshots.mjs dies mid-run
+assets/.screenshot-harness-*.html
+
 # Test output
 /coverage
 src/cypress/screenshots

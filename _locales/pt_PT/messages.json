@@ -1,338 +1,526 @@
 {
-  "ext_name": {
-    "message": "Pesquisar e Substituir",
-    "description": "ext_name"
-  },
-  "ext_description": {
-    "message": "Pesquise texto em uma página da web e substitua-o por outro texto.",
-    "description": "ext_description"
-  },
-  "options": {
-    "message": "Opções",
-    "description": "options"
-  },
-  "saved_rules": {
-    "message": "Regras Salvas",
-    "description": "Options Tab"
-  },
-  "select_language": {
-    "message": "Selecione um idioma:",
-    "description": "Options Tab"
-  },
-  "settings": {
-    "message": "Configurações",
-    "description": "Settings"
-  },
-  "about": {
-    "message": "Sobre",
-    "description": "about"
-  },
-  "back": {
-    "message": "costas",
-    "description": "Back"
-  },
-  "version": {
-    "message": "Versão",
-    "description": "version"
-  },
-  "RuleID": {
-    "message": "ID da Regra",
-    "description": "options"
-  },
-  "URLPattern": {
-    "message": "Padrão de URL",
-    "description": "options"
-  },
-  "SearchTerm": {
-    "message": "Termo de Pesquisa",
-    "description": "options"
-  },
-  "ReplaceTerm": {
-    "message": "Termo de Substituição",
-    "description": "options"
-  },
-  "Delete": {
-    "message": "Excluir",
-    "description": "options"
-  },
-  "Save": {
-    "message": "Salvar",
-    "description": "options"
-  },
-  "matchCase": {
-    "message": "Diferenciar maiúsculas",
-    "description": "checkbox matchCase"
-  },
-  "inputFieldsOnly": {
-    "message": "Apenas campos de entrada",
-    "description": "checkbox inputFieldsOnly"
-  },
-  "hiddenContent": {
-    "message": "Conteúdo oculto",
-    "description": "checkbox hiddenContent"
-  },
-  "wholeWord": {
-    "message": "Corresponder palavra inteira",
-    "description": "checkbox wholeWord"
-  },
-  "isRegex": {
-    "message": "Expressão regular",
-    "description": "checkbox isRegex"
-  },
-  "replaceHTML": {
-    "message": "Substituir HTML",
-    "description": "checkbox replaceHTML"
-  },
-  "replaceAll": {
-    "message": "Substituir tudo",
-    "description": "checkbox replaceAll"
-  },
-  "saveApplyPageReload": {
-    "message": "Salvar e aplicar na recarga da página",
-    "description": "checkbox save"
-  },
-  "Searchfor": {
-    "message": "Pesquisar por",
-    "description": "popup"
-  },
-  "Swap": {
-    "message": "Trocar ⇅",
-    "description": "popup"
-  },
-  "Replacewith": {
-    "message": "Substituir por",
-    "description": "popup"
-  },
-  "Matchcase": {
-    "message": "Diferenciar maiúsculas",
-    "description": "popup"
-  },
-  "Inputfields": {
-    "message": "Apenas campos de entrada",
-    "description": "popup"
-  },
-  "Hiddencontent": {
-    "message": "Conteúdo oculto",
-    "description": "popup"
-  },
-  "Matchwhole": {
-    "message": "Corresponder palavra inteira",
-    "description": "popup"
-  },
-  "Regularexpression": {
-    "message": "Expressão regular",
-    "description": "popup"
-  },
-  "Saveandapply": {
-    "message": "Salvar e aplicar na recarga da página",
-    "description": "popup"
-  },
-  "ReplaceNext": {
-    "message": "Substituir Próximo",
-    "description": "popup"
-  },
-  "ReplaceAll": {
-    "message": "Substituir Tudo",
-    "description": "popup"
-  },
-  "History": {
-    "message": "Histórico",
-    "description": "popup"
-  },
-  "Clear": {
-    "message": "Limpar",
-    "description": "popup"
-  },
-  "EditSettings": {
-    "message": "Editar Configurações",
-    "description": "popup"
-  },
-  "Help": {
-    "message": "Ajuda",
-    "description": ""
-  },
-  "help_title": {
-    "message": "Página de Ajuda para Pesquisar e Substituir",
-    "description": "help"
-  },
-  "URL": {
-    "message": "URL",
-    "description": ""
-  },
-  "Search": {
-    "message": "Pesquisar",
-    "description": ""
-  },
-  "Replace": {
-    "message": "Substituir",
-    "description": ""
-  },
-  "Priority": {
-    "message": "Prioridade",
-    "description": ""
-  },
-  "Example": {
-    "message": "Exemplo",
-    "description": ""
-  },
-  "applied_first": {
-    "message": "aplicado primeiro",
-    "description": ""
-  },
-  "applied_last": {
-    "message": "aplicado por último",
-    "description": ""
-  },
-  "next_vs_all": {
-    "message": "Substituir Próximo vs. Substituir Tudo",
-    "description": "Replace Next vs. Replace All"
-  },
-  "next_vs_all_p1": {
-    "message": "Para substituir a primeira ocorrência do termo de pesquisa, pressione <code>Substituir Próximo</code>. Você pode continuar pressionando o botão até que não haja mais ocorrências.",
-    "description": "Replace Next vs. Replace All"
-  },
-  "next_vs_all_p2": {
-    "message": "Para substituir todas as ocorrências do termo de pesquisa, pressione <code>Substituir Tudo</code>.",
-    "description": "Replace Next vs. Replace All"
-  },
-  "next_vs_all_p3": {
-    "message": "Atualmente, não há função de desfazer. Se você cometer um erro, pode recarregar a página para restaurar o texto original. No entanto, você perderá quaisquer alterações não salvas nos editores de texto e nos campos de entrada de texto.",
-    "description": "Replace Next vs. Replace All"
-  },
-  "replace_editors": {
-    "message": "Substituir texto em editores de texto e campos de entrada de texto",
-    "description": "Explanation about replacing text in editors and text fields"
-  },
-  "replace_editors_p1": {
-    "message": "Para substituir texto em editores de texto ou caixas de entrada, você deve marcar a caixa <code>Apenas campos de entrada?</code>.",
-    "description": "Explanation about replacing text in editors and text fields"
-  },
-  "replace_editors_p2": {
-    "message": "Para substituir texto em editores de texto ou caixas de entrada, você deve marcar a caixa <code>Apenas campos de entrada?</code>. Caso contrário, o texto de pesquisa será substituído em todo o HTML, o que pode quebrar a página. Para evitar a alteração de campos de entrada ocultos, você também deve marcar a caixa <code>Apenas elementos visíveis?</code>.",
-    "description": "Explanation about replacing text in editors and text fields"
-  },
-  "Setup": {
-    "message": "Configuração",
-    "description": "help"
-  },
-  "Replacing_anywhere": {
-    "message": "Substituir texto em qualquer lugar na página",
-    "description": "Explanation about replacing text anywhere on the page"
-  },
-  "Replacing_anywhere_p1": {
-    "message": "Para substituir o texto contido em um HTML, contido em um editor de texto e contido em um campo de texto, você deve marcar a caixa de seleção <code>Substituir HTML?</code>.",
-    "description": "Explanation about replacing text anywhere on the page"
-  },
-  "Replacing_anywhere_p2": {
-    "message": "Para substituir texto que não está contido em um editor de texto e não está contido em um campo de entrada de texto, deixe as caixas <code>Apenas campos de entrada?</code> e <code>Apenas alterar conteúdo visível?</code> <b>não marcadas</b>.",
-    "description": "Explanation about replacing text anywhere on the page"
-  },
-  "Replacing_anywhere_warning": {
-    "message": "AVISO: Esta configuração alterará o HTML da página e poderá quebrar a página. Você pode restaurar a página recarregando-a, mas perderá quaisquer alterações não salvas nos editores de texto e nos campos de entrada de texto.",
-    "description": "Explanation about replacing text anywhere on the page"
-  },
-  "Matching_case": {
-    "message": "Correspondência de maiúsculas e minúsculas do texto",
-    "description": "Explanation about matching the case of text"
-  },
-  "Matching_case_p1": {
-    "message": "Se você precisar substituir <code>ISTO</code> mas não <code>Isto</code>, deve usar a opção de correspondência de maiúsculas e minúsculas.",
-    "description": "Explanation about matching the case of text"
-  },
-  "Matching_case_p2": {
-    "message": "A configuração a seguir corresponderá a <code>Condomínio</code> mas não <code>condomínio</code>. Ela substituirá <code>Condomínio</code> por <code>apartamento</code> em campos de texto que são visíveis na página.",
-    "description": "Explanation about matching the case of text"
-  },
-  "Matching_whole": {
-    "message": "Correspondência de palavra inteira",
-    "description": "Matching whole words"
-  },
-  "Matching_whole_p1": {
-    "message": "Se você precisar substituir a palavra <code>parcial</code> mas não <code>parcialmente</code>, deve usar a opção <code>Corresponder palavra inteira?</code>.",
-    "description": "Matching whole words"
-  },
-  "wildcards_and_regex": {
-    "message": "Coringas e Expressões Regulares",
-    "description": "Explanation about wild cards and regular expressions"
-  },
-  "wildcards_and_regex_p1": {
-    "message": "Se você precisar corresponder a uma parte do termo de pesquisa, deve marcar a caixa de seleção Expressões Regulares e especificar um caractere curinga. Você precisará de um conhecimento básico de <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expressões regulares</a> para usar esse recurso. Recomenda-se o uso de <a href='https://regexpal.com' target='_blank'>regexpal</a> para testes.",
-    "description": "Explanation about wild cards and regular expressions"
-  },
-  "Before": {
-    "message": "Antes",
-    "description": ""
-  },
-  "After": {
-    "message": "Depois",
-    "description": ""
-  },
-  "Replacing_wordpress": {
-    "message": "Substituir texto no WordPress",
-    "description": ""
-  },
-  "Replacing_wordpress_p1": {
-    "message": "O WordPress está atualmente na versão 6.6, a partir de março de 2023. O editor de postagens mudou significativamente desde a criação desta extensão e é necessária uma nova configuração para substituir texto no WordPress.",
-    "description": ""
-  },
-  "Replacing_wordpress_setup_w6": {
-    "message": "Configuração para WordPress 6+",
-    "description": ""
-  },
-  "Replacing_wordpress_setup_w5": {
-    "message": "Configuração para WordPress 5 e versões anteriores",
-    "description": ""
-  },
-  "Save_apply": {
-    "message": "Salvar e aplicar na recarga da página",
-    "description": "Save and apply on page reload"
-  },
-  "Save_apply_p1": {
-    "message": "Você pode marcar a caixa <code>Salvar e aplicar na recarga da página</code> para salvar sua pesquisa e aplicá-la nas recargas subsequentes da página. Isso será salvo e reaberto em seu navegador.",
-    "description": "Save and apply on page reload"
-  },
-  "Save_apply_multi": {
-    "message": "Regras de Correspondência Múltipla",
-    "description": "Multiple Matching Rules"
-  },
-  "Save_apply_multi_p1": {
-    "message": "Se várias regras se aplicarem à mesma página, as regras serão aplicadas em ordem do mais <b>específico</b> para o menos <b>específico</b>. Por exemplo:",
-    "description": "Multiple Matching Rules"
-  },
-  "Save_apply_multi_p2": {
-    "message": "Isso significa que quaisquer alterações aplicadas pela primeira regra serão passadas para as regras subsequentes. No exemplo acima, o texto <code>Exemplo</code> teria sido substituído pela regra que corresponde a <code>http://www.example.com/a/deeper/nested/page</code>. Portanto, regras subsequentes não terão efeito.",
-    "description": "Multiple Matching Rules"
-  },
-  "Save_apply_multi_p3": {
-    "message": "Você pode editar as regras salvas clicando no link <a href='saveRules.html'><i><svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 28 28'><path fill='currentColor' d='M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z' /></svg></i></a> na janela pop-up da extensão. O campo <code>Padrão de URL</code> é uma <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expressão regular</a>, que permite que você aplique a mesma regra a muitos sites diferentes.",
-    "description": "Multiple Matching Rules"
-  },
-  "ReportingIssues": {
-    "message": "Relatórios de Problemas",
-    "description": ""
-  },
-  "ReportingIssuesWarning": {
-    "message": "Lembre-se de ATUALIZAR a página na qual deseja substituir o texto após a instalação.",
-    "description": ""
-  },
-  "ReportingIssuesInfo": {
-    "message": "Se a página estiver quebrada após o uso da extensão, tente atualizar a página e, em seguida, marcar as caixas <code>Apenas campos de entrada?</code> antes de realizar uma pesquisa e substituição.",
-    "description": ""
-  },
-  "ReportingIssues_p1": {
-    "message": "Se você encontrar um erro, forneça um relatório detalhado na <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank'>Chrome Extension Store</a > ou no <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>.",
-    "description": ""
-  },
-  "Rate_on_store": {
-    "message": "Por favor, avalie com <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> na Chrome Store se a extensão lhe ajudar!",
-    "description": ""
-  },
-  "no_saved_instances": {
-    "message": "Nenhuma instância salva",
-    "description": "message to tell user that no rules were found"
-  },
-  "matches": {
-    "message": "correspondências",
-    "description": "message to tell user how many instances of the search term were found"
-  }
+    "ext_name": {
+        "message": "Pesquisar e Substituir",
+        "description": "ext_name"
+    },
+    "ext_description": {
+        "message": "Pesquise texto em uma página da web e substitua-o por outro texto.",
+        "description": "ext_description"
+    },
+    "options": {
+        "message": "Opções",
+        "description": "options"
+    },
+    "saved_rules": {
+        "message": "Regras Salvas",
+        "description": "Options Tab"
+    },
+    "select_language": {
+        "message": "Selecione um idioma:",
+        "description": "Options Tab"
+    },
+    "settings": {
+        "message": "Configurações",
+        "description": "Settings"
+    },
+    "about": {
+        "message": "Sobre",
+        "description": "about"
+    },
+    "back": {
+        "message": "costas",
+        "description": "Back"
+    },
+    "version": {
+        "message": "Versão",
+        "description": "version"
+    },
+    "RuleID": {
+        "message": "ID da Regra",
+        "description": "options"
+    },
+    "URLPattern": {
+        "message": "Padrão de URL",
+        "description": "options"
+    },
+    "SearchTerm": {
+        "message": "Termo de Pesquisa",
+        "description": "options"
+    },
+    "ReplaceTerm": {
+        "message": "Termo de Substituição",
+        "description": "options"
+    },
+    "Delete": {
+        "message": "Excluir",
+        "description": "options"
+    },
+    "Save": {
+        "message": "Salvar",
+        "description": "options"
+    },
+    "matchCase": {
+        "message": "Diferenciar maiúsculas",
+        "description": "checkbox matchCase"
+    },
+    "inputFieldsOnly": {
+        "message": "Apenas campos de entrada",
+        "description": "checkbox inputFieldsOnly"
+    },
+    "hiddenContent": {
+        "message": "Conteúdo oculto",
+        "description": "checkbox hiddenContent"
+    },
+    "wholeWord": {
+        "message": "Corresponder palavra inteira",
+        "description": "checkbox wholeWord"
+    },
+    "isRegex": {
+        "message": "Expressão regular",
+        "description": "checkbox isRegex"
+    },
+    "replaceHTML": {
+        "message": "Substituir HTML",
+        "description": "checkbox replaceHTML"
+    },
+    "replaceAll": {
+        "message": "Substituir tudo",
+        "description": "checkbox replaceAll"
+    },
+    "saveApplyPageReload": {
+        "message": "Salvar e aplicar na recarga da página",
+        "description": "checkbox save"
+    },
+    "Searchfor": {
+        "message": "Pesquisar por",
+        "description": "popup"
+    },
+    "Swap": {
+        "message": "Trocar ⇅",
+        "description": "popup"
+    },
+    "Replacewith": {
+        "message": "Substituir por",
+        "description": "popup"
+    },
+    "Matchcase": {
+        "message": "Diferenciar maiúsculas",
+        "description": "popup"
+    },
+    "Inputfields": {
+        "message": "Apenas campos de entrada",
+        "description": "popup"
+    },
+    "Hiddencontent": {
+        "message": "Conteúdo oculto",
+        "description": "popup"
+    },
+    "Matchwhole": {
+        "message": "Corresponder palavra inteira",
+        "description": "popup"
+    },
+    "Regularexpression": {
+        "message": "Expressão regular",
+        "description": "popup"
+    },
+    "Saveandapply": {
+        "message": "Salvar e aplicar na recarga da página",
+        "description": "popup"
+    },
+    "ReplaceNext": {
+        "message": "Substituir Próximo",
+        "description": "popup"
+    },
+    "ReplaceAll": {
+        "message": "Substituir Tudo",
+        "description": "popup"
+    },
+    "History": {
+        "message": "Histórico",
+        "description": "popup"
+    },
+    "Clear": {
+        "message": "Limpar",
+        "description": "popup"
+    },
+    "EditSettings": {
+        "message": "Editar Configurações",
+        "description": "popup"
+    },
+    "Help": {
+        "message": "Ajuda",
+        "description": ""
+    },
+    "help_title": {
+        "message": "Página de Ajuda para Pesquisar e Substituir",
+        "description": "help"
+    },
+    "URL": {
+        "message": "URL",
+        "description": ""
+    },
+    "Search": {
+        "message": "Pesquisar",
+        "description": ""
+    },
+    "Replace": {
+        "message": "Substituir",
+        "description": ""
+    },
+    "Priority": {
+        "message": "Prioridade",
+        "description": ""
+    },
+    "Example": {
+        "message": "Exemplo",
+        "description": ""
+    },
+    "applied_first": {
+        "message": "aplicado primeiro",
+        "description": ""
+    },
+    "applied_last": {
+        "message": "aplicado por último",
+        "description": ""
+    },
+    "next_vs_all": {
+        "message": "Substituir Próximo vs. Substituir Tudo",
+        "description": "Replace Next vs. Replace All"
+    },
+    "next_vs_all_p1": {
+        "message": "Para substituir a primeira ocorrência do termo de pesquisa, pressione <code>Substituir Próximo</code>. Você pode continuar pressionando o botão até que não haja mais ocorrências.",
+        "description": "Replace Next vs. Replace All"
+    },
+    "next_vs_all_p2": {
+        "message": "Para substituir todas as ocorrências do termo de pesquisa, pressione <code>Substituir Tudo</code>.",
+        "description": "Replace Next vs. Replace All"
+    },
+    "next_vs_all_p3": {
+        "message": "Atualmente, não há função de desfazer. Se você cometer um erro, pode recarregar a página para restaurar o texto original. No entanto, você perderá quaisquer alterações não salvas nos editores de texto e nos campos de entrada de texto.",
+        "description": "Replace Next vs. Replace All"
+    },
+    "replace_editors": {
+        "message": "Substituir texto em editores de texto e campos de entrada de texto",
+        "description": "Explanation about replacing text in editors and text fields"
+    },
+    "replace_editors_p1": {
+        "message": "Para substituir texto em editores de texto ou caixas de entrada, você deve marcar a caixa <code>Apenas campos de entrada?</code>.",
+        "description": "Explanation about replacing text in editors and text fields"
+    },
+    "replace_editors_p3": {
+        "message": "Isto abrange as caixas <code>input</code> e <code>textarea</code> simples, bem como editores de texto formatado como o TinyMCE e o CKEditor. Como nada fora desses campos é tocado, é a opção mais segura numa página complicada e a primeira a experimentar se uma substituição parecer ter danificado alguma coisa.",
+        "description": "Explanation about replacing text in editors and text fields"
+    },
+    "Setup": {
+        "message": "Configuração",
+        "description": "help"
+    },
+    "Replacing_anywhere": {
+        "message": "Substituir texto em qualquer lugar na página",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Replacing_anywhere_p1": {
+        "message": "Para substituir o texto contido em um HTML, contido em um editor de texto e contido em um campo de texto, você deve marcar a caixa de seleção <code>Substituir HTML?</code>.",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Replacing_anywhere_caption": {
+        "message": "A reescrever cada <code>example.com</code> da página, incluindo os endereços das ligações.",
+        "description": "Caption for the Replace HTML screenshot"
+    },
+    "Replacing_anywhere_warning": {
+        "message": "Esta configuração altera o HTML da página e pode danificá-la. Pode restaurar a página recarregando-a, mas perderá quaisquer alterações não guardadas nos editores de texto e nos campos de entrada de texto.",
+        "description": "Explanation about replacing text anywhere on the page"
+    },
+    "Matching_case": {
+        "message": "Correspondência de maiúsculas e minúsculas do texto",
+        "description": "Explanation about matching the case of text"
+    },
+    "Matching_case_p1": {
+        "message": "Se você precisar substituir <code>ISTO</code> mas não <code>Isto</code>, deve usar a opção de correspondência de maiúsculas e minúsculas.",
+        "description": "Explanation about matching the case of text"
+    },
+    "Matching_case_p2": {
+        "message": "A configuração a seguir corresponderá a <code>Condomínio</code> mas não <code>condomínio</code>. Ela substituirá <code>Condomínio</code> por <code>apartamento</code> em campos de texto que são visíveis na página.",
+        "description": "Explanation about matching the case of text"
+    },
+    "Matching_whole": {
+        "message": "Correspondência de palavra inteira",
+        "description": "Matching whole words"
+    },
+    "Matching_whole_p1": {
+        "message": "Se você precisar substituir a palavra <code>parcial</code> mas não <code>parcialmente</code>, deve usar a opção <code>Corresponder palavra inteira?</code>.",
+        "description": "Matching whole words"
+    },
+    "wildcards_and_regex": {
+        "message": "Coringas e Expressões Regulares",
+        "description": "Explanation about wild cards and regular expressions"
+    },
+    "wildcards_and_regex_p1": {
+        "message": "Se você precisar corresponder a uma parte do termo de pesquisa, deve marcar a caixa de seleção Expressões Regulares e especificar um caractere curinga. Você precisará de um conhecimento básico de <a href='http://www.regular-expressions.info/quickstart.html' target='_blank'>expressões regulares</a> para usar esse recurso. Recomenda-se o uso de <a href='https://regexpal.com' target='_blank'>regexpal</a> para testes.",
+        "description": "Explanation about wild cards and regular expressions"
+    },
+    "wildcards_and_regex_p2": {
+        "message": "No exemplo abaixo, <code>1\\d1</code> significa «um 1, depois qualquer algarismo, depois um 1», o que corresponde a 101, 111, 121 e assim por diante até 191.",
+        "description": "Worked example for the regular expression section"
+    },
+    "Before": {
+        "message": "Antes",
+        "description": ""
+    },
+    "After": {
+        "message": "Depois",
+        "description": ""
+    },
+    "Replacing_wordpress": {
+        "message": "Substituir texto no WordPress",
+        "description": ""
+    },
+    "Replacing_wordpress_p1": {
+        "message": "O editor de blocos do WordPress mantém a sua publicação dentro de um quadro próprio, separado do resto da página de administração. A extensão olha para dentro desse quadro por si, por isso não são precisas opções especiais: escreva os seus termos e prima <code>Substituir Tudo</code>.",
+        "description": "Replacing text in WordPress"
+    },
+    "Replacing_wordpress_p2": {
+        "message": "Se estiver a utilizar o editor clássico, ou um construtor de páginas cujos campos sejam caixas de texto normais, marque primeiro <code>Apenas campos de entrada</code>.",
+        "description": "Replacing text in WordPress"
+    },
+    "Replacing_wordpress_save": {
+        "message": "A substituição altera o que está no editor, não o que está guardado. Prima <b>Atualizar</b> no WordPress depois para a manter.",
+        "description": "Reminder to save the post after replacing"
+    },
+    "Replacing_wordpress_caption": {
+        "message": "A editar uma publicação no editor de blocos. Não é necessária nenhuma opção.",
+        "description": "Caption for the WordPress screenshot"
+    },
+    "Save_apply": {
+        "message": "Salvar e aplicar na recarga da página",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_p1": {
+        "message": "Pode marcar a caixa <code>Salvar e aplicar na recarga da página</code> para guardar a sua pesquisa e aplicá-la sempre que a página for recarregada. Continuará a aplicar-se mesmo depois de fechar e reabrir o navegador.",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_editing": {
+        "message": "Editar regras guardadas",
+        "description": "Save and apply on page reload"
+    },
+    "Save_apply_rules_caption": {
+        "message": "Cada regra guardada pode ser editada ou eliminada aqui.",
+        "description": "Caption for the Saved Rules screenshot"
+    },
+    "Save_apply_multi": {
+        "message": "Regras de Correspondência Múltipla",
+        "description": "Multiple Matching Rules"
+    },
+    "Save_apply_multi_p1": {
+        "message": "Se várias regras se aplicarem à mesma página, as regras serão aplicadas em ordem do mais <b>específico</b> para o menos <b>específico</b>. Por exemplo:",
+        "description": "Multiple Matching Rules"
+    },
+    "Save_apply_multi_p2": {
+        "message": "Isso significa que quaisquer alterações aplicadas pela primeira regra serão passadas para as regras subsequentes. No exemplo acima, o texto <code>Exemplo</code> teria sido substituído pela regra que corresponde a <code>http://www.example.com/a/deeper/nested/page</code>. Portanto, regras subsequentes não terão efeito.",
+        "description": "Multiple Matching Rules"
+    },
+    "Save_apply_multi_p3": {
+        "message": "Pode editar as regras guardadas na página <a href='saveRules.html'>Regras Salvas</a>, que o ícone de guardar do popup abre. O campo <code>Padrão de URL</code> é uma <a href='https://www.regular-expressions.info/quickstart.html' target='_blank' rel='noopener'>expressão regular</a>, o que lhe permite aplicar a mesma regra a muitos sítios diferentes.",
+        "description": "Multiple Matching Rules"
+    },
+    "ReportingIssues": {
+        "message": "Relatórios de Problemas",
+        "description": ""
+    },
+    "ReportingIssuesWarning": {
+        "message": "Lembre-se de recarregar qualquer página que já estivesse aberta quando a extensão foi instalada ou atualizada. Até ser recarregada, a extensão não consegue aceder-lhe.",
+        "description": ""
+    },
+    "ReportingIssuesInfo": {
+        "message": "Se a página estiver quebrada após o uso da extensão, tente atualizar a página e, em seguida, marcar as caixas <code>Apenas campos de entrada?</code> antes de realizar uma pesquisa e substituição.",
+        "description": ""
+    },
+    "ReportingIssues_p1": {
+        "message": "Se você encontrar um erro, forneça um relatório detalhado na <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/support' target='_blank'>Chrome Extension Store</a > ou no <a href='https://github.com/forgetso/search-replace/issues'>GitHub</a>.",
+        "description": ""
+    },
+    "Rate_on_store": {
+        "message": "Por favor, avalie com <a href='https://chrome.google.com/webstore/detail/search-and-replace/bldchfkhmnkoimaciljpilanilmbnofo/reviews' >&#9733;&#9733;&#9733;&#9733;&#9733;</a> na Chrome Store se a extensão lhe ajudar!",
+        "description": ""
+    },
+    "Troubleshooting": {
+        "message": "Antes de comunicar um problema",
+        "description": "Troubleshooting checklist heading"
+    },
+    "Troubleshooting_reload": {
+        "message": "Recarregue a página. Uma página que já estivesse aberta quando a extensão foi instalada ou atualizada só fica acessível depois de ser recarregada.",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_restricted": {
+        "message": "Páginas do navegador como <code>chrome://</code>, a Chrome Web Store e a página de extensões estão vedadas a todas as extensões, pelo que nada pode ser substituído aí.",
+        "description": "Troubleshooting checklist"
+    },
+    "Troubleshooting_nomatch": {
+        "message": "Se a contagem ficar a zero, experimente <code>Conteúdo oculto</code>, desligue <code>Diferenciar maiúsculas</code>, ou verifique se o texto não é uma imagem.",
+        "description": "Troubleshooting checklist"
+    },
+    "no_saved_instances": {
+        "message": "Nenhuma instância salva",
+        "description": "message to tell user that no rules were found"
+    },
+    "matches": {
+        "message": "correspondências",
+        "description": "message to tell user how many instances of the search term were found"
+    },
+    "hidden_content_nav": {
+        "message": "Pesquisar conteúdo oculto",
+        "description": "Navigation link for hidden content help section"
+    },
+    "hidden_content_title": {
+        "message": "Pesquisar conteúdo oculto",
+        "description": "Title for hidden content help section"
+    },
+    "hidden_content_p1": {
+        "message": "Por predefinição, a extensão só pesquisa e substitui texto visível na página. Se precisar de pesquisar e substituir texto em elementos ocultos (como secções recolhidas, divs ocultas ou elementos com <code>display: none</code>), marque a opção <code>Conteúdo oculto</code>.",
+        "description": "First paragraph explaining hidden content checkbox"
+    },
+    "hidden_content_p2": {
+        "message": "Isto é particularmente útil com conteúdo dinâmico que começa oculto mas se torna visível através da interação do utilizador, ou quando precisa de modificar campos de formulário ocultos.",
+        "description": "Second paragraph explaining hidden content use cases"
+    },
+    "hidden_content_note": {
+        "message": "Quando <code>Conteúdo oculto</code> está marcado, a extensão percorre todos os elementos independentemente da sua visibilidade, o que pode dar um número de correspondências mais elevado.",
+        "description": "Note about hidden content behavior"
+    },
+    "pageUnreachable": {
+        "message": "O Pesquisar e Substituir não consegue aceder a esta página. Recarregue a página e tente novamente.",
+        "description": "pageUnreachable"
+    },
+    "help_lede": {
+        "message": "Como encontrar texto numa página e alterá-lo &mdash; em texto comum, em campos de formulário, em editores e automaticamente em cada visita.",
+        "description": "Introduction under the Help heading"
+    },
+    "Contents": {
+        "message": "Índice",
+        "description": "Help page sidebar heading"
+    },
+    "Note": {
+        "message": "Nota",
+        "description": "Callout label"
+    },
+    "Tip": {
+        "message": "Dica",
+        "description": "Callout label"
+    },
+    "Warning": {
+        "message": "Aviso",
+        "description": "Callout label"
+    },
+    "No_undo": {
+        "message": "Sem anulação",
+        "description": "Callout label"
+    },
+    "basics_title": {
+        "message": "O popup num relance",
+        "description": "Help section title"
+    },
+    "basics_p1": {
+        "message": "Abra o popup a partir da barra de ferramentas, ou com <code>Ctrl+Shift+S</code>. Escreva o texto que procura em <code>Pesquisar por</code> e o texto que pretende em vez dele em <code>Substituir por</code>, e depois prima um dos dois botões em baixo.",
+        "description": "Help section on the popup layout"
+    },
+    "basics_p2": {
+        "message": "O número por baixo da caixa <code>Pesquisar por</code> conta as correspondências que restam na página, e atualiza-se à medida que escreve e que substitui. A fila de ícones no topo abre esta página de ajuda, as suas pesquisas recentes, o painel Sobre, a definição de idioma e as suas regras guardadas.",
+        "description": "Help section on the popup layout"
+    },
+    "basics_caption": {
+        "message": "Restam quatro ocorrências de <code>Condo</code> na página.",
+        "description": "Caption for the popup overview screenshot"
+    },
+    "options_title": {
+        "message": "O que faz cada opção",
+        "description": "Help section title"
+    },
+    "options_p1": {
+        "message": "Cada caixa do popup restringe ou alarga o que é pesquisado. Podem ser combinadas.",
+        "description": "Introduction to the option reference"
+    },
+    "option_matchCase_desc": {
+        "message": "Só corresponde a texto exatamente com as mesmas maiúsculas e minúsculas. Sem marcar, <code>Condo</code>, <code>condo</code> e <code>CONDO</code> correspondem todos.",
+        "description": "Option reference"
+    },
+    "option_inputFieldsOnly_desc": {
+        "message": "Limita a pesquisa a caixas de texto, áreas de texto e editores de texto formatado, e deixa o resto da página em paz. Use-a sempre que estiver a editar um formulário, uma mensagem ou uma publicação.",
+        "description": "Option reference"
+    },
+    "option_hiddenContent_desc": {
+        "message": "Inclui elementos que não consegue ver de momento: painéis recolhidos, separadores inativos, menus fora do ecrã e campos de formulário ocultos.",
+        "description": "Option reference"
+    },
+    "option_wholeWord_desc": {
+        "message": "Exige que a correspondência seja uma palavra inteira, para que <code>partial</code> deixe de corresponder dentro de <code>partially</code>.",
+        "description": "Option reference"
+    },
+    "option_isRegex_desc": {
+        "message": "Trata o termo de pesquisa como uma expressão regular em vez de texto literal.",
+        "description": "Option reference"
+    },
+    "option_replaceHTML_desc": {
+        "message": "Pesquisa o código HTML da página em vez do texto que consegue ler, pelo que as etiquetas, os atributos, os endereços das ligações e o texto alternativo também são abrangidos.",
+        "description": "Option reference"
+    },
+    "option_save_desc": {
+        "message": "Guarda a pesquisa como uma regra e aplica-a novamente sempre que abrir uma página correspondente, mesmo depois de reiniciar o navegador.",
+        "description": "Option reference"
+    },
+    "hidden_content_caption": {
+        "message": "A mesma pesquisa encontra seis correspondências em vez de quatro depois de incluir os elementos ocultos.",
+        "description": "Caption for the hidden content screenshot"
+    },
+    "history_title": {
+        "message": "Histórico, Trocar e idioma",
+        "description": "Help section title"
+    },
+    "history_p1": {
+        "message": "O ícone do relógio no popup lista as suas pesquisas recentes. Clique numa para a repor nas duas caixas, ou prima <b>Limpar</b> para esvaziar a lista.",
+        "description": "Help section on history"
+    },
+    "history_p2": {
+        "message": "<b>Swap</b>, entre as duas caixas, troca os termos de pesquisa e de substituição &mdash; útil para anular uma substituição que acabou de fazer, desde que o texto original não tenha sido escrito noutro sítio da página.",
+        "description": "Help section on the swap button"
+    },
+    "history_p3": {
+        "message": "O ícone da roda dentada contém a definição de idioma. A extensão está traduzida para alemão, árabe, chinês, coreano, espanhol, hindi, inglês, japonês, português e russo; o que ainda não estiver traduzido aparece em inglês.",
+        "description": "Help section on the language setting"
+    },
+    "saved_rules_lede": {
+        "message": "Estas pesquisas são executadas automaticamente sempre que abre uma página cujo endereço corresponde ao seu padrão de URL. O padrão é uma expressão regular, por isso uma regra pode cobrir um sítio inteiro.",
+        "description": "Introduction on the Saved Rules page"
+    },
+    "no_saved_instances_hint": {
+        "message": "Marque «Salvar e aplicar na recarga da página» no popup para criar uma.",
+        "description": "Empty state on the Saved Rules page"
+    },
+    "about_author_label": {
+        "message": "Autor",
+        "description": "About panel"
+    },
+    "about_licence_label": {
+        "message": "Licença",
+        "description": "About panel"
+    },
+    "about_release_notes": {
+        "message": "Notas de lançamento",
+        "description": "About panel"
+    },
+    "about_report_issue": {
+        "message": "Comunicar um problema",
+        "description": "About panel"
+    },
+    "about_rate": {
+        "message": "Avaliar esta extensão",
+        "description": "About panel"
+    },
+    "no_history": {
+        "message": "As suas pesquisas recentes aparecerão aqui.",
+        "description": "Empty state of the History panel"
+    },
+    "history_removed": {
+        "message": "(removido)",
+        "description": "Shown in the History panel when the replacement term is empty"
+    }
 }
