@@ -51,6 +51,7 @@
                                 Expressions</a></li>
                         <li><a href="#wordpress" data-locale="Replacing_wordpress">Replacing text in WordPress</a></li>
                         <li><a href="#save" data-locale="Save_apply">Save and apply on page reload</a></li>
+                        <li><a href="#sidebar" data-locale="sidebar_title">Popup or side panel</a></li>
                         <li><a href="#history" data-locale="history_title">History, Swap and language</a></li>
                         <li><a href="#issues" data-locale="ReportingIssues">Reporting Issues</a></li>
                     </ul>
@@ -409,6 +410,34 @@
                             rule matching <code>http://www.example.com/a/deeper/nested/page</code>. Subsequent rules
                             will therefore have no effect.
                         </p>
+                    </section>
+
+                    <section class="section" id="sidebar">
+                        <h2 data-locale="sidebar_title">Popup or side panel</h2>
+                        <p data-locale="sidebar_p1">
+                            By default the extension opens as a popup under the toolbar button. A popup closes as
+                            soon as anything else takes the focus, so clicking into the page to check a replacement
+                            dismisses it and the terms have to be typed again.
+                        </p>
+                        <p data-locale="sidebar_p2">
+                            Choose <code>Side panel</code> under the cog icon to open in Chrome's side panel instead.
+                            It stays open while you work on the page, follows you from tab to tab, and can be dragged
+                            wider. Everything else works exactly as it does in the popup.
+                        </p>
+                        <figure class="figure figure--popup">
+                            <img src="setup-side-panel.png"
+                                srcset="setup-side-panel.png 1x, setup-side-panel@2x.png 2x" width="320"
+                                alt="The Settings panel of the popup, with Open in set to Side panel" />
+                            <figcaption data-locale="Setup">Setup</figcaption>
+                        </figure>
+                        <div class="callout">
+                            <span class="callout__label" data-locale="Note">Note</span>
+                            <p data-locale="sidebar_p3">
+                                The setting follows your Chrome profile, and the keyboard shortcut
+                                <code>Ctrl+Shift+S</code> opens whichever one you have chosen. The side panel needs
+                                Chrome 114 or newer; on anything older the setting is not shown.
+                            </p>
+                        </div>
                     </section>
 
                     <section class="section" id="history">

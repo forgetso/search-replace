@@ -5,9 +5,11 @@ import {
     REPLACE_TERM_INPUT_ID,
     SEARCH_TERM_INPUT_ID,
 } from './popup/constants'
+import { DEFAULT_OPEN_IN, OPEN_IN_KEY, sidePanelAvailable } from './background/surface'
 import {
     Hint,
     HintPreferences,
+    OpenIn,
     SearchReplaceActions,
     SearchReplaceBackgroundMessage,
     SearchReplaceCheckboxNames,
@@ -42,6 +44,64 @@ enum ContentType {
 
 const RELEASE_NOTES_URL = 'https://github.com/forgetso/search-replace/releases/tag'
 
+/**
+ * Whether this document is being shown in the side panel rather than the toolbar popup.
+ *
+ * Both surfaces load assets/popup.html; background/surface.ts registers the side panel with a
+ * query string so the two can be told apart. Defaulting to the popup means that if the query
+ * were ever lost the panel would still render, just at the popup's fixed width.
+ */
+function isSidePanel(): boolean {
+    return new URLSearchParams(globalThis.location.search).get('surface') === 'sidepanel'
+}
+
+/**
+ * The window this document belongs to, looked up once on load.
+ *
+ * `sidePanel.open` has to be called while the user gesture that triggered it is still in effect,
+ * and awaiting `windows.getCurrent()` inside the click handler risks spending it, so the id is
+ * fetched ahead of time and used synchronously.
+ */
+let currentWindowId: number | undefined
+
+/**
+ * Opens the side panel from the popup, and closes it from within itself.
+ *
+ * There is no `sidePanel.close()`; closing the panel is done by the panel document closing its
+ * own window, which is also how the popup dismisses itself once the panel has taken over.
+ */
+function setUpSidePanelToggle(translationFn: TranslationProxy) {
+    const toggle = document.getElementById('sidePanelToggle')
+    if (!toggle || !sidePanelAvailable()) {
+        return
+    }
+    toggle.classList.remove('d-none')
+
+    const showingPanel = isSidePanel()
+    toggle.querySelector('.side-panel-open')?.classList.toggle('d-none', showingPanel)
+    toggle.querySelector('.side-panel-close')?.classList.toggle('d-none', !showingPanel)
+
+    const link = toggle.querySelector('a')
+    if (link) {
+        link.title = translationFn(showingPanel ? 'close_side_panel' : 'open_side_panel')
+    }
+
+    toggle.addEventListener('click', function (event) {
+        event.preventDefault()
+        if (showingPanel) {
+            globalThis.close()
+            return
+        }
+        if (currentWindowId === undefined) {
+            return
+        }
+        chrome.sidePanel
+            .open({ windowId: currentWindowId })
+            .then(() => globalThis.close())
+            .catch((error) => console.error('POPUP: Could not open the side panel', error))
+    })
+}
+
 function getSearchTermElement() {
     return <HTMLTextAreaElement>document.getElementById(SEARCH_TERM_INPUT_ID)
 }
@@ -55,6 +115,21 @@ function getReplaceTermElement() {
 window.addEventListener('DOMContentLoaded', async function () {
     const langData = await getTranslation()
     const translationFn = createTranslationProxy(langData)
+
+    if (isSidePanel()) {
+        // The popup is a fixed 320px box; the panel is as tall as the window and the user can
+        // drag it wider, so the layout has to fill whatever it is given
+        document.body.classList.add('side-panel')
+        watchActiveTab(translationFn)
+    }
+
+    if (sidePanelAvailable()) {
+        chrome.windows
+            .getCurrent()
+            .then((currentWindow) => (currentWindowId = currentWindow.id))
+            .catch((error) => console.error('POPUP: Could not identify the current window', error))
+    }
+    setUpSidePanelToggle(translationFn)
 
     // Update popup version number and GitHub link dynamically with manifest.version
     for (const id of ['version_number', 'github_version_number']) {
@@ -237,6 +312,7 @@ async function loadContent(contentType: ContentType) {
             inactiveButton(aboutBtn)
             activeButton(settingBtn)
             await loadLanguageOptions()
+            await loadOpenInOptions()
             break
         case ContentType.About: // pressed about icon
             hideElement(replaceNext)
@@ -301,6 +377,70 @@ function inactiveButton(element: Element | null) {
     if (element) {
         element.classList.remove('icon-selected')
     }
+}
+
+/**
+ * Recount when the user moves to another tab, or navigates the one they are on.
+ *
+ * The popup never needed this: it is thrown away the moment focus leaves it, so it only ever
+ * describes the tab it was opened over. The side panel outlives both, and a match count left
+ * over from a tab the user has since switched away from is worse than no count at all.
+ */
+function watchActiveTab(translationFn: TranslationProxy) {
+    const recount = () => {
+        const searchTerm = getSearchTermElement().value
+        if (searchTerm.length < MIN_SEARCH_TERM_LENGTH) {
+            setCount(newEmptyResult(), translationFn)
+            return
+        }
+        contentScriptCall('count', getInputValues(false), []).catch((error) =>
+            console.error('POPUP: Could not recount after the tab changed', error)
+        )
+    }
+
+    chrome.tabs.onActivated.addListener(recount)
+    chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
+        // Only once the new page is there to be counted, and only for the tab on display
+        if (changeInfo.status === 'complete' && tab.active) {
+            recount()
+        }
+    })
+}
+
+function newEmptyResult(): SearchReplaceResult {
+    return { count: { original: 0, replaced: 0 }, replaced: false }
+}
+
+/**
+ * The popup-or-side-panel preference. Hidden entirely on a Chrome without `chrome.sidePanel`,
+ * where there is no choice to make.
+ */
+async function loadOpenInOptions() {
+    const setting = document.getElementById('openInSetting')
+    const select = document.getElementById('openInSelect') as HTMLSelectElement | null
+    if (!setting || !select || !sidePanelAvailable()) {
+        return
+    }
+    setting.classList.remove('d-none')
+
+    const stored = await chrome.storage.sync.get({ [OPEN_IN_KEY]: DEFAULT_OPEN_IN })
+    select.value = stored[OPEN_IN_KEY] === 'sidePanel' ? 'sidePanel' : DEFAULT_OPEN_IN
+
+    select.addEventListener('change', function () {
+        const openIn = this.value as OpenIn
+        chrome.storage.sync.set({ [OPEN_IN_KEY]: openIn })
+
+        // Switching to the side panel from inside the popup: open the panel straight away rather
+        // than leaving the user to work out that they have to click the toolbar button again.
+        // The change event is the user gesture that sidePanel.open requires, so this cannot be
+        // deferred until after the storage write settles.
+        if (openIn === 'sidePanel' && !isSidePanel() && currentWindowId !== undefined) {
+            chrome.sidePanel
+                .open({ windowId: currentWindowId })
+                .then(() => globalThis.close())
+                .catch((error) => console.error('POPUP: Could not open the side panel', error))
+        }
+    })
 }
 
 async function loadLanguageOptions() {

@@ -522,5 +522,45 @@
     "history_removed": {
         "message": "(محذوف)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "الفتح في",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "نافذة منبثقة",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "اللوحة الجانبية",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "تظل اللوحة الجانبية مفتوحة أثناء عملك على الصفحة.",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "نافذة منبثقة أم لوحة جانبية",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "افتراضيًا تفتح الإضافة كنافذة منبثقة أسفل زر شريط الأدوات. وتُغلق النافذة المنبثقة بمجرد انتقال التركيز إلى شيء آخر، فالنقر داخل الصفحة للتحقق من الاستبدال يُخفيها ويضطرك إلى كتابة الكلمات من جديد.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "اختر <code>اللوحة الجانبية</code> أسفل أيقونة الترس لتفتح الإضافة في اللوحة الجانبية لكروم بدلًا من ذلك. تظل مفتوحة أثناء عملك على الصفحة، وتنتقل معك من تبويب إلى آخر، ويمكن توسيعها بالسحب. وكل ما عدا ذلك يعمل تمامًا كما في النافذة المنبثقة.",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "يتبع هذا الإعداد ملفك الشخصي في كروم، ويفتح اختصار لوحة المفاتيح <code>Ctrl+Shift+S</code> ما اخترته منهما. وتتطلب اللوحة الجانبية كروم 114 أو أحدث؛ ولا يظهر الإعداد في الإصدارات الأقدم.",
+        "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "الفتح في اللوحة الجانبية",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "إغلاق اللوحة الجانبية",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

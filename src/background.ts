@@ -1,4 +1,5 @@
 // Storing and retrieving popup values
+import { OPEN_IN_KEY, applyStoredOpenIn, openConfiguredSurface } from './background/surface'
 import { SearchReplaceBackgroundMessage, SearchReplaceResponse } from './types'
 import { listenerAdmin } from './background/admin'
 import { listenerApplySavedInstances } from './background/saved'
@@ -44,6 +45,29 @@ chrome.runtime.onMessage.addListener(function (msg: SearchReplaceResponse, sende
 // Listen for the extension being installed or updated
 chrome.runtime.onInstalled.addListener(function (details) {
     listenerInstall(details)
+    applyStoredOpenIn().catch((error) => console.error('BACKGROUND: Could not apply the open-in setting', error))
+})
+
+// Neither the cleared popup nor the side panel behaviour survives a browser restart
+chrome.runtime.onStartup.addListener(function () {
+    applyStoredOpenIn().catch((error) => console.error('BACKGROUND: Could not apply the open-in setting', error))
+})
+
+// Follow the setting when it is changed, here or on another synced machine
+chrome.storage.onChanged.addListener(function (changes, areaName) {
+    if (areaName === 'sync' && OPEN_IN_KEY in changes) {
+        applyStoredOpenIn().catch((error) => console.error('BACKGROUND: Could not apply the open-in setting', error))
+    }
+})
+
+// The keyboard shortcut. Until now the command had no handler at all, so Ctrl+Shift+S did nothing.
+chrome.commands.onCommand.addListener(function (command, tab) {
+    if (command !== 'toggle-popup') {
+        return
+    }
+    openConfiguredSurface(tab?.windowId).catch((error) =>
+        console.error('BACKGROUND: Could not open from the keyboard shortcut', error)
+    )
 })
 
 // Listen for tab updates and apply any saved instances

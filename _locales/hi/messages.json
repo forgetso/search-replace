@@ -522,5 +522,45 @@
     "history_removed": {
         "message": "(हटाया गया)",
         "description": "Shown in the History panel when the replacement term is empty"
+    },
+    "open_in": {
+        "message": "इसमें खोलें",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_popup": {
+        "message": "पॉपअप",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_side_panel": {
+        "message": "साइड पैनल",
+        "description": "Settings: popup or side panel"
+    },
+    "open_in_hint": {
+        "message": "जब आप पृष्ठ पर काम करते हैं, साइड पैनल खुला रहता है।",
+        "description": "Settings: popup or side panel"
+    },
+    "sidebar_title": {
+        "message": "पॉपअप या साइड पैनल",
+        "description": "Help section title"
+    },
+    "sidebar_p1": {
+        "message": "डिफ़ॉल्ट रूप से यह एक्सटेंशन टूलबार बटन के नीचे पॉपअप के रूप में खुलता है। जैसे ही फ़ोकस कहीं और जाता है पॉपअप बंद हो जाता है, इसलिए बदलाव जाँचने के लिए पृष्ठ पर क्लिक करते ही वह गायब हो जाता है और शब्द फिर से लिखने पड़ते हैं।",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p2": {
+        "message": "इसके बजाय Chrome के साइड पैनल में खोलने के लिए गियर आइकन के नीचे <code>साइड पैनल</code> चुनें। जब आप पृष्ठ पर काम करते हैं यह खुला रहता है, टैब बदलने पर साथ चलता है, और इसे चौड़ा खींचा जा सकता है। बाकी सब कुछ ठीक वैसे ही काम करता है जैसे पॉपअप में।",
+        "description": "Help section on the side panel"
+    },
+    "sidebar_p3": {
+        "message": "यह सेटिंग आपकी Chrome प्रोफ़ाइल के साथ चलती है, और कीबोर्ड शॉर्टकट <code>Ctrl+Shift+S</code> वही खोलता है जो आपने चुना है। साइड पैनल के लिए Chrome 114 या नया चाहिए; उससे पुराने में यह सेटिंग नहीं दिखती।",
+        "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "साइड पैनल में खोलें",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "साइड पैनल बंद करें",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }
