@@ -4,14 +4,6 @@ Paste-ready text for the Developer Dashboard. The dashboard asks for a justifica
 permission requested, not only the new ones. Code references are for our own use — they are not
 needed in the field, but they are where to check each claim.
 
-## tabs
-
-> Reads the URL of the active tab so that saved find-and-replace rules can be matched to the page
-> they were saved on and reapplied on later visits. URLs are kept in local extension storage as
-> part of the user's own saved rules and are never transmitted.
-
-`src/background/saved.ts` (matching), `src/popup.ts` (saving), `src/background/install.ts` (query).
-
 ## scripting
 
 > Injects the extension's own bundled content script into tabs that are already open when the
@@ -19,6 +11,10 @@ needed in the field, but they are where to check each claim.
 > remote or generated code is executed.
 
 `src/background/install.ts`, `injectContentScriptIntoOpenTabs`.
+
+> **Note:** the `tabs` permission is deliberately not requested. Tab URLs, needed to match saved
+> rules, are available through the host permissions below, so `tabs` would add the "Read your
+> browsing history" warning for nothing. The published 2.0.9 build works this way already.
 
 ## activeTab
 
