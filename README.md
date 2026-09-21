@@ -58,8 +58,11 @@ Vite transpiles TypeScript with esbuild and does **not** typecheck, so run `npm 
 
 ### Tests and checks
 
-`npm run checks` runs everything CI runs bar the end-to-end tests: typecheck, lint, formatting and
-unit tests. The individual scripts are:
+Node 22 or newer is required (jsdom, used by the unit tests, needs a `webidl` API that older
+releases lack).
+
+`npm run checks` runs everything CI runs: typecheck, lint, formatting, unit tests and the build.
+The individual scripts are:
 
 | Command | What it does |
 | --- | --- |
