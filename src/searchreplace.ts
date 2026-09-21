@@ -235,7 +235,20 @@ function replaceInContentEditableDiv(
 
 type ReplaceTarget = 'innerText' | 'innerHTML' | 'outerHTML'
 
-/** Assigns to one of the text-bearing properties without indexing into the element by string */
+/**
+ * Assigns to one of the text-bearing properties without indexing into the element by string.
+ *
+ * The innerHTML and outerHTML writes take markup that was read out of the same page, with the
+ * user's replacement substituted into it, and put it back. CodeQL flags that round trip as
+ * js/xss-through-dom, and the data flow it describes is real: page markup is re-parsed as HTML.
+ * It is also precisely what the "Replace HTML" option exists to do, and it only ever runs on the
+ * page the user is looking at, at their explicit request, with a replacement they typed
+ * themselves. There is no privilege boundary being crossed — no content moves between origins,
+ * and the extension grants the page nothing it did not already have.
+ *
+ * The previous form, `nodeElement[config.searchTarget] = newValue`, had the same behaviour but
+ * hid it from static analysis behind a computed property.
+ */
 function setReplaceTarget(element: Element, target: ReplaceTarget, value: string) {
     if (target === 'innerHTML') {
         element.innerHTML = value
