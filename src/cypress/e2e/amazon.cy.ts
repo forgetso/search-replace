@@ -19,22 +19,22 @@ describe('Search Replace WordPress', { baseUrl: BASEURL, responseTimeout: 120e3 
                 <NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe')
             ).filter((iframe) => !isBlobIframe(iframe))
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    true,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     console.log(`result`, result)
                     expect(result.searchReplaceResult.count.original).to.equal(1)
                 })
@@ -50,39 +50,39 @@ describe('Search Replace WordPress', { baseUrl: BASEURL, responseTimeout: 120e3 
                 <NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe')
             ).filter((iframe) => !isBlobIframe(iframe))
             cy.wrap(
-                searchReplace(
-                    'searchReplace',
+                searchReplace({
+                    action: 'searchReplace',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    true,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result1) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result1) => {
                     expect(result1.searchReplaceResult.count.replaced).to.equal(1)
-                    searchReplace(
-                        'searchReplace',
+                    searchReplace({
+                        action: 'searchReplace',
                         window,
-                        REPLACETERM,
-                        SEARCHTERM,
-                        false,
-                        false,
-                        true,
-                        false,
-                        false,
-                        false,
-                        true,
-                        false,
+                        searchTerm: REPLACETERM,
+                        replaceTerm: SEARCHTERM,
+                        inputFieldsOnly: false,
+                        isRegex: false,
+                        hiddenContent: true,
+                        wholeWord: false,
+                        matchCase: false,
+                        replaceHTML: false,
+                        replaceAll: true,
+                        isIframe: false,
                         iframes,
-                        ELEMENT_FILTER
-                    ).then((result2) => {
+                        elementFilter: ELEMENT_FILTER,
+                    }).then((result2) => {
                         expect(result2.searchReplaceResult.count.replaced).to.equal(1)
                     })
                 })

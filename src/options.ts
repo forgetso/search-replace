@@ -7,25 +7,16 @@ import {
     SearchReplaceInstance,
     SearchReplaceOptions,
     SearchReplacePopupStorage,
+    TranslationProxy,
 } from './types'
-import {
-    createTranslationProxy,
-    getAvailableLanguages,
-    getTranslation,
-    manifest,
-    localizeElements,
-    tabConnect,
-} from './util'
+import { createTranslationProxy, getTranslation, localizeElements, manifest, tabConnect } from './util'
 
 window.addEventListener('DOMContentLoaded', async function () {
-    const languages = await getAvailableLanguages()
     const langData = await getTranslation()
     const getString = createTranslationProxy(langData)
 
     // Add poller to refresh the page if storage changes detected
     chrome.storage.onChanged.addListener(function (changes, namespace) {
-        console.log('changes', changes)
-        console.log('namespace', namespace)
         if (namespace === 'local') {
             port.postMessage({ action: 'recover' })
         }
@@ -49,8 +40,6 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     // Restore the SavedInstances from storage
     port.onMessage.addListener(function (storageItems: SearchReplacePopupStorage) {
-        console.log('storage msg received: ', storageItems)
-        console.log('storage msg received storageItems.saved: ', storageItems.storage.saved)
         const saved: SavedInstances = storageItems.storage.saved || ({} as SavedInstances)
         const languageProxy = createTranslationProxy(langData)
         if (Object.keys(saved).length > 0) {
@@ -68,7 +57,7 @@ window.addEventListener('DOMContentLoaded', async function () {
     })
 
     // Localize HTML elements
-    localizeElements(langData, () => {})
+    localizeElements(langData)
 })
 
 function addFormSubmitListeners() {
@@ -84,25 +73,41 @@ function addFormSubmitListeners() {
 }
 
 //get parent form
-function getParentForm(el: HTMLElement) {
-    while (el && el.nodeName !== 'FORM') {
-        el = el.parentNode as HTMLElement
+function getParentForm(el: HTMLElement | null): HTMLFormElement | null {
+    let candidate: HTMLElement | null = el
+    while (candidate && candidate.nodeName !== 'FORM') {
+        candidate = candidate.parentElement
     }
-    return el as HTMLFormElement
+    return candidate as HTMLFormElement | null
 }
 
-function savedInstanceSubmitHandler(event) {
+/** Reads a named field's value without indexing into `form.elements` by string */
+function getFieldValue(form: HTMLFormElement, name: string): string {
+    const field = form.elements.namedItem(name)
+    return field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement ? field.value : ''
+}
+
+function getFieldChecked(form: HTMLFormElement, name: string): boolean {
+    const field = form.elements.namedItem(name)
+    return field instanceof HTMLInputElement && field.checked
+}
+
+function savedInstanceSubmitHandler(event: Event) {
     event.preventDefault()
-    const action = event.target.name as SearchReplaceBackgroundActions
-    const form = getParentForm(event.target)
+    const target = event.target
+    if (!(target instanceof HTMLElement)) {
+        return
+    }
+    const action = target.getAttribute('name') as SearchReplaceBackgroundActions
+    const form = getParentForm(target)
     if (form) {
-        const url = form.elements['url'].value as string
-        const searchTerm = form.elements['searchTerm'].value as string
-        const replaceTerm = form.elements['replaceTerm'].value as string
-        const instanceId = Number(form.elements['instanceId'].value)
+        const url = getFieldValue(form, 'url')
+        const searchTerm = getFieldValue(form, 'searchTerm')
+        const replaceTerm = getFieldValue(form, 'replaceTerm')
+        const instanceId = Number(getFieldValue(form, 'instanceId'))
         const options: Partial<SearchReplaceOptions> = { save: true }
         for (const name of getCheckboxNames()) {
-            options[name] = form.elements[name].checked === true
+            options[name] = getFieldChecked(form, name)
         }
         const instance: SearchReplaceInstance = {
             searchTerm,
@@ -120,13 +125,13 @@ function savedInstanceSubmitHandler(event) {
     }
 }
 
-function instancesToHTML(instances: SavedInstances, i18n) {
+function instancesToHTML(instances: SavedInstances, i18n: TranslationProxy) {
     return Object.entries(instances)
         .map(([instanceId, instance]) => instanceToHTML(instance, instanceId, i18n))
         .join('')
 }
 
-function checkBoxesToHTML(instance, i18n) {
+function checkBoxesToHTML(instance: SavedSearchReplaceInstance, i18n: TranslationProxy) {
     const getString = i18n
 
     const checkboxes = getCheckboxNames().map((name) => {
@@ -144,7 +149,7 @@ function getCheckboxNames() {
     return Object.values(SearchReplaceCheckboxNames).filter((name) => name !== SearchReplaceCheckboxNames.save)
 }
 
-function instanceToHTML(instance: SavedSearchReplaceInstance, instanceId: string, i18n) {
+function instanceToHTML(instance: SavedSearchReplaceInstance, instanceId: string, i18n: TranslationProxy) {
     const getString = i18n
 
     return `

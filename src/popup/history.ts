@@ -1,18 +1,7 @@
-// function to expand or contract the history section
 import { CHECKBOXES } from './constants'
 import { SearchReplaceInstance, SearchReplaceOptions } from '../types'
 
-export function historyHeaderClickHandler(e) {
-    e.preventDefault()
-    const historyContent = document.getElementById('historyContent')
-    if (historyContent) {
-        if (historyContent.style.display === 'block') {
-            historyContent.style.display = 'none'
-        } else {
-            historyContent.style.display = 'block'
-        }
-    }
-}
+const MAX_HISTORY_ITEMS = 10
 
 export function clearHistoryClickHandler(port: chrome.runtime.Port) {
     port.postMessage({ action: 'clearHistory' })
@@ -31,10 +20,11 @@ export function constructSearchReplaceHistory(searchReplaceInstance?: SearchRepl
         if (searchReplaceInstance) {
             // place the most recent item at the top of the list
             historyItems.unshift(searchReplaceInstance)
-            // never store more than 10 history items
-            historyItems = historyItems.slice(0, 10)
-            // get unique items in list of objects
+            // drop repeats before applying the cap, so that a run of duplicates cannot push
+            // distinct entries off the end of the list
             historyItems = getUniqueHistoryItems(historyItems)
+            // never store more than 10 history items
+            historyItems = historyItems.slice(0, MAX_HISTORY_ITEMS)
         }
         return historyItems
     }
@@ -47,10 +37,10 @@ function getHistoryItemsFromListItemsElements(history: HTMLElement): SearchRepla
         searchTerm: item.getAttribute('data-searchTerm') || '',
         replaceTerm: item.getAttribute('data-replaceTerm') || '',
         instanceId: Number(item.getAttribute('data-instanceId') || ''),
-        options: CHECKBOXES.reduce((result, checkboxName) => {
+        options: CHECKBOXES.reduce<SearchReplaceOptions>((result, checkboxName) => {
             result[checkboxName] = item.getAttribute(`data-${checkboxName}`) === 'true'
             return result
-        }, {}) as SearchReplaceOptions,
+        }, {} as SearchReplaceOptions),
     }))
 }
 

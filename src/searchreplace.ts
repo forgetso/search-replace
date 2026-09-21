@@ -2,7 +2,7 @@ import { ELEMENT_FILTER } from './constants'
 import {
     RegexFlags,
     ReplaceFunctionReturnType,
-    SearchReplaceActions,
+    SearchReplaceArgs,
     SearchReplaceConfig,
     SearchReplaceContentMessage,
     SearchReplaceResponse,
@@ -17,6 +17,7 @@ import {
     getSearchableIframes,
     inIframe,
     isBlobIframe,
+    isEditable,
     isHidden,
     isInputElement,
     isWYSIWYGEditorIframe,
@@ -77,59 +78,79 @@ function replaceInInputShadow(
     config: SearchReplaceConfig,
     newValue: string
 ) {
-    if (config.shadowRoots.length) {
-        config.shadowRoots.map((shadowRoot) => {
-            let shadowInputs = Array.from(shadowRoot.querySelectorAll(`input[id="${input['id']}"]`))
-            if (!shadowInputs.length) {
-                shadowInputs = Array.from(shadowRoot.querySelectorAll(`input[name="${input['name']}"]`))
+    for (const shadowRoot of config.shadowRoots) {
+        // Try to locate the same input inside the shadow root, from the most precise selector
+        // to the least, stopping at the first that matches anything
+        const selectors = [
+            `input[id="${input.id}"]`,
+            `input[name="${input.name}"]`,
+            `input[value="${input.value}"]`,
+            // perform less exact search
+            `*[value="${input.value}"]`,
+        ]
+        const shadowInputs = selectors
+            .map((selector) => Array.from(shadowRoot.querySelectorAll(selector)))
+            .find((matches) => matches.length)
+
+        if (shadowInputs) {
+            for (const shadowInput of shadowInputs) {
+                if (isValueElement(shadowInput)) {
+                    shadowInput.value = newValue
+                } else {
+                    shadowInput.setAttribute('value', newValue)
+                }
+                shadowInput.dispatchEvent(new Event('input', { bubbles: true }))
             }
-            if (!shadowInputs.length) {
-                shadowInputs = Array.from(shadowRoot.querySelectorAll(`input[value="${input['value']}"]`))
-            }
-            if (!shadowInputs.length) {
-                // perform less exact search
-                shadowInputs = Array.from(shadowRoot.querySelectorAll(`*[value="${input['value']}"]`))
-            }
-            if (shadowInputs.length) {
-                shadowInputs.map((shadowInput) => {
-                    shadowInput['value'] = newValue
-                    shadowInput.dispatchEvent(new Event('input', { bubbles: true }))
-                })
-                shadowRoot.host.dispatchEvent(new Event('input', { bubbles: true }))
-            }
-        })
+            shadowRoot.host.dispatchEvent(new Event('input', { bubbles: true }))
+        }
     }
+}
+
+function isValueElement(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
+    return element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA'
+}
+
+function isSrcdocIframe(element: Element): element is HTMLIFrameElement {
+    return element.nodeName === 'IFRAME' && element.hasAttribute('srcdoc')
+}
+
+/**
+ * `innerText` exists on HTMLElement but not on Element, so SVG and MathML elements have none.
+ * Returning '' for those keeps callers, which all go on to call `String.match`, from throwing.
+ */
+function getInnerText(element: Element | undefined): string {
+    if (element && 'innerText' in element) {
+        return (element as HTMLElement).innerText ?? ''
+    }
+    return ''
 }
 
 function getValue(node: Element | Node, config: SearchReplaceConfig): string {
     const nodeElement = getElementFromNode(node)
-    // if it's an input or a textarea, take the value
-    if (nodeElement && (nodeElement.nodeName === 'INPUT' || nodeElement.nodeName === 'TEXTAREA')) {
-        return nodeElement['value']
-    }
-    // if it's an iframe with srcdoc, take the srcdoc
-    if (nodeElement && nodeElement.nodeName === 'IFRAME' && nodeElement.hasAttribute('srcdoc')) {
-        return nodeElement['srcdoc']
-    }
-
-    // if it's a contenteditable div, take the outerHTML if we're replacing HTML, otherwise take the innerHTML
-    if (nodeElement && nodeElement.nodeName.match(/DIV|BODY/g) && nodeElement.hasAttribute('contenteditable')) {
-        console.log('returning outer / innerHTML')
-        return config.searchTarget === 'innerHTML' ? nodeElement['outerHTML'] : nodeElement['innerHTML']
-    }
-    // if the search target is innerHTML, take the innerHTML
-    if (nodeElement && config.searchTarget === 'innerHTML') {
-        console.log('returning innerHTML')
-        return nodeElement['innerHTML']
+    if (nodeElement) {
+        // if it's an input or a textarea, take the value
+        if (isValueElement(nodeElement)) {
+            return nodeElement.value
+        }
+        // if it's an iframe with srcdoc, take the srcdoc
+        if (isSrcdocIframe(nodeElement)) {
+            return nodeElement.srcdoc
+        }
+        // if it's a contenteditable div, take the outerHTML if we're replacing HTML, otherwise take the innerHTML
+        if (/^(?:DIV|BODY)$/.test(nodeElement.nodeName) && nodeElement.hasAttribute('contenteditable')) {
+            return config.searchTarget === 'innerHTML' ? nodeElement.outerHTML : nodeElement.innerHTML
+        }
+        // if the search target is innerHTML, take the innerHTML
+        if (config.searchTarget === 'innerHTML') {
+            return nodeElement.innerHTML
+        }
     }
     // If it's a text node, return the nodeValue
     if (node.nodeType === Node.TEXT_NODE) {
-        console.log('returning nodeValue')
         return node.nodeValue || ''
     }
     // Otherwise return the innerText
-    console.log('returning innerText')
-    return node['innerText']
+    return getInnerText(nodeElement)
 }
 
 function replaceInInput(
@@ -174,7 +195,7 @@ function replaceInInput(
     return { searchReplaceResult, elementsChecked }
 }
 
-function containsAncestor(element: Element, results: Map<Element, SearchReplaceResult>, replaced?: boolean): boolean {
+function containsAncestor(element: Element, results: Map<Element, SearchReplaceResult>): boolean {
     // if element is not the body, check if the body is in the results
     if (element.tagName !== 'BODY' && results.has(document.body)) {
         return true
@@ -212,40 +233,41 @@ function replaceInContentEditableDiv(
     return replaceInNodeOrElement(element, newValue, occurrences, config, replaceTarget)
 }
 
+type ReplaceTarget = 'innerText' | 'innerHTML' | 'outerHTML'
+
+/** Assigns to one of the text-bearing properties without indexing into the element by string */
+function setReplaceTarget(element: Element, target: ReplaceTarget, value: string) {
+    if (target === 'innerHTML') {
+        element.innerHTML = value
+    } else if (target === 'outerHTML') {
+        element.outerHTML = value
+    } else if ('innerText' in element) {
+        ;(element as HTMLElement).innerText = value
+    }
+}
+
 // TODO make replace function part of config instead of continuously checking innerText vs. innerHTML
 function replaceInNodeOrElement(
     node: Node | Element,
     newValue: string,
     occurrences: RegExpMatchArray,
     config: SearchReplaceConfig,
-    replaceTarget?: 'innerText' | 'innerHTML' | 'outerHTML'
+    replaceTarget?: ReplaceTarget
 ) {
-    console.log(newValue);
-    console.log(occurrences);
-    console.log(config);
-    console.log(replaceTarget);
-
-    let replacementCount = 0
-    let replaced = false
     const nodeElement = getElementFromNode(node)
     if (config.searchTarget === 'innerHTML' && nodeElement) {
-        nodeElement[config.searchTarget] = newValue
-        replaced = true
+        setReplaceTarget(nodeElement, config.searchTarget, newValue)
     } else if (replaceTarget && nodeElement) {
-        nodeElement[replaceTarget] = newValue
-        replaced = true
+        setReplaceTarget(nodeElement, replaceTarget, newValue)
     } else {
         // replace in innerText but use nodeValue only as innerText contains text of descendent elements
         node.nodeValue = newValue
-        replaced = true
     }
-    if (replaced) {
-        console.log('adding', config.replaceAll ? occurrences.length : 1, 'to replaced count')
-        replacementCount = config.replaceAll ? occurrences.length : 1 // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
-    }
+    // adds one to replaced count if a replacement was made, adds occurrences if a global replace is made
+    const replacementCount = config.replaceAll ? occurrences.length : 1
     nodeElement?.dispatchEvent(new Event('input', { bubbles: true }))
 
-    return { node, replacementCount, replaced }
+    return { node, replacementCount, replaced: true }
 }
 
 function getElementFromNode(node: Node): Element | undefined {
@@ -316,44 +338,43 @@ function nodesUnder(
         if (!config.replace) {
             break
         }
-        console.log('Config.replace', config.replace)
 
         if (walked.has(node)) {
-            console.log('Continuing as already walked')
             continue
         }
         walked.add(node)
         const nodeElement = getElementFromNode(node)
 
         if (!nodeElement) {
-            console.log('Continuing as no parentElement')
             continue
         }
 
         if (nodeElement.tagName.match(/INPUT|TEXTAREA/g)) {
-            console.log('Continuing as input or textarea handled later')
+            // handled by replaceInInputs
             continue
         }
 
-        if ('contentEditable' in nodeElement && nodeElement.contentEditable === true) {
-            console.log('Continuing as contentEditable handled later')
+        // Editable text is handled by replaceInInputs, so skip it here to avoid replacing twice.
+        // This previously compared `contentEditable` to the boolean `true`, but that property is
+        // a string ('true' | 'false' | 'inherit' | 'plaintext-only'), so the guard never fired.
+        // Nothing broke, because editable elements are also dropped from the cloned element and
+        // so land in `ignoredElements` — but that made this guard silently redundant rather than
+        // the safety net it reads as.
+        if (isEditable(nodeElement)) {
             continue
         }
 
         if (nodeElement.tagName === 'WINDOW') {
-            console.log('Continuing as element is window')
             continue
         }
         const oldValue = getValue(node, config)
         const occurrences = oldValue.match(config.globalSearchPattern)
 
         if (!occurrences) {
-            console.log('Continuing as no occurrences')
             continue
         }
 
         if (!config.hiddenContent && isHidden(nodeElement, false)) {
-            console.log('Continuing as isHidden nodeElement', nodeElement)
             continue
         }
 
@@ -394,27 +415,26 @@ function replaceInner(
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     // continue if there is no inner searchTarget
-    if (element[config.searchTarget] === undefined) {
+    if (!(config.searchTarget in element)) {
         elementsChecked = updateResults(elementsChecked, element, false, 0, 0)
         return { searchReplaceResult, elementsChecked }
     }
 
-    const occurrences = countOccurrences(element, config)
-    console.log('occurrences', occurrences)
+    // When replacing in HTML the whole of the original element's innerHTML is rewritten, hidden
+    // and filtered descendants included. The count therefore has to be taken from that same
+    // string: counting on the filtered clone reported fewer matches than were really replaced,
+    // and the popup displayed the difference as a negative number ("-2 matches").
+    const countTarget = config.replace && config.searchTarget === 'innerHTML' ? originalElement : element
+    const occurrences = countOccurrences(countTarget, config)
     elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
 
-    const ancestorChecked = containsAncestor(element, elementsChecked)
-
     if (config.searchTarget === 'innerHTML') {
-        // We can reliably add the occurrences as any hidden elements will have been removed from the cloned element
         searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
     } else if (config.searchTarget === 'innerText') {
-        // We have to check if an ancestor has been checked as the innerText of the ancestor will contain the innerText
-        // of the element. We also need to check if the element is visible as we will have used textContent in this
-        // case, which does contain the hidden text.
-        if (!ancestorChecked && !config.hiddenContent) {
-            searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
-        } else if (!ancestorChecked && config.hiddenContent) {
+        // Skip elements whose ancestor was already counted: the ancestor's innerText already
+        // contained this element's text, so adding it again would double count.
+        // (The hiddenContent flag used to select between two identical branches here.)
+        if (!containsAncestor(element, elementsChecked)) {
             searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
         }
     }
@@ -507,7 +527,6 @@ function replaceInputFields(
     const allInputs = getInputElements(document, elementsChecked, config.hiddenContent)
     // add inputs to elementsChecked
     allInputs.map((input) => elementsChecked.set(input, newSearchReplaceCount()))
-    console.log('Inputs', allInputs)
     const inputsResult = replaceInInputs(config, document, allInputs, searchReplaceResult, elementsChecked)
     searchReplaceResult = inputsResult.searchReplaceResult
     elementsChecked = inputsResult.elementsChecked
@@ -542,12 +561,10 @@ function replaceInSrcDocIframe(
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
     const occurrences = countOccurrences(iframe, config)
-    console.log("occurrences in iframe's srcdoc", occurrences)
     elementsChecked = updateResults(elementsChecked, iframe, false, occurrences, 0)
     searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
     if (config.replace && occurrences) {
         iframe.srcdoc = iframe.srcdoc.replace(config.searchPattern, config.replaceTerm)
-        console.log('adding', config.replaceAll ? occurrences : 1, 'to replaced count')
         searchReplaceResult.count.replaced += config.replaceAll ? occurrences : 1
     }
     return { searchReplaceResult, elementsChecked }
@@ -637,24 +654,25 @@ function replaceNextOnly(flags: string): boolean {
     return flags.indexOf(RegexFlags.Global) === -1
 }
 
-export async function searchReplace(
-    action: SearchReplaceActions,
-    window: Window,
-    searchTerm: string,
-    replaceTerm: string,
-    inputFieldsOnly: boolean,
-    isRegex: boolean,
-    hiddenContent: boolean,
-    wholeWord: boolean,
-    matchCase: boolean,
-    replaceHTML: boolean,
-    replaceAll: boolean,
-    isIframe: boolean,
-    iframes: HTMLIFrameElement[],
-    elementFilter: RegExp
-): Promise<ReplaceFunctionReturnType> {
+export async function searchReplace(args: SearchReplaceArgs): Promise<ReplaceFunctionReturnType> {
+    const {
+        action,
+        window,
+        searchTerm,
+        replaceTerm,
+        inputFieldsOnly,
+        isRegex,
+        hiddenContent,
+        wholeWord,
+        matchCase,
+        replaceHTML,
+        replaceAll,
+        isIframe,
+        iframes,
+        elementFilter = ELEMENT_FILTER,
+    } = args
     const searchReplaceResult: SearchReplaceResult = {
-        count: { original: Number(0), replaced: Number(0) },
+        count: { original: 0, replaced: 0 },
         replaced: false,
     }
     const elementsChecked = new Map<Element, SearchReplaceResult>()
@@ -719,21 +737,19 @@ export async function searchReplace(
             result.searchReplaceResult = srcDocResult.searchReplaceResult
             result.elementsChecked = srcDocResult.elementsChecked
         })
-        console.log(JSON.stringify(result.searchReplaceResult))
-        console.log('searchableIframesInitial', searchableIframesInitial)
         const searchableIframes = searchableIframesInitial.filter((iframe: HTMLIFrameElement) => {
             return iframe.srcdoc === '' || iframe.srcdoc === undefined
         })
         const searchable = searchableIframes.map(getInitialIframeElement).filter(notEmpty)
-        console.log('searchableIframes', searchableIframes)
-        console.log('searchable', searchable)
         result = replaceInHTML(config, document, [startingElement, ...searchable], searchReplaceResult, elementsChecked)
     }
 
     return result
 }
 
-if (chrome && chrome.runtime && chrome.runtime.onMessage) {
+// `typeof` guard rather than a truthiness check: `chrome` is not merely falsy but *undeclared*
+// outside an extension context (e.g. under jest), where a bare reference throws a ReferenceError
+if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
     chrome.runtime.onMessage.addListener(function (msg: SearchReplaceContentMessage, sender, sendResponse) {
         try {
             const instance = msg.instance
@@ -744,22 +760,22 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             // get all iframes
             const iframes = getRespondingIframes(window, window.document)
             // Setup event listeners to communicate between iframes and parent
-            searchReplace(
+            searchReplace({
                 action,
                 window,
-                instance.searchTerm,
-                instance.replaceTerm,
-                instance.options.inputFieldsOnly,
-                instance.options.isRegex,
-                instance.options.hiddenContent,
-                instance.options.wholeWord,
-                instance.options.matchCase,
-                instance.options.replaceHTML,
+                searchTerm: instance.searchTerm,
+                replaceTerm: instance.replaceTerm,
+                inputFieldsOnly: instance.options.inputFieldsOnly,
+                isRegex: instance.options.isRegex,
+                hiddenContent: instance.options.hiddenContent,
+                wholeWord: instance.options.wholeWord,
+                matchCase: instance.options.matchCase,
+                replaceHTML: instance.options.replaceHTML,
                 replaceAll,
                 isIframe,
                 iframes,
-                ELEMENT_FILTER
-            ).then((result) => {
+                elementFilter: ELEMENT_FILTER,
+            }).then((result) => {
                 const response: SearchReplaceResponse = {
                     inIframe: inIframe(),
                     result: result.searchReplaceResult,
@@ -773,7 +789,6 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
                 }
 
                 // Send the response to the background script for processing
-                console.log('sending response to background script', JSON.stringify(response, null, 4))
                 chrome.runtime.sendMessage(response).then((r) => {
                     sendResponse({
                         action: 'searchReplaceResponsePopup',
@@ -783,7 +798,7 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
                 return true
             })
         } catch (err) {
-            console.log('Error in content script', err)
+            console.error('Error in content script', err)
             sendResponse({ action: 'searchReplaceResponsePopup', msg: err })
         }
     })

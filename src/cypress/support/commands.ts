@@ -8,7 +8,7 @@ declare namespace Cypress {
         visitAdmin(page: string): Chainable<any>
         addBlockInEditor(search: string, name?: string): Chainable<any>
         savePost(): Chainable<any>
-        focusBlock(): Chainable<any>
+        focusBlock(index?: number): Chainable<any>
         disableTooltips(): Chainable<any>
         changeRange(selector: string, value: number): Chainable<any>
         installWordPress(): Chainable<any>

@@ -14,7 +14,7 @@ Please Note:
 
 1. You must refresh the page or restart chrome before using.
 2. Please select "Input Fields Only" if you are editing text in a text editor or form.
-2. The popup will not stay open if you click elsewhere. This is a feature of Chrome.
+3. The popup will not stay open if you click elsewhere. This is a feature of Chrome.
 
 View a video of it in action here: http://www.youtube.com/watch?v=tf0D8RUdwkI
 
@@ -44,7 +44,48 @@ extension locally.
 
 You will now have a local copy of the extension running in your browser. You can edit the TypeScript files and the
 extension will automatically rebuild thanks to the `npm run watch` command. To see the changes in your browser you will
-need to hit the reload button underneath Search and Replace on the [Extensions page](chrome://extensions) and then also
-reload the web page on which you are doing the replacements.
+need to hit the reload button underneath Search and Replace on the [Extensions page](chrome://extensions).
+
+### The build
+
+[Vite](https://vite.dev) builds the extension; `npm run build` produces `dist/`, and `npm run build:dev`
+does the same without minification. Each entry point is bundled separately into a self-contained
+IIFE, because a manifest v3 content script is injected as a classic script and cannot use ESM
+imports. `scripts/build.mjs` drives that, and `vite.config.mts` explains it in more detail.
+
+Vite transpiles TypeScript with esbuild and does **not** typecheck, so run `npm run typecheck`
+(CI does) rather than relying on the build to catch type errors.
+
+### Tests and checks
+
+`npm run checks` runs everything CI runs bar the end-to-end tests: typecheck, lint, formatting and
+unit tests. The individual scripts are:
+
+| Command | What it does |
+| --- | --- |
+| `npm test` | Unit tests ([vitest](https://vitest.dev), jsdom) |
+| `npm run test:watch` | Unit tests in watch mode |
+| `npm run test:coverage` | Unit tests with a coverage report |
+| `npm run typecheck` | `tsc --noEmit` over the extension, the tests and the Cypress specs |
+| `npm run lint` / `lint:fix` | eslint |
+| `npm run format` / `format:check` | prettier |
+
+End-to-end tests use [Cypress](https://www.cypress.io) and need the fixture server running:
+
+```bash
+npm run start &        # serves the fixtures in ./tests on port 9000
+npm run test:e2e       # or `npm run cypress:open` to pick specs interactively
+```
+
+`wordpress.cy.ts` is excluded from that run because it drives a real WordPress install. To run it:
+
+```bash
+npm run e2e:docker:up
+npm run test:e2e:wordpress
+npm run e2e:docker:down
+```
+
+Unit tests live next to the code they cover as `*.test.ts`. They run in jsdom, so anything that
+depends on real layout, real iframes or the loaded extension belongs in the Cypress specs instead.
 
 Feel free to submit a PR if you make any improvements!

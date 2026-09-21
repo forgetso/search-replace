@@ -18,16 +18,17 @@ import {
     SearchReplaceStorageItems,
     TranslationProxy,
 } from './types'
-import { clearHistoryClickHandler, constructSearchReplaceHistory, historyHeaderClickHandler } from './popup/history'
+import { clearHistoryClickHandler, constructSearchReplaceHistory } from './popup/history'
 import {
     createTranslationProxy,
+    getAvailableLanguages,
     getInstanceId,
     getTranslation,
     localizeElements,
     manifest,
     tabConnect,
-    getAvailableLanguages,
 } from './util'
+import { getRemainingMatchCount } from './popup/count'
 
 // Enum for content types
 enum ContentType {
@@ -63,22 +64,12 @@ window.addEventListener('DOMContentLoaded', async function () {
         githubVersionElement.href = `${RELEASE_NOTES_URL}/${manifest.version}`
     }
 
-    // Set the onchange and onkeydown functions for the input fields
-    const inputs: HTMLCollectionOf<Element> = document.getElementsByClassName('data_field')
-    for (const el of inputs) {
-        const inputElement = <HTMLInputElement>el
-        inputElement.onkeydown = inputElement.onchange = function () {
-            console.debug('Set the onchange and onkeydown functions for the input fields')
-        }
-    }
-
     // Get the stored values from the background page
     const port = tabConnect()
     port.postMessage({ action: 'recover' })
 
     // Restore the recent search replace instance and history list from storage
     port.onMessage.addListener(function (msg: SearchReplaceStorageItems) {
-        console.log('received msg', msg)
         const history: SearchReplaceInstance[] = msg.history || []
         let recentSearch: SearchReplaceInstance = msg.instance
         if (history.length > 0) {
@@ -126,9 +117,8 @@ window.addEventListener('DOMContentLoaded', async function () {
     })
 
     // Change the content when the icon is pressed (setting | about | history)
-    ;(<HTMLButtonElement>document.querySelector('#history')).addEventListener('click', function (e) {
+    ;(<HTMLButtonElement>document.querySelector('#history')).addEventListener('click', function () {
         loadContent(ContentType.History)
-        // historyHeaderClickHandler(e);
     })
 
     // Click the back button, return main popup
@@ -158,46 +148,42 @@ window.addEventListener('DOMContentLoaded', async function () {
     // Handlers for input elements changing value - storeTerms
     for (const elementName in INPUT_ELEMENTS_AND_EVENTS) {
         for (const eventType of INPUT_ELEMENTS_AND_EVENTS[elementName]) {
-            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, (e) =>
-                storeTermsHandler(e, translationFn)
+            ;(<HTMLInputElement>document.getElementById(elementName)).addEventListener(eventType, () =>
+                storeTerms(false).catch((e) => console.error(e))
             )
         }
     }
 
-    // Handler for auto resizing the textareas
+    // Handlers for auto resizing the textareas, and for Enter / Shift+Enter
     for (const elementName of [SEARCH_TERM_INPUT_ID, REPLACE_TERM_INPUT_ID]) {
         const element = <HTMLTextAreaElement | null>document.getElementById(elementName)
-        if (element) {
-            autoGrow(element)
+        if (!element) {
+            continue
         }
-        ;(<HTMLTextAreaElement>element).addEventListener('input', function () {
+        autoGrow(element)
+        element.addEventListener('input', function () {
             autoGrow(this)
         })
+        element.addEventListener('keydown', (e) => searchTermKeydownHandler(e, translationFn))
     }
 
     // Click handler for historyContent element. Will take the search term and replace term from the history item and populate the input fields
-    ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', (e) =>
-        historyItemClickHandler(e, translationFn)
-    )
+    ;(<HTMLDivElement>document.getElementById('historyContent')).addEventListener('click', historyItemClickHandler)
 
     // Click handler for swapping terms
-    ;(<HTMLButtonElement>document.getElementById('swapTerms')).addEventListener('click', function (e) {
+    ;(<HTMLButtonElement>document.getElementById('swapTerms')).addEventListener('click', function () {
         const searchTerm = getSearchTermElement()
         const replaceTerm = getReplaceTermElement()
-        swapTerms(searchTerm, replaceTerm, translationFn)
+        swapTerms(searchTerm, replaceTerm)
         autoGrow(searchTerm)
         autoGrow(replaceTerm)
     })
 
     // Localize HTML elements
     localizeElements(langData, () => {
-        loadContent(ContentType.SearchForm);
-    });
+        loadContent(ContentType.SearchForm)
+    })
 })
-
-async function storeTermsHandler(e: Event, translationFn: TranslationProxy) {
-    await storeTerms(e, translationFn, false)
-}
 
 // function to change the height of the textarea to fit the content
 function autoGrow(element: HTMLTextAreaElement) {
@@ -216,6 +202,15 @@ async function loadContent(contentType: ContentType) {
     const historyBtn = document.getElementById('history')
     const aboutBtn = document.getElementById('about')
     const settingBtn = document.getElementById('setting')
+    // The footer holds nothing but the two action buttons, so it would otherwise sit there as an
+    // empty grey band on the Settings, About and History sections
+    const footer = document.getElementById('footer')
+
+    if (contentType === ContentType.SearchForm) {
+        showElement(footer)
+    } else {
+        hideElement(footer)
+    }
 
     switch (contentType) {
         case ContentType.Setting: // pressed setting icon
@@ -270,27 +265,27 @@ async function loadContent(contentType: ContentType) {
     }
 }
 
-function showElement(element) {
+function showElement(element: Element | null) {
     if (element) {
         element.classList.add('d-block')
         element.classList.remove('d-none')
     }
 }
 
-function hideElement(element) {
+function hideElement(element: Element | null) {
     if (element) {
         element.classList.remove('d-block')
         element.classList.add('d-none')
     }
 }
 
-function activeButton(element) {
+function activeButton(element: Element | null) {
     if (element) {
         element.classList.add('icon-selected')
     }
 }
 
-function inactiveButton(element) {
+function inactiveButton(element: Element | null) {
     if (element) {
         element.classList.remove('icon-selected')
     }
@@ -342,14 +337,14 @@ function restoreSearchReplaceInstance(searchReplaceInstance: SearchReplaceInstan
  * @param e
  * @param translationFn
  */
-export function historyItemClickHandler(e: Event, translationFn: TranslationProxy) {
+export function historyItemClickHandler(e: Event) {
     const target = <HTMLElement>e.target
 
     if (target.tagName === 'LI') {
-        const options: SearchReplaceOptions = CHECKBOXES.reduce((result, checkboxName) => {
+        const options = CHECKBOXES.reduce<SearchReplaceOptions>((result, checkboxName) => {
             result[checkboxName] = target.getAttribute(`data-${checkboxName}`) === 'true'
             return result
-        }, {}) as SearchReplaceOptions
+        }, {} as SearchReplaceOptions)
 
         const searchReplaceInstance: SearchReplaceInstance = {
             searchTerm: target.getAttribute('data-searchTerm') || '',
@@ -357,7 +352,7 @@ export function historyItemClickHandler(e: Event, translationFn: TranslationProx
             options,
         }
         restoreSearchReplaceInstance(searchReplaceInstance)
-        storeTerms(e, translationFn, false).catch((e) => console.error(e))
+        storeTerms(false).catch((error) => console.error(error))
     }
 }
 
@@ -370,7 +365,7 @@ export function historyItemClickHandler(e: Event, translationFn: TranslationProx
 async function formSubmitHandler(
     action: SearchReplaceActions,
     translationFn: TranslationProxy,
-    callbackHandler: (msg: any, translationFn: TranslationProxy) => void,
+    callbackHandler: (msg: SearchReplaceResponse, translationFn: TranslationProxy) => void,
     replaceAll: boolean
 ) {
     const loader = document.getElementById('loader')
@@ -384,7 +379,7 @@ async function formSubmitHandler(
     // create the new history list items
     createHistoryListItemElements(historyItems)
     // store the new history list items
-    await storeTerms(new Event('storeTerms'), translationFn, true)
+    await storeTerms(true)
     // do the search replace
     await contentScriptCall(action, searchReplaceInstance, historyItems)
 }
@@ -414,7 +409,6 @@ export async function contentScriptCall(
             instanceId,
         }
         await chrome.tabs.sendMessage(tab.id, message)
-        console.log(url);
         url = tab.url
     }
     return url
@@ -435,9 +429,9 @@ function contentScriptCallback(msg: SearchReplaceResponse, translationFn: Transl
 
 function setCount(result: SearchReplaceResult, translationFn: TranslationProxy) {
     if (getSearchTermElement().value.length >= MIN_SEARCH_TERM_LENGTH) {
-        ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerHTML = `${
-            result.count.original - result.count.replaced
-        } ${translationFn('matches')}`
+        ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerHTML = `${getRemainingMatchCount(
+            result
+        )} ${translationFn('matches')}`
     } else {
         ;(<HTMLDivElement>document.getElementById('searchTermCount')).innerHTML = ''
     }
@@ -448,9 +442,7 @@ function setHints(hints?: Hint[]) {
     if (hintsElement) {
         hintsElement.innerHTML = ''
         if (hints) {
-            console.log('Hints', hints)
             for (const hint of hints) {
-                console.log('hint', hint)
                 // check that this hint has not been previously dismissed by reading the local storage
 
                 const hintElement = document.createElement('div')
@@ -485,28 +477,32 @@ function removeLoader() {
 }
 
 /** Stores the terms from the popup and performs a count of the terms on the page **/
-async function storeTerms(
-    event: Event | KeyboardEvent,
-    translationFn: TranslationProxy,
-    save?: boolean,
-    ignoreLength?: boolean
-) {
-    console.debug('storing terms')
-    event = event || new Event('storeTerms')
-    if (event instanceof KeyboardEvent && event.code === 'Enter') {
-        //if the user presses enter we want to trigger the search replace
-        await formSubmitHandler('searchReplace', translationFn, contentScriptCallback, false)
-    } else {
-        const searchReplaceInput = getInputValues(false)
-        const history = constructSearchReplaceHistory()
+async function storeTerms(save?: boolean, ignoreLength?: boolean) {
+    const searchReplaceInput = getInputValues(false)
+    const history = constructSearchReplaceHistory()
 
-        if (searchReplaceInput.searchTerm.length >= MIN_SEARCH_TERM_LENGTH || ignoreLength) {
-            // This counts the terms on the page
-            const url = await contentScriptCall('count', searchReplaceInput, history)
-            // This sends the search replace terms to the background page and stores them
-            sendToStorage(searchReplaceInput, history, {}, url, save)
-        }
+    if (searchReplaceInput.searchTerm.length >= MIN_SEARCH_TERM_LENGTH || ignoreLength) {
+        // This counts the terms on the page
+        const url = await contentScriptCall('count', searchReplaceInput, history)
+        // This sends the search replace terms to the background page and stores them
+        sendToStorage(searchReplaceInput, history, {}, url, save)
     }
+}
+
+/**
+ * Enter runs the replacement; Shift+Enter inserts a new line so that multi-line terms can be
+ * typed at all.
+ *
+ * This has to run on keydown so the newline can be suppressed. It used to be handled on keyup,
+ * which fired *after* the browser had already inserted the newline — so pressing Enter both
+ * added a line break and kicked off a replacement with a half-typed term. See issue #28.
+ */
+function searchTermKeydownHandler(event: KeyboardEvent, translationFn: TranslationProxy) {
+    if (event.key !== 'Enter' || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+        return
+    }
+    event.preventDefault()
+    formSubmitHandler('searchReplace', translationFn, contentScriptCallback, false)
 }
 
 function sendToStorage(
@@ -570,11 +566,11 @@ function createHistoryListItemElements(history: SearchReplaceInstance[]) {
     }
 }
 
-function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement, translationFn: TranslationProxy) {
+function swapTerms(source: HTMLTextAreaElement, target: HTMLTextAreaElement) {
     const sourceText = source.value
     source.value = target.value
     target.value = sourceText
-    storeTerms(new Event('storeTerms'), translationFn, true, true).catch((e) => console.error(e))
+    storeTerms(true, true).catch((error) => console.error(error))
 }
 
 function getInputValues(replaceAll: boolean): SearchReplaceInstance {

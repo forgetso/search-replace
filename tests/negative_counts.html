@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Counting regression fixture</title>
+    <style>
+        /* Hidden via a stylesheet rather than an inline style, as real sites do. jsdom cannot
+           resolve this, which is why this fixture lives in the Cypress suite. */
+        .menu { display: none; }
+        .promo { display: none; }
+    </style>
+</head>
+<!--
+  Mirrors the page shape behind the "-2 matches" report: a <header> (whose tag name used to be
+  caught by the unanchored element filter and dropped from the count), a hidden nav, hidden
+  siblings in the body, an inline script, and a hidden input. Counting and replacing must agree
+  on all of it.
+-->
+<body>
+<header>
+    <nav class="menu">
+        <a href="/european-news">European</a>
+        <a href="/european-sport">European</a>
+    </nav>
+    <h1>European</h1>
+</header>
+<main>
+    <p>European news today</p>
+    <p class="promo">European</p>
+    <p class="promo">European</p>
+    <div>
+        <span>European</span>
+        <input type="hidden" name="hidden" value="European">
+    </div>
+    <div id="nested-script-container">
+        <p>European</p>
+        <script id="nested-script" type="text/javascript">
+            var nested = 'European'
+        </script>
+    </div>
+</main>
+<footer>
+    <p style="display: none;">European</p>
+</footer>
+<script id="page-script" type="text/javascript">
+    var region = 'European'
+</script>
+</body>
+</html>

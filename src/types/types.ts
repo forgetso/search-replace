@@ -159,6 +159,34 @@ export type SearchReplaceResult = {
     replaced: boolean
 }
 
+/**
+ * The arguments to `searchReplace`. An object rather than a positional list: there are ten
+ * booleans here, and at a call site `searchReplace(a, b, false, false, true, false, ...)` is
+ * both unreadable and trivial to get wrong.
+ */
+export type SearchReplaceArgs = {
+    action: SearchReplaceActions
+    window: Window
+    searchTerm: string
+    replaceTerm: string
+    /** Restrict the search to inputs, textareas and contenteditable elements */
+    inputFieldsOnly: boolean
+    /** Treat `searchTerm` as a regular expression rather than literal text */
+    isRegex: boolean
+    /** Include text that is not visible on the page */
+    hiddenContent: boolean
+    wholeWord: boolean
+    matchCase: boolean
+    /** Search and replace in the markup rather than the rendered text */
+    replaceHTML: boolean
+    /** Replace every occurrence rather than just the next one */
+    replaceAll: boolean
+    isIframe: boolean
+    iframes: HTMLIFrameElement[]
+    /** Tags never searched, e.g. SCRIPT and STYLE. Defaults to ELEMENT_FILTER. */
+    elementFilter?: RegExp
+}
+
 export type SearchReplaceConfig = {
     action: SearchReplaceBackgroundActions
     replace: boolean

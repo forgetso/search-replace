@@ -28,9 +28,7 @@ export function getDefaultStorage(): SearchReplacePopupStorage {
 
 export function getStorageSync<T>(key: string): Promise<T | undefined> {
     return new Promise<T>((resolve) => {
-        console.log('STORAGE: looking for storage with key', key)
         chrome.storage.sync.get(key, function (items) {
-            console.log('STORAGE: got items from storage', JSON.stringify(items, null, 4))
             resolve(items[key])
         })
     })

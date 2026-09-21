@@ -20,8 +20,9 @@ describe('Search Replace WordPress', { baseUrl: BASEURL, responseTimeout: 120e3 
                     expect(iframe.contents().find('body')).to.exist
                     cy.getAllLocalStorage().then((localStorage) => {
                         console.log(localStorage)
-                        if (BASEURL in localStorage && 'WP_PREFERENCES_USER_1' in localStorage[BASEURL]) {
-                            const wpPreferences = JSON.parse(localStorage[BASEURL]['WP_PREFERENCES_USER_1'].toString())
+                        const storedPreferences = localStorage[BASEURL]?.['WP_PREFERENCES_USER_1']
+                        if (storedPreferences) {
+                            const wpPreferences = JSON.parse(storedPreferences.toString())
                             console.log('localStorage', wpPreferences)
                             if (!wpPreferences['core/edit-post']['welcomeGuide']) {
                                 cy.get('button[aria-label="Close"]')
@@ -44,22 +45,22 @@ describe('Search Replace WordPress', { baseUrl: BASEURL, responseTimeout: 120e3 
                 <NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe')
             ).filter((iframe) => !isBlobIframe(iframe))
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: false,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     console.log(`result`, result)
                     expect(result.searchReplaceResult.count.original).to.equal(1)
                 })
@@ -75,22 +76,22 @@ describe('Search Replace WordPress', { baseUrl: BASEURL, responseTimeout: 120e3 
                 <NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe')
             ).filter((iframe) => !isBlobIframe(iframe))
             cy.wrap(
-                searchReplace(
-                    'searchReplace',
+                searchReplace({
+                    action: 'searchReplace',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: false,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     console.log(`result`, result)
                     expect(result.searchReplaceResult.count.original).to.equal(1)
                 })
@@ -108,42 +109,42 @@ describe('Search Replace WordPress', { baseUrl: BASEURL, responseTimeout: 120e3 
                     <NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe')
                 ).filter((iframe) => !isBlobIframe(iframe))
                 cy.wrap(
-                    searchReplace(
-                        'searchReplace',
+                    searchReplace({
+                        action: 'searchReplace',
                         window,
-                        SEARCHTERM,
-                        REPLACETERM,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        true,
-                        false,
+                        searchTerm: SEARCHTERM,
+                        replaceTerm: REPLACETERM,
+                        inputFieldsOnly: false,
+                        isRegex: false,
+                        hiddenContent: false,
+                        wholeWord: false,
+                        matchCase: false,
+                        replaceHTML: false,
+                        replaceAll: true,
+                        isIframe: false,
                         iframes,
-                        ELEMENT_FILTER
-                    )
+                        elementFilter: ELEMENT_FILTER,
+                    })
                 ).then(() => {
                     cy.savePost().then(() => {
                         //cy.reload()
                         cy.wrap(
-                            searchReplace(
-                                'count',
+                            searchReplace({
+                                action: 'count',
                                 window,
-                                SEARCHTERM,
-                                REPLACETERM,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                true,
-                                false,
+                                searchTerm: SEARCHTERM,
+                                replaceTerm: REPLACETERM,
+                                inputFieldsOnly: false,
+                                isRegex: false,
+                                hiddenContent: false,
+                                wholeWord: false,
+                                matchCase: false,
+                                replaceHTML: false,
+                                replaceAll: true,
+                                isIframe: false,
                                 iframes,
-                                ELEMENT_FILTER
-                            ).then((result) => {
+                                elementFilter: ELEMENT_FILTER,
+                            }).then((result) => {
                                 console.log(`result`, result)
                                 expect(result.searchReplaceResult.count.original).to.equal(0)
                             })
