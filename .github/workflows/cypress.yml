@@ -3,18 +3,15 @@ name: Cypress Tests
 on:
   pull_request:
     branches: [ main, master ]
-    paths:
-      - '**.ts'
-      - '**.js'
-      - '.github/workflows/cypress.yml'
+  push:
+    branches: [ main, master ]
 
-env:
-  CARGO_TERM_COLOR: always
-  ENVIRONMENT: development
-  GH_TOKEN: ${{ github.token }}
+# Least privilege: these jobs only need to read the repository
+permissions:
+  contents: read
 
 jobs:
-  build:
+  e2e:
     strategy:
       fail-fast: false
       matrix:
@@ -22,21 +19,44 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Clone search and replace
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          ref: ${{ github.head_ref }}
-          repository: forgetso/search-replace
-          path: search-replace
+          node-version: 24
+          cache: npm
 
       - name: Install dependencies
-        run: |
-          cd search-replace
-          ls .
-          npm install
+        run: npm ci
 
-      - name: Run search and replace tests
-        run: |
-          cd search-replace
-          npm run start 1>server.log 2>&1 &
-          npm run cypress:run
+      # The specs import from src directly, but the extension is built too so that a failure to
+      # compile is caught here rather than at release time
+      - name: Build the extension
+        run: npm run build
+
+      - name: Serve the test fixtures
+        run: npm run start > server.log 2>&1 &
+
+      - name: Wait for the fixture server
+        run: npx wait-on http://localhost:9000/tests/test.html --timeout 60000
+
+      # wordpress.cy.ts is excluded by cypress.config.ts: it needs the dockerised WordPress from
+      # `npm run e2e:docker:up`. Run it locally with `npm run test:e2e:wordpress`.
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: src/cypress/screenshots
+          if-no-files-found: ignore
+
+      - name: Upload server log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-log
+          path: server.log
+          if-no-files-found: ignore

@@ -1,18 +1,16 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
-    "types": [
-      "chrome",
-      "cypress",
-      "dom",
-      "node"
-    ]
-  },
-  "include": [
-    "**/*.ts"
-  ]
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        // Cypress 13 bundles lodash types that clash with TypeScript 5 over WeakMap
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "noEmit": true,
+        "lib": ["esnext", "dom", "dom.iterable"],
+        // "dom" is a lib, not an @types package, and listing it here made tsc fail outright
+        "types": ["chrome", "cypress", "node"]
+    },
+    "include": ["**/*.ts", "../constants.ts", "../elements.ts", "../searchreplace.ts", "../types/**/*.ts"]
 }

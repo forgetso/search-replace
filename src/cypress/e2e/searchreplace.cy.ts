@@ -38,22 +38,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
             console.log('iframes', iframes)
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    true,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     console.log(`result`, result)
                     expect(result.searchReplaceResult.count.original).to.equal(8)
                 })
@@ -68,22 +68,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: false,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(5)
                 })
             ).then(() => {
@@ -97,22 +97,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    'This text is not on the page',
-                    REPLACETERM,
-                    true,
-                    false,
-                    true,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: 'This text is not on the page',
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: true,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(0)
                 })
             ).then(() => {
@@ -126,22 +126,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    true,
-                    false,
-                    true,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: true,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(5)
                 })
             ).then(() => {
@@ -155,22 +155,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    true,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: true,
+                    isRegex: false,
+                    hiddenContent: false,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(4)
                 })
             ).then(() => {
@@ -184,22 +184,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'searchReplace',
+                searchReplace({
+                    action: 'searchReplace',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    true,
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(
                         result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
                     ).to.equal(0)
@@ -215,22 +215,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'searchReplace',
+                searchReplace({
+                    action: 'searchReplace',
                     window,
-                    SEARCHTERM,
-                    REPLACETERM,
-                    false,
-                    false,
-                    true,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
+                    searchTerm: SEARCHTERM,
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: false,
+                    replaceAll: false,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(
                         result.searchReplaceResult.count.original - result.searchReplaceResult.count.replaced
                     ).to.equal(7)
@@ -246,22 +246,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    '<div',
-                    REPLACETERM,
-                    false,
-                    false,
-                    true,
-                    false,
-                    false,
-                    true,
-                    true,
-                    false,
+                    searchTerm: '<div',
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: true,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(18)
                 })
             ).then(() => {
@@ -275,22 +275,22 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'count',
+                searchReplace({
+                    action: 'count',
                     window,
-                    '<div',
-                    REPLACETERM,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    true,
-                    true,
-                    false,
+                    searchTerm: '<div',
+                    replaceTerm: REPLACETERM,
+                    inputFieldsOnly: false,
+                    isRegex: false,
+                    hiddenContent: false,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: true,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then((result) => {
+                    elementFilter: ELEMENT_FILTER,
+                }).then((result) => {
                     expect(result.searchReplaceResult.count.original).to.equal(11)
                 })
             ).then(() => {
@@ -304,38 +304,38 @@ describe('Search Replace ', () => {
             const iframes = Array.from(<NodeListOf<HTMLIFrameElement>>window.document.querySelectorAll('iframe'))
 
             cy.wrap(
-                searchReplace(
-                    'searchReplace',
+                searchReplace({
+                    action: 'searchReplace',
                     window,
-                    'display: none;',
-                    'display: block;',
-                    false,
-                    true,
-                    true,
-                    false,
-                    false,
-                    true,
-                    true,
-                    false,
+                    searchTerm: 'display: none;',
+                    replaceTerm: 'display: block;',
+                    inputFieldsOnly: false,
+                    isRegex: true,
+                    hiddenContent: true,
+                    wholeWord: false,
+                    matchCase: false,
+                    replaceHTML: true,
+                    replaceAll: true,
+                    isIframe: false,
                     iframes,
-                    ELEMENT_FILTER
-                ).then(() => {
-                    searchReplace(
-                        'count',
+                    elementFilter: ELEMENT_FILTER,
+                }).then(() => {
+                    searchReplace({
+                        action: 'count',
                         window,
-                        SEARCHTERM,
-                        '',
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        true,
-                        false,
+                        searchTerm: SEARCHTERM,
+                        replaceTerm: '',
+                        inputFieldsOnly: false,
+                        isRegex: false,
+                        hiddenContent: false,
+                        wholeWord: false,
+                        matchCase: false,
+                        replaceHTML: false,
+                        replaceAll: true,
+                        isIframe: false,
                         iframes,
-                        ELEMENT_FILTER
-                    ).then((countResult) => {
+                        elementFilter: ELEMENT_FILTER,
+                    }).then((countResult) => {
                         expect(countResult.searchReplaceResult.count.original).to.equal(7)
                     })
                 })

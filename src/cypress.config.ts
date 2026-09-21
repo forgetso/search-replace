@@ -14,13 +14,26 @@
 import { defineConfig } from 'cypress'
 
 export default defineConfig({
-    e2e: { baseUrl: 'http://localhost:9000' },
+    e2e: {
+        baseUrl: 'http://localhost:9000',
+        // wordpress.cy.ts needs the dockerised WordPress from `npm run e2e:docker:up`, so it is
+        // excluded from the default run and has its own script (`npm run test:e2e:wordpress`).
+        // Leaving it in meant every run failed in its `before all` hook.
+        excludeSpecPattern: ['**/wordpress.cy.ts'],
+        setupNodeEvents(on) {
+            on('task', {
+                log(message) {
+                    console.log(message)
+                    return null
+                },
+            })
+        },
+    },
     env: {
         WP_USER: 'admin',
         WP_PASSWORD: 'password',
     },
     chromeWebSecurity: false,
-    setupNodeEvents(on, config) {
-        // implement node event listeners here
-    },
+    screenshotOnRunFailure: true,
+    video: false,
 })

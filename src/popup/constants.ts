@@ -1,9 +1,9 @@
 import { SearchReplaceCheckboxNames } from '../types'
 
-const { matchCase, inputFieldsOnly, hiddenContent, wholeWord, isRegex, replaceHTML, save, replaceAll } =
-    SearchReplaceCheckboxNames
+const { matchCase, inputFieldsOnly, hiddenContent, wholeWord, isRegex, replaceHTML } = SearchReplaceCheckboxNames
 
-export const INPUT_ELEMENTS_AND_EVENTS = {
+/** Element id -> the DOM events on that element which should store the search terms */
+export const INPUT_ELEMENTS_AND_EVENTS: Record<string, string[]> = {
     searchTerm: ['change', 'keyup', 'blur'],
     replaceTerm: ['change', 'keyup', 'blur'],
     [matchCase]: ['change', 'click'],

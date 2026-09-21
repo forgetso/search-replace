@@ -1,36 +1,36 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "rootDir": "src",
-    "outDir": "./dist/",
-    "noImplicitAny": false,
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "sourceMap": false,
-    "target": "es6",
-    "jsx": "react",
-    "allowJs": true,
-    "noEmitOnError": true,
-    "lib": [
-      "es5", "es6", "dom", "dom.iterable"
-    ],
-  },
-  "include": [
-    "**/*.ts",
-    "assets/**/*",
-    "manifest.json"
-  ],
-  "types": [
-    "chrome",
-    "cypress",
-    "dom"
-  ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "tests",
-    "src/cypress",
-    "src/cypress.config.ts"
-  ],
-
+    // The extension source. Vite transpiles with esbuild and does not typecheck, so this config
+    // exists for `npm run typecheck` rather than for the build.
+    //
+    // It is also the config Cypress's bundled ts-node picks up when it compiles
+    // cypress.config.ts, which is why moduleResolution stays on "node": ts-node forces commonjs,
+    // and "bundler" resolution is incompatible with that. Test files need "bundler" (vitest's
+    // own types require it), so they live in tsconfig.test.json instead.
+    "compilerOptions": {
+        "strict": true,
+        "rootDir": ".",
+        "outDir": "./dist/",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "sourceMap": false,
+        "target": "es2020",
+        "allowJs": false,
+        "noEmitOnError": true,
+        "lib": ["es2020", "dom", "dom.iterable"],
+        // Previously this sat outside `compilerOptions`, where TypeScript ignores it, so every
+        // installed @types package was pulled in implicitly
+        "types": ["chrome"]
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": [
+        "node_modules",
+        "build",
+        "dist",
+        "tests",
+        "src/cypress",
+        "src/cypress.config.ts",
+        "src/**/*.test.ts",
+        "src/testing"
+    ]
 }

@@ -1,3 +1,29 @@
+/* Palette. These are the greys the popup used before the redesign; the redesign's layout is
+   kept, but its green-and-white colouring is not. Change a value here rather than in the
+   rules below. */
+:root {
+    --sr-bg: #eee;
+    --sr-surface: #e2e2e2;
+    --sr-text: #444;
+    --sr-muted: #6b6b6b;
+    --sr-accent: #333;
+    --sr-border: #cfcfcf;
+    --sr-hover-bg: #ccc;
+    --sr-button-bg: #ddd;
+    --sr-button-bg-hover: #ccc;
+    --sr-control: #6c757d;
+
+    /* Spacing scale. Every gap in the popup should come from one of these, so that the
+       vertical rhythm stays consistent as sections are added. */
+    --sr-space-xs: 4px;
+    --sr-space-sm: 8px;
+    --sr-space-md: 12px;
+    --sr-space-lg: 16px;
+
+    /* Horizontal padding of the popup's panels, so the header, body and footer line up */
+    --sr-gutter: 16px;
+}
+
 html {
     height: fit-content;
 }
@@ -5,12 +31,18 @@ html {
 body,
 body div table {
     font-family: 'Open Sans', sans-serif;
-    background-color: #eee;
+    background-color: var(--sr-bg);
     font-size: 13px;
     text-shadow: 0 1px rgba(255, 255, 255, 0.5);
     /* width: 320px; */
     height: fit-content;
-    color: #444;
+    color: var(--sr-text);
+}
+
+/* Header and footer panels. Replaces bootstrap's .bg-white so the panels read as a slightly
+   darker grey than the body rather than as white. */
+.bg-surface {
+    background-color: var(--sr-surface);
 }
 
 textarea {
@@ -38,30 +70,116 @@ a {
 
 #historyList li {
     list-style-type: none;
-    font-size: 14px;
-    padding: 0;
+    font-size: 13px;
+    padding: var(--sr-space-sm);
     margin: 0;
+    border-radius: 3px;
 }
 
 #historyList li:hover {
-    color: #10892B;
+    color: var(--sr-accent);
     cursor: pointer;
-    background-color: #ccc;
+    background-color: var(--sr-hover-bg);
 }
 
 #content {
     width: 320px;
 }
 
+/* Was display:table, which shrink-wraps to its content rather than filling the popup width */
 #body {
-    display: table;
+    display: block;
 }
 
-/* header section */
+/* Main body panel between the header and footer.
+   Was a fixed 445px tall with a white swirl background image. The fixed height left a band of
+   dead space under the short sections (Settings, About) and overflowed the long ones, so the
+   panel now sizes to its content and Chrome sizes the popup to match. */
 .background-img {
-    background: url(background.png) no-repeat;
-    background-size: cover;
-    height: 445px;
+    background-color: var(--sr-bg);
+    padding: var(--sr-space-lg) var(--sr-gutter);
+}
+
+/* The header, body and footer panels are full-bleed, so each supplies its own gutter. Keeping
+   them equal is what makes the three panels line up down the left and right edges. */
+#header > div,
+#footer > div {
+    padding-left: var(--sr-gutter);
+    padding-right: var(--sr-gutter);
+}
+
+/* Form groups set the vertical rhythm of the search form */
+#searchReplaceForm .form-group + .form-group,
+.swap-row + .form-group {
+    margin-top: var(--sr-space-md);
+}
+
+/* Reserves no space until popup.ts renders a hint into it */
+#hints:empty {
+    display: none;
+}
+
+#searchReplaceForm label {
+    display: inline-block;
+    margin-bottom: var(--sr-space-xs);
+}
+
+/* Row holding the match count and the swap button, between the two text areas */
+.swap-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sr-space-sm);
+    margin-top: var(--sr-space-sm);
+}
+
+#searchTermCount {
+    color: var(--sr-muted);
+    text-align: left;
+}
+
+#swapTerms {
+    width: auto;
+    padding: 2px var(--sr-space-sm);
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+/* The option checkboxes read as one group, set apart from the fields above them */
+.options-group {
+    margin-top: var(--sr-space-lg);
+    padding-top: var(--sr-space-lg);
+    border-top: 1px solid var(--sr-border);
+}
+
+.options-group .form-check {
+    margin-bottom: var(--sr-space-xs);
+    min-height: auto;
+}
+
+.options-group .form-check:last-child {
+    margin-bottom: 0;
+}
+
+.options-group .form-check-label {
+    cursor: pointer;
+}
+
+/* Back link at the top of the Settings, About and History sections */
+#settingSection #back,
+#aboutSection #back,
+#historySection #back {
+    align-items: center;
+    gap: var(--sr-space-xs);
+    margin-bottom: var(--sr-space-sm);
+}
+
+#settingSection h5,
+#aboutSection h5,
+#historySection h5 {
+    font-size: 16px;
+    margin-bottom: var(--sr-space-md);
 }
 
 .shadow-top {
@@ -73,8 +191,12 @@ a {
     border-top-right-radius: 12px;
 }
 
+/* Title block in the header: logo and name on one baseline, never wrapped */
 .display-flow {
-    display: flow;
+    display: flex;
+    align-items: center;
+    gap: var(--sr-space-sm);
+    white-space: nowrap;
 }
 
 .cursor-point {
@@ -85,38 +207,52 @@ a {
     font-size: 22px;
 }
 
+/* The header's icon buttons, spaced evenly rather than crowded together, and kept on one row */
+#header form {
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+}
+
+/* The markup carries .mx-1, which bootstrap declares !important, so the gap above would be
+   added to it and the five icons would wrap onto a second row */
+#header form > .form-group {
+    margin: 0 !important;
+}
+
+#header form a {
+    display: flex;
+    align-items: center;
+}
+
 .icon-selected {
-    border-bottom: solid #25BE47;
+    border-bottom: 2px solid var(--sr-accent);
     padding-bottom: 2px;
 }
 
 .icon-selected a i svg path {
-  fill: #25BE47; /* Original color */
+    fill: var(--sr-accent);
 }
 
 /* body section */
 
-.first-row {
-    padding-top: 35px;
-}
-
 .bg-button {
-    background-color: #10892B;
-    color: white!important;
+    background-color: var(--sr-button-bg);
+    color: var(--sr-text) !important;
 }
 
 .bg-button:hover {
-    background-color: #25BE47!important;
-    color: white!important;
+    background-color: var(--sr-button-bg-hover) !important;
+    color: var(--sr-text) !important;
 }
 
 .text-color {
-    color: #10892B;
+    color: var(--sr-accent);
 }
 
 .form-check-input:checked {
-    background-color: rgb(66, 201, 122);
-    border-color: rgb(66, 201, 122);
+    background-color: var(--sr-control);
+    border-color: var(--sr-control);
 }
 
 .content {
@@ -141,6 +277,19 @@ a {
     min-height: 54px;
 }
 
+/* The two action buttons share the footer evenly and must not wrap: "Replace Next" used to
+   break onto a second line while "Replace All" stayed on one, leaving them different heights */
+#footer .d-flex {
+    gap: var(--sr-space-md);
+}
+
+#replaceNext,
+#replaceAll {
+    flex: 1 1 0;
+    white-space: nowrap;
+    padding: var(--sr-space-sm);
+}
+
 .historyRow-0 {
     background-color: #f5f5f5;
 }
@@ -150,8 +299,9 @@ a {
 }
 
 #clearHistory {
-    width: 30%;
-    margin: 0 auto;
+    width: auto;
+    padding: var(--sr-space-xs) var(--sr-space-md);
+    margin: var(--sr-space-sm) 0 0 auto;
 }
 
 #swapTerms {

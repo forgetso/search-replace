@@ -24,10 +24,6 @@ chrome.runtime.onConnect.addListener(function (port) {
 
 // Listen for messages from the content script
 chrome.runtime.onMessage.addListener(function (msg: SearchReplaceResponse, sender, sendResponse) {
-    console.log(
-        "BACKGROUND: Received message from content script's sendResponse in listenerContentResponse",
-        msg.action
-    )
     if (msg.action === 'searchReplaceResponseBackground') {
         ;(async () => {
             await listenerContentResponse(msg)
@@ -55,22 +51,12 @@ chrome.tabs.onUpdated.addListener(function (tabId, info) {
     listenerApplySavedInstances(info)
 })
 
-// Listen for storage changes
-// chrome.storage.onChanged.addListener(function (changes, areaName) {
-//     console.log('BACKGROUND: Storage changes', changes, areaName)
-//     ;(async () => {
-//         await listenerApplyStoredResponse(changes)
-//     })()
-//     return true
-// })
-
 // Run when popup closes
 chrome.runtime.onConnect.addListener(function (externalPort) {
     externalPort.onDisconnect.addListener(function () {
-        console.log('onDisconnect')
-        removeSearchReplaceResponses().then(() => {
-            console.log('Removed saved responses')
-        })
+        removeSearchReplaceResponses().catch((error) =>
+            console.error('BACKGROUND: Failed to clear saved responses on popup close', error)
+        )
     })
 })
 

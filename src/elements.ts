@@ -24,6 +24,32 @@ export function isInputElement(el: Element): el is HTMLInputElement {
     )
 }
 
+/**
+ * Whether text inside this element is editable by the user, including text in descendants of a
+ * contenteditable container. Those descendants carry no attribute of their own, so an attribute
+ * check alone would miss them.
+ *
+ * Prefers the `isContentEditable` property, which already accounts for inheritance, and falls
+ * back to walking ancestors where that property is unimplemented (jsdom).
+ */
+export function isEditable(el: Element): boolean {
+    if (typeof (el as HTMLElement).isContentEditable === 'boolean') {
+        return (el as HTMLElement).isContentEditable
+    }
+    let ancestor: Element | null = el
+    while (ancestor) {
+        const editable = ancestor.getAttribute('contenteditable')
+        if (editable === 'true' || editable === '') {
+            return true
+        }
+        if (editable === 'false') {
+            return false
+        }
+        ancestor = ancestor.parentElement
+    }
+    return false
+}
+
 export function isBlobIframe(el: Element) {
     return el.tagName === 'IFRAME' && 'src' in el && typeof el.src === 'string' && el.src.startsWith('blob:')
 }
@@ -40,7 +66,6 @@ export function containsPartialClass(element: Element, partialClass: string) {
 }
 
 export function getLocalIframes(window: Window, document: Document): HTMLIFrameElement[] {
-    console.log('iframes', document.querySelectorAll('iframe'))
     return Array.from(<NodeListOf<HTMLIFrameElement>>document.querySelectorAll('iframe')).filter((iframe) => {
         return iframe.src === '' || iframe.src === 'about:blank' || iframe.srcdoc || iframe.src === window.location.href
     })
@@ -61,22 +86,30 @@ export function getBlobIframes(document: Document): HTMLIFrameElement[] {
     return blobIframes
 }
 
-export const waitForIframeLoad = async (iframe: HTMLIFrameElement): Promise<HTMLIFrameElement | null> => {
-    return new Promise((resolve, reject) => {
-        if (iframe.contentDocument) {
-            if (iframe.contentDocument.readyState !== 'complete') {
-                iframe.contentDocument.onreadystatechange = () => {
-                    if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-                        resolve(iframe)
-                    }
-                }
-            } else {
+/** How long to wait for an iframe to finish loading before giving up on searching it */
+export const IFRAME_LOAD_TIMEOUT_MS = 2000
+
+export const waitForIframeLoad = async (
+    iframe: HTMLIFrameElement,
+    timeoutMs = IFRAME_LOAD_TIMEOUT_MS
+): Promise<HTMLIFrameElement | null> => {
+    return new Promise((resolve) => {
+        if (!iframe.contentDocument) {
+            resolve(iframe.srcdoc ? iframe : null)
+            return
+        }
+        if (iframe.contentDocument.readyState === 'complete') {
+            resolve(iframe)
+            return
+        }
+        // An iframe that never reaches `complete` would otherwise leave this promise pending
+        // forever, and searchReplace awaits it, so the whole search would hang
+        const timeout = setTimeout(() => resolve(null), timeoutMs)
+        iframe.contentDocument.onreadystatechange = () => {
+            if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+                clearTimeout(timeout)
                 resolve(iframe)
             }
-        } else if (iframe.srcdoc) {
-            resolve(iframe)
-        } else {
-            resolve(null)
         }
     })
 }
@@ -203,7 +236,6 @@ export function elementIsVisible(element: HTMLElement, ancestorCheck = true, clo
 
 export function getInitialIframeElement(iframe: HTMLIFrameElement): HTMLElement | null {
     let element: HTMLElement | null = null
-    console.log('iframe', iframe)
     if (iframe.srcdoc) {
         return iframe
     }
@@ -215,7 +247,7 @@ export function getInitialIframeElement(iframe: HTMLIFrameElement): HTMLElement 
 
 export function copyElementAndRemoveSelectedElements(
     originalElement: HTMLElement,
-    selectorFn: (e: HTMLElement, ...args: any) => boolean,
+    selectorFn: (e: HTMLElement) => boolean,
     clone = true
 ) {
     let elementCopy = originalElement

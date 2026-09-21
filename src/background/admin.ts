@@ -38,16 +38,12 @@ function combineHistory(messageStorage: SearchReplaceStorageItems | undefined, s
 export async function setupStorage(msg: SearchReplaceBackgroundMessage) {
     // Get the various stored values
     const { storage } = (await chrome.storage.local.get(['storage'])) as SearchReplacePopupStorage
-    //console.log('BACKGROUND: saved storage is', storage)
     const instance: SearchReplaceInstance = msg.storage ? msg.storage.instance : storage.instance
-    //console.log('BACKGROUND: instance is: ', instance)
     // Allows the edit rules page to not have to send back history
     const history: SearchReplaceInstance[] = combineHistory(msg.storage, storage)
-    //console.log('BACKGROUND: history is: ', history)
     const url = msg.url
     const savedInstances: SavedInstances = storage.saved || {}
     const hintPreferences = { ...(storage.hintPreferences || {}), ...(msg.storage?.hintPreferences || {}) }
-    //console.log('BACKGROUND: SavedInstances is: ', savedInstances)
     return { instance, history, url, savedInstances, storage, hintPreferences }
 }
 
@@ -67,7 +63,6 @@ export async function listenerAdmin(msg: SearchReplaceBackgroundMessage, port: c
             // Clearing the history in the popup
             await saveStorage(instance, [], savedInstances)
         } else if (msg.action === 'save' && instance.options.save && url) {
-            console.log('save message received', msg)
             // Saving a SearchReplaceInstance for use on subsequent page loads
             const instanceId = msg['instanceId']
             const newInstance: SavedSearchReplaceInstance = {

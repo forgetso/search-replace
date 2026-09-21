@@ -17,7 +17,6 @@ async function saveSearchReplaceResponse(response: SearchReplaceResponse) {
     ).toString()
     const key = `savedResponse-${id}`
     const savedResponse = await getSearchReplaceResponse(Number(id))
-    console.log(`Saved response for ${id}?:`, JSON.stringify(savedResponse, null, 4))
     if (!response.inIframe) {
         const storage: SavedSearchReplaceResponseStorage =
             savedResponse && savedResponse.iframes
@@ -59,7 +58,6 @@ export async function removeSearchReplaceResponses(key?: string) {
 async function checkPreviousResponse(msg: SearchReplaceResponse) {
     if (msg.instance.instanceId) {
         const previousResponse = await getSearchReplaceResponse(msg.instance.instanceId)
-        console.log('BACKGROUND: Got content response', JSON.stringify(msg, null, 4))
         // get the previous response that will contain either the parent and / or the iframe responses
         if (previousResponse) {
             // assume the current msg is not in an iframe and the previousResponse contains the iframe responses
@@ -87,7 +85,6 @@ async function checkPreviousResponse(msg: SearchReplaceResponse) {
                 // if the total number in msg.backGroundReceived is equal to the number of iframes then we're good,
                 // send the response to the popup.
                 if (mergedResult.backgroundReceived === mergedResult.iframes) {
-                    console.log('Sending merged result to popup', JSON.stringify(mergedResult, null, 4))
                     await chrome.runtime.sendMessage(mergedResult)
                     await removeSearchReplaceResponses(`savedResponse-${msg.instance.instanceId}`)
                 }
@@ -98,23 +95,19 @@ async function checkPreviousResponse(msg: SearchReplaceResponse) {
 
 export async function listenerContentResponse(msg: SearchReplaceResponse) {
     msg.action = 'searchReplaceResponseMerged'
-    // console.log('BACKGROUND: Received msg from content', JSON.stringify(msg, null, 4))
     if (!msg.inIframe && msg.iframes === 0) {
-        console.log('BACKGROUND: Sending msg to popup immediately', JSON.stringify(msg, null, 4))
         await chrome.runtime.sendMessage(msg)
     } else if (!msg.inIframe && msg.iframes > 0) {
-        console.log('Storing parent response', JSON.stringify(msg, null, 4))
         // save the response as a WIP
         await saveSearchReplaceResponse(msg) // --> triggers storage change listener
     } else if (msg.inIframe) {
         // note that we've received a response from the iframe
         msg.backgroundReceived = msg.backgroundReceived += 1
-        console.log('Storing iframe response', JSON.stringify(msg, null, 4))
         // save the response as a WIP
         await saveSearchReplaceResponse(msg) // --> triggers storage change listener
     }
 
-    checkPreviousResponse(msg).then(() => {
-        console.log('BACKGROUND: checkPreviousResponse complete')
-    })
+    // Must be awaited: background.ts calls `sendResponse()` as soon as this resolves, and an
+    // un-awaited promise here also means a rejection would go unreported
+    await checkPreviousResponse(msg)
 }

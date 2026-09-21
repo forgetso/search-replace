@@ -1,0 +1,24 @@
+# Generated or vendored
+node_modules
+dist
+coverage
+releases
+package-lock.json
+bootstrap-5.3.0-dist
+search_and_replace_*
+assets/bootstrap*
+
+# Cypress output
+src/cypress/screenshots
+src/cypress/videos
+
+# Large HTML fixtures and hand-maintained extension pages are not prettier-managed
+tests
+assets/*.html
+_locales
+
+# YAML and markdown are left alone: prettier's 4-space indent fights the 2-space convention
+# used by the workflows and docker-compose, for no benefit
+*.yml
+*.yaml
+*.md

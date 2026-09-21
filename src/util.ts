@@ -11,7 +11,7 @@ import {
     TranslationProxy,
 } from './types'
 
-export const cyrb53 = (str, seed = 0) => {
+export const cyrb53 = (str: string, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
         h2 = 0x41c6ce57 ^ seed
     for (let i = 0, ch; i < str.length; i++) {
@@ -44,7 +44,9 @@ export function tabConnect() {
 let manifestJSON = {
     version: 'test',
 }
-if (chrome && chrome.runtime) {
+// `typeof` guard rather than a truthiness check: `chrome` is not merely falsy but *undeclared*
+// outside an extension context (e.g. under jest), where a bare reference throws a ReferenceError
+if (typeof chrome !== 'undefined' && chrome.runtime) {
     manifestJSON = chrome.runtime.getManifest()
 }
 export const manifest = manifestJSON
@@ -66,7 +68,6 @@ export function clearSavedResponses(): Promise<void> {
 export function getTranslation(): Promise<LangFile> {
     return new Promise((resolve) => {
         chrome.runtime.sendMessage({ action: 'getTranslation' }, (translation) => {
-            console.log('UTIL: getTranslation', translation)
             resolve(translation)
         })
     })
@@ -98,14 +99,13 @@ export function createTranslationProxy(translationData: LangFile): TranslationPr
 }
 
 // Function to localize HTML elements using translation data
-export function localizeElements(translationData: LangFile, callback: () => void) {
+export function localizeElements(translationData: LangFile, callback?: () => void) {
     chrome.storage.onChanged.addListener((changes, areaName) => {
         if (areaName === 'sync' && 'preferredLanguage' in changes) {
             // Reload the page when the preferredLanguage is changed
             location.reload()
         }
     })
-    console.log('UTIL: localizeElements, translationData', translationData)
     document.querySelectorAll('[data-locale]').forEach((elem) => {
         const element = elem as HTMLElement
         const localeKey = element.getAttribute('data-locale')
@@ -122,7 +122,7 @@ export function localizeElements(translationData: LangFile, callback: () => void
             element.innerHTML = innerString // Use innerHTML to render HTML content
         }
     })
-    callback();
+    callback?.()
 }
 
 export function getExtensionStorage<T>(key: string): Promise<T | undefined> {

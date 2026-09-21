@@ -1,0 +1,12 @@
+{
+    // Unit tests and the vitest config. Separate from tsconfig.json because vitest's type
+    // definitions require "bundler" module resolution, which Cypress's ts-node cannot use.
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "types": ["chrome", "node"]
+    },
+    "include": ["src/**/*.ts", "vitest.config.mts"],
+    "exclude": ["node_modules", "dist", "src/cypress", "src/cypress.config.ts"]
+}
