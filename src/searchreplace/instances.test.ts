@@ -93,13 +93,45 @@ describe('what is in scope', () => {
 })
 
 describe('markup matches', () => {
-    test('a match in a tag is charged to the innermost element that explains it', () => {
+    test('a match in a tag is charged to the element whose tag it is', () => {
         const config = html({ searchTerm: '<b', searchPattern: /<b/g, globalSearchPattern: /<b/g })
         const instances = collect('<div><p>a <b>bold</b> word</p></div>', config)
+
+        expect(summariseInstances(instances)).toEqual({ tag: 1 })
+        const tag = instances.find((instance) => instance.kind === 'tag')
+        expect(tag?.kind === 'tag' && tag.element.tagName).toBe('B')
+    })
+
+    test('one instance per element, however deeply they nest', () => {
+        // An ancestor's innerHTML repeats every descendant's tag, so charging matches to
+        // innerHTML counted the same <div once per level of nesting
+        const config = html({ searchTerm: '<div', searchPattern: /<div/g, globalSearchPattern: /<div/g })
+        const instances = collect('<div><div><div>x</div></div></div>', config)
+
+        expect(countInstances(instances)).toBe(3)
+    })
+
+    test('a term spanning a tag boundary falls back to the innermost element holding it', () => {
+        const term = '<span>x</span>'
+        const pattern = /<span>x<\/span>/g
+        const config = html({ searchTerm: term, searchPattern: pattern, globalSearchPattern: pattern })
+        const instances = collect('<div id="outer"><p><span>x</span></p></div>', config)
 
         expect(summariseInstances(instances)).toEqual({ markup: 1 })
         const markup = instances.find((instance) => instance.kind === 'markup')
         expect(markup?.kind === 'markup' && markup.element.tagName).toBe('P')
+    })
+
+    test('rewriting a tag keeps the children it had', () => {
+        const config = html({ searchTerm: '<b', searchPattern: /<b/g, globalSearchPattern: /<b/g })
+        document.body.innerHTML = '<p><b>bold <i id="kept">and italic</i></b></p>'
+        const kept = document.getElementById('kept')
+        const instances = collectInstances(document.body, config)
+
+        applyInstance(instances[0], { ...config, replaceTerm: '<strong' }, true)
+
+        expect(document.getElementById('kept')).toBe(kept)
+        expect(document.querySelector('strong')?.textContent).toBe('bold and italic')
     })
 
     test('text that a text node already explains is not counted twice', () => {

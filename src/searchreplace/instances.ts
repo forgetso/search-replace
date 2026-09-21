@@ -23,11 +23,17 @@ export type MatchInstance =
     /** An attribute value, e.g. the href of a link. Only in scope when replacing HTML. */
     | { kind: 'attribute'; element: Element; name: string; matches: number }
     /**
-     * A match that exists only in the markup — `<p`, or a term spanning a tag boundary — and so
-     * cannot be written through a text node or an attribute. Replacing it rewrites the
-     * element's innerHTML, which is the destructive operation this module otherwise avoids, so
-     * it is confined to the innermost element that can account for the match and is only used
-     * where the surplus cannot be explained any other way.
+     * A match in an element's own tags, e.g. searching for `<div`. Replacing it rebuilds the
+     * element from the rewritten tag and moves the existing children across, so everything
+     * beneath keeps its identity.
+     */
+    | { kind: 'tag'; element: Element; matches: number }
+    /**
+     * A match spanning a tag boundary, e.g. `<span>x</span>`, which no single tag, attribute or
+     * text node holds. Replacing it rewrites the element's innerHTML, the destructive operation
+     * this module otherwise avoids, so it is a last resort: only for what nothing else can
+     * account for, only on the innermost element that explains it, and never on an element
+     * whose subtree holds anything out of scope.
      */
     | { kind: 'markup'; element: Element; matches: number }
 
@@ -137,6 +143,15 @@ export function collectInstances(root: Node, config: SearchReplaceConfig): Match
         }
         const element = node as Element
         elements.push(element)
+        if (element === root) {
+            // The search is of what is *inside* the root, as innerHTML always was. Its own tags
+            // and attributes are the frame around that, not part of it — and counting them
+            // means a search for `<b` matches `<body>`, whose replacement would swap out the
+            // body element itself.
+            continue
+        }
+
+        let inAttributes = 0
         for (const attribute of Array.from(element.attributes)) {
             if (attribute.name.match(NOT_AN_ATTRIBUTE_MATCH)) {
                 continue
@@ -144,9 +159,18 @@ export function collectInstances(root: Node, config: SearchReplaceConfig): Match
             const matches = countMatches(attribute.value, config)
             if (matches > 0) {
                 instances.push({ kind: 'attribute', element, name: attribute.name, matches })
+                inAttributes += matches
                 // An attribute of E shows up in E's *parent's* innerHTML, not E's own
                 account(element.parentElement, matches)
             }
+        }
+
+        // The element's own tags, children excluded: `<div class="x"></div>`. Attribute values
+        // live inside the opening tag, so what they already account for comes back off.
+        const inTags = countMatches(tagsOf(element), config) - inAttributes
+        if (inTags > 0) {
+            instances.push({ kind: 'tag', element, matches: inTags })
+            account(element.parentElement, inTags)
         }
     }
 
@@ -186,6 +210,11 @@ function collectMarkupInstances(
     }
 }
 
+/** An element's opening and closing tags with nothing between them */
+function tagsOf(element: Element): string {
+    return (element.cloneNode(false) as Element).outerHTML
+}
+
 function isInputLike(element: Element | null): boolean {
     return !!element && /^(?:INPUT|TEXTAREA)$/i.test(element.tagName)
 }
@@ -200,6 +229,8 @@ function readInstance(instance: MatchInstance): string {
             return instance.node.data
         case 'attribute':
             return instance.element.getAttribute(instance.name) ?? ''
+        case 'tag':
+            return tagsOf(instance.element)
         case 'markup':
             return instance.element.innerHTML
     }
@@ -215,10 +246,34 @@ function writeInstance(instance: MatchInstance, value: string): void {
         case 'attribute':
             instance.element.setAttribute(instance.name, value)
             break
+        case 'tag':
+            rewriteTags(instance.element, value)
+            break
         case 'markup':
             instance.element.innerHTML = value
             break
     }
+}
+
+/**
+ * Swaps an element for one built from `tags`, carrying the existing children across.
+ *
+ * Assigning to outerHTML would reparse the children too and hand back new nodes; moving them
+ * keeps every descendant's identity, and with it the page's listeners and focus.
+ */
+function rewriteTags(element: Element, tags: string): void {
+    const template = element.ownerDocument.createElement('template')
+    template.innerHTML = tags
+    const replacement = template.content.firstElementChild
+    if (!replacement || template.content.childElementCount !== 1) {
+        // The rewritten tag did not parse to a single element — a search that mangled the
+        // markup. Leaving the element alone is better than replacing the page with rubble.
+        return
+    }
+    while (element.firstChild) {
+        replacement.appendChild(element.firstChild)
+    }
+    element.replaceWith(replacement)
 }
 
 /**
