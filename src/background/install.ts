@@ -10,8 +10,16 @@ const DEFAULT_LANGUAGE = 'en'
 /** The bundle listed under content_scripts in manifest.json */
 const CONTENT_SCRIPT = 'searchreplace.js'
 
-/** Kept in step with the `matches` patterns of the content script in manifest.json */
-const CONTENT_SCRIPT_MATCHES = ['http://*/*', 'https://*/*', 'file:///*']
+/**
+ * Tabs to inject into on install and update.
+ *
+ * These are the `host_permissions` from manifest.json, not the content script's `matches`, which
+ * also include `file:///*`. Without the `tabs` permission, querying by a URL pattern — and
+ * reading a tab's URL at all — works only where a host permission covers it, so file:// pages
+ * still need a manual reload. That is a fair trade for not asking every user to approve the
+ * "Read your browsing history" warning that `tabs` carries.
+ */
+const INJECTABLE_TABS = ['http://*/*', 'https://*/*']
 
 /**
  * The first browser UI language we also ship a translation for, else English.
@@ -38,7 +46,7 @@ export async function injectContentScriptIntoOpenTabs(): Promise<number[]> {
     const injected: number[] = []
     let tabs: chrome.tabs.Tab[] = []
     try {
-        tabs = await chrome.tabs.query({ url: CONTENT_SCRIPT_MATCHES })
+        tabs = await chrome.tabs.query({ url: INJECTABLE_TABS })
     } catch (error) {
         console.error('BACKGROUND: Could not list open tabs to inject into', error)
         return injected
