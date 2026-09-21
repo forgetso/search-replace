@@ -76,7 +76,7 @@ a {
     display: flex;
     flex-direction: column;
     gap: var(--sr-space-xs);
-    max-height: 380px;
+    max-height: 340px;
     overflow-y: auto;
     margin: 0;
     padding-inline-start: 0;
@@ -367,9 +367,8 @@ body.side-panel #footer > div {
     border-top-right-radius: 12px;
 }
 
-/* Title block in the header: logo and name on one baseline, never wrapped. It is allowed to
-   shrink so that a long translation of the extension name is trimmed rather than pushing the
-   row of icons past the edge of the popup. */
+/* Title block in the header: logo and name on one baseline, never wrapped. The ellipsis is a
+   safety net for a translation longer than the popup; it has the whole row to itself. */
 .display-flow {
     display: flex;
     align-items: center;
@@ -391,25 +390,25 @@ body.side-panel #footer > div {
     font-size: 22px;
 }
 
-/* The header's icon buttons, spaced evenly rather than crowded together, and kept on one row.
-   The markup used to carry bootstrap's .flex-wrap, whose !important beat the nowrap here, so
-   this never actually held — it only looked like it did while five icons happened to fit. The
-   sixth, the side panel toggle, dropped onto a second row.
-   `flex: none` makes the title give up space first: it is already set to ellipsise. */
-#header form {
+/* The header's icon buttons sit on their own row under the title.
+   They used to share the line with it, which left six icons and a title fighting over 320px:
+   the icons ended up crowded together and the title was trimmed to "Search and Repl...". On
+   their own row they have the whole width, so they can be spaced properly. */
+.header-actions {
+    display: flex;
     align-items: center;
-    flex: none;
     flex-wrap: nowrap;
-    gap: 4px;
+    gap: var(--sr-space-md);
+    margin-top: 6px;
 }
 
 /* The markup carries .mx-1, which bootstrap declares !important, so the gap above would be
-   added to it and the five icons would wrap onto a second row */
-#header form > .form-group {
+   added to it and the icons would spread unevenly */
+.header-actions > .form-group {
     margin: 0 !important;
 }
 
-#header form a {
+.header-actions a {
     display: flex;
     align-items: center;
 }
