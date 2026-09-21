@@ -9,7 +9,7 @@
         "watch": "node scripts/build.mjs --dev --watch",
         "build": "node scripts/build.mjs",
         "build:dev": "node scripts/build.mjs --dev",
-        "release": "zip -r ./releases/search_and_replace_$npm_package_version.zip ./dist",
+        "release": "npm run build && mkdir -p releases && cd dist && zip -qr ../releases/search_and_replace_$npm_package_version.zip .",
         "start": "light-server --no-reload -s . -p 9000 -w \"**/*.html,**/*.css,**/*.js,**/*.gz\"",
         "typecheck": "tsc --noEmit && tsc --noEmit --project tsconfig.test.json && tsc --noEmit --project src/cypress/tsconfig.json",
         "lint": "eslint 'src/**/*.ts' 'scripts/*.mjs'",
