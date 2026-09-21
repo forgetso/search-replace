@@ -13,6 +13,16 @@ export const RICH_TEXT_EDITORS = {
  */
 export const ELEMENT_FILTER = /^(HTML|HEAD|SCRIPT|STYLE|IFRAME)$/i
 export const INPUT_TEXTAREA_CONTENT_EDITABLE_SELECTOR = 'input,textarea,*[contenteditable="true"]'
+
+/** The bundle listed under content_scripts in manifest.json, and injected on demand */
+export const CONTENT_SCRIPT_FILE = 'searchreplace.js'
+
+/**
+ * Chrome's wording when `tabs.sendMessage` finds nobody listening in the target tab, which
+ * happens when the page was loaded before the extension, or when the extension has been
+ * reloaded or auto-updated since the page was loaded, orphaning its content script.
+ */
+export const NO_RECEIVER_MESSAGE = 'Receiving end does not exist'
 export const HINTS: Record<string, Hint> = {
     gmail: {
         hint: 'Hint: Gmail detected. Check "Input fields only?" when editing draft emails.',
