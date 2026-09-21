@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "A definição acompanha o seu perfil do Chrome, e o atalho de teclado <code>Ctrl+Shift+S</code> abre aquele que tiver escolhido. O painel lateral requer o Chrome 114 ou mais recente; em versões anteriores a definição não é apresentada.",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "Abrir no painel lateral",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "Fechar o painel lateral",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

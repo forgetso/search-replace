@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "이 설정은 Chrome 프로필을 따라가며, 키보드 단축키 <code>Ctrl+Shift+S</code>는 선택한 쪽을 엽니다. 사이드 패널은 Chrome 114 이상이 필요하고, 그보다 낮은 버전에서는 이 설정이 표시되지 않습니다.",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "사이드 패널에서 열기",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "사이드 패널 닫기",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

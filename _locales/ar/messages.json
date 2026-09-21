@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "يتبع هذا الإعداد ملفك الشخصي في كروم، ويفتح اختصار لوحة المفاتيح <code>Ctrl+Shift+S</code> ما اخترته منهما. وتتطلب اللوحة الجانبية كروم 114 أو أحدث؛ ولا يظهر الإعداد في الإصدارات الأقدم.",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "الفتح في اللوحة الجانبية",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "إغلاق اللوحة الجانبية",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

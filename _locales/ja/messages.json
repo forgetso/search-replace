@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "この設定は Chrome のプロファイルに従い、キーボードショートカット <code>Ctrl+Shift+S</code> は選んだ方を開きます。サイドパネルには Chrome 114 以降が必要で、それより古い場合この設定は表示されません。",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "サイドパネルで開く",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "サイドパネルを閉じる",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

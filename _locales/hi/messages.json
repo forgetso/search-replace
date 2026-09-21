@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "यह सेटिंग आपकी Chrome प्रोफ़ाइल के साथ चलती है, और कीबोर्ड शॉर्टकट <code>Ctrl+Shift+S</code> वही खोलता है जो आपने चुना है। साइड पैनल के लिए Chrome 114 या नया चाहिए; उससे पुराने में यह सेटिंग नहीं दिखती।",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "साइड पैनल में खोलें",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "साइड पैनल बंद करें",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

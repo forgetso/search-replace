@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "The setting follows your Chrome profile, and the keyboard shortcut <code>Ctrl+Shift+S</code> opens whichever one you have chosen. The side panel needs Chrome 114 or newer; on anything older the setting is not shown.",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "Open in the side panel",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "Close the side panel",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

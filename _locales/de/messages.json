@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "Die Einstellung folgt Ihrem Chrome-Profil, und das Tastenkürzel <code>Strg+Umschalt+S</code> öffnet jeweils die gewählte Variante. Die Seitenleiste erfordert Chrome 114 oder neuer; in älteren Versionen wird die Einstellung nicht angezeigt.",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "In der Seitenleiste öffnen",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "Seitenleiste schließen",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

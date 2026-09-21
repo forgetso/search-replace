@@ -55,6 +55,53 @@ function isSidePanel(): boolean {
     return new URLSearchParams(globalThis.location.search).get('surface') === 'sidepanel'
 }
 
+/**
+ * The window this document belongs to, looked up once on load.
+ *
+ * `sidePanel.open` has to be called while the user gesture that triggered it is still in effect,
+ * and awaiting `windows.getCurrent()` inside the click handler risks spending it, so the id is
+ * fetched ahead of time and used synchronously.
+ */
+let currentWindowId: number | undefined
+
+/**
+ * Opens the side panel from the popup, and closes it from within itself.
+ *
+ * There is no `sidePanel.close()`; closing the panel is done by the panel document closing its
+ * own window, which is also how the popup dismisses itself once the panel has taken over.
+ */
+function setUpSidePanelToggle(translationFn: TranslationProxy) {
+    const toggle = document.getElementById('sidePanelToggle')
+    if (!toggle || !sidePanelAvailable()) {
+        return
+    }
+    toggle.classList.remove('d-none')
+
+    const showingPanel = isSidePanel()
+    toggle.querySelector('.side-panel-open')?.classList.toggle('d-none', showingPanel)
+    toggle.querySelector('.side-panel-close')?.classList.toggle('d-none', !showingPanel)
+
+    const link = toggle.querySelector('a')
+    if (link) {
+        link.title = translationFn(showingPanel ? 'close_side_panel' : 'open_side_panel')
+    }
+
+    toggle.addEventListener('click', function (event) {
+        event.preventDefault()
+        if (showingPanel) {
+            globalThis.close()
+            return
+        }
+        if (currentWindowId === undefined) {
+            return
+        }
+        chrome.sidePanel
+            .open({ windowId: currentWindowId })
+            .then(() => globalThis.close())
+            .catch((error) => console.error('POPUP: Could not open the side panel', error))
+    })
+}
+
 function getSearchTermElement() {
     return <HTMLTextAreaElement>document.getElementById(SEARCH_TERM_INPUT_ID)
 }
@@ -75,6 +122,14 @@ window.addEventListener('DOMContentLoaded', async function () {
         document.body.classList.add('side-panel')
         watchActiveTab(translationFn)
     }
+
+    if (sidePanelAvailable()) {
+        chrome.windows
+            .getCurrent()
+            .then((currentWindow) => (currentWindowId = currentWindow.id))
+            .catch((error) => console.error('POPUP: Could not identify the current window', error))
+    }
+    setUpSidePanelToggle(translationFn)
 
     // Update popup version number and GitHub link dynamically with manifest.version
     for (const id of ['version_number', 'github_version_number']) {
@@ -379,12 +434,9 @@ async function loadOpenInOptions() {
         // than leaving the user to work out that they have to click the toolbar button again.
         // The change event is the user gesture that sidePanel.open requires, so this cannot be
         // deferred until after the storage write settles.
-        if (openIn === 'sidePanel' && !isSidePanel()) {
-            chrome.windows
-                .getCurrent()
-                .then((window) =>
-                    window.id !== undefined ? chrome.sidePanel.open({ windowId: window.id }) : undefined
-                )
+        if (openIn === 'sidePanel' && !isSidePanel() && currentWindowId !== undefined) {
+            chrome.sidePanel
+                .open({ windowId: currentWindowId })
                 .then(() => globalThis.close())
                 .catch((error) => console.error('POPUP: Could not open the side panel', error))
         }

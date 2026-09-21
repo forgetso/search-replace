@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "该设置随你的 Chrome 配置文件同步，键盘快捷键 <code>Ctrl+Shift+S</code> 会打开你所选择的那一种。侧边栏需要 Chrome 114 或更高版本；更早的版本不会显示此设置。",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "在侧边栏中打开",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "关闭侧边栏",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

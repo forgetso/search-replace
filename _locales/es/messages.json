@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "El ajuste sigue a su perfil de Chrome, y el atajo de teclado <code>Ctrl+Mayús+S</code> abre el que haya elegido. El panel lateral necesita Chrome 114 o posterior; en versiones anteriores el ajuste no se muestra.",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "Abrir en el panel lateral",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "Cerrar el panel lateral",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

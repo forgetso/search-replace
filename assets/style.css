@@ -391,11 +391,16 @@ body.side-panel #footer > div {
     font-size: 22px;
 }
 
-/* The header's icon buttons, spaced evenly rather than crowded together, and kept on one row */
+/* The header's icon buttons, spaced evenly rather than crowded together, and kept on one row.
+   The markup used to carry bootstrap's .flex-wrap, whose !important beat the nowrap here, so
+   this never actually held — it only looked like it did while five icons happened to fit. The
+   sixth, the side panel toggle, dropped onto a second row.
+   `flex: none` makes the title give up space first: it is already set to ellipsise. */
 #header form {
     align-items: center;
+    flex: none;
     flex-wrap: nowrap;
-    gap: 6px;
+    gap: 4px;
 }
 
 /* The markup carries .mx-1, which bootstrap declares !important, so the gap above would be

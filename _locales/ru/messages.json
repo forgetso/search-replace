@@ -554,5 +554,13 @@
     "sidebar_p3": {
         "message": "Настройка привязана к вашему профилю Chrome, а сочетание клавиш <code>Ctrl+Shift+S</code> открывает выбранный вариант. Боковая панель требует Chrome 114 или новее; в более старых версиях настройка не отображается.",
         "description": "Help section on the side panel"
+    },
+    "open_side_panel": {
+        "message": "Открыть в боковой панели",
+        "description": "Tooltip on the side panel icon in the popup"
+    },
+    "close_side_panel": {
+        "message": "Закрыть боковую панель",
+        "description": "Tooltip on the side panel icon when shown in the panel"
     }
 }

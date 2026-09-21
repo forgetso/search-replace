@@ -22,7 +22,7 @@
                         and
                         Replace</span>
                 </div>
-                <form class="d-flex flex-wrap">
+                <form class="d-flex">
                     <!--Search and Replace History
                         This is an expandable list of previously searched and replaced terms. Users can click on a term to populate the
                         search and replace fields.
@@ -109,6 +109,30 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 28 28">
                                     <path fill="currentColor"
                                         d="M6.25 4.5A1.75 1.75 0 0 0 4.5 6.25v15.5A1.75 1.75 0 0 0 6 23.482V16.25A2.25 2.25 0 0 1 8.25 14h11.5A2.25 2.25 0 0 1 22 16.25v7.232a1.75 1.75 0 0 0 1.5-1.732V8.786c0-.465-.184-.91-.513-1.238l-2.535-2.535a1.75 1.75 0 0 0-1.238-.513H19v4.25A2.25 2.25 0 0 1 16.75 11h-6.5A2.25 2.25 0 0 1 8 8.75V4.5zm3.25 0v4.25c0 .414.336.75.75.75h6.5a.75.75 0 0 0 .75-.75V4.5zm11 19v-7.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v7.25zM3 6.25A3.25 3.25 0 0 1 6.25 3h12.965a3.25 3.25 0 0 1 2.298.952l2.535 2.535c.61.61.952 1.437.952 2.299V21.75A3.25 3.25 0 0 1 21.75 25H6.25A3.25 3.25 0 0 1 3 21.75z" />
+                                </svg>
+                            </i>
+                        </a>
+                    </div>
+                    <!-- Open the side panel, or close it when this document is the panel.
+                         Revealed by popup.ts only where chrome.sidePanel exists. -->
+                    <div id="sidePanelToggle" class="form-group mx-1 d-none">
+                        <a class="fs-10" href="#" title="Open in the side panel">
+                            <i class="side-panel-open">
+                                <svg width="18" height="18" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="2" width="10" height="8" rx="1.25" stroke="#2D2D2D"
+                                        stroke-width="1" />
+                                    <path d="M7.5 2.5h2.25c.41 0 .75.34.75.75v5.5c0 .41-.34.75-.75.75H7.5V2.5z"
+                                        fill="#2D2D2D" />
+                                </svg>
+                            </i>
+                            <i class="side-panel-close d-none">
+                                <svg width="18" height="18" viewBox="0 0 12 12" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="2" width="10" height="8" rx="1.25" stroke="#2D2D2D"
+                                        stroke-width="1" />
+                                    <path d="M3.75 6h3.5M5.75 4.5 7.25 6 5.75 7.5" stroke="#2D2D2D" stroke-width="1"
+                                        stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </i>
                         </a>
