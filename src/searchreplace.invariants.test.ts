@@ -143,6 +143,83 @@ describe.each(OPTION_SETS)('$name', ({ options }) => {
     })
 })
 
+describe.each(OPTION_SETS)('$name', ({ options }) => {
+    describe.each(PAGES)('$name', ({ html }) => {
+        test('each Replace Next takes exactly one match off the count', async () => {
+            // The popup shows the remaining matches, so a press that leaves the number where it
+            // was reads as "I pressed it and nothing happened". Counting and replacing have to
+            // agree about what is a match for this to hold.
+            document.body.innerHTML = html
+            const nextOnly = { ...options, replaceAll: false }
+            let remaining = (await run('count', nextOnly)).searchReplaceResult.count.original
+
+            // Bounded so a count that refuses to fall fails the expectation rather than hanging
+            for (let press = 0; remaining > 0 && press < 20; press++) {
+                await run('searchReplace', nextOnly)
+                const now = (await run('count', nextOnly)).searchReplaceResult.count.original
+                expect(now).toBe(remaining - 1)
+                remaining = now
+            }
+
+            expect(remaining).toBe(0)
+        })
+    })
+})
+
+describe('Replace HTML counts everything it replaces', () => {
+    // Replace HTML means the HTML: script and style contents and attribute values are all in
+    // scope, and are all replaced. The count has to say so, or Replace Next appears to stall on
+    // the matches the count never knew about.
+    const MIXED =
+        '<div>' +
+        '<p>European</p>' +
+        '<script type="application/json">{"region":"European"}</script>' +
+        '<style>.European { color: red; }</style>' +
+        '<a href="/European-news">link</a>' +
+        '</div>'
+
+    test('counts the match in visible text, a script, a style and an attribute', async () => {
+        document.body.innerHTML = MIXED
+
+        const { count } = (await run('count', { replaceHTML: true })).searchReplaceResult
+
+        expect(count.original).toBe(4)
+    })
+
+    test('counts only the visible text when Replace HTML is off', async () => {
+        document.body.innerHTML = MIXED
+
+        const { count } = (await run('count', {})).searchReplaceResult
+
+        expect(count.original).toBe(1)
+    })
+
+    test('replaces every one of them', async () => {
+        document.body.innerHTML = MIXED
+
+        await run('searchReplace', { replaceHTML: true })
+
+        expect(document.body.innerHTML).not.toContain(TERM)
+        expect((await run('count', { replaceHTML: true })).searchReplaceResult.count.original).toBe(0)
+    })
+})
+
+describe('replacing leaves the rest of the page alone', () => {
+    test('a match in one element does not recreate its siblings', async () => {
+        // Assigning to an ancestor's innerHTML destroys and recreates every node beneath it,
+        // which loses focus, selection, event listeners and the DOM identity frameworks hold on
+        // to. Only the element holding the match should be touched.
+        document.body.innerHTML = '<div><p id="target">European</p><p id="untouched">other text</p></div>'
+        const untouched = document.getElementById('untouched')
+        const untouchedText = untouched?.firstChild
+
+        await run('searchReplace', { replaceHTML: true })
+
+        expect(document.getElementById('untouched')).toBe(untouched)
+        expect(untouched?.firstChild).toBe(untouchedText)
+    })
+})
+
 describe('the count the popup displays', () => {
     test('is never negative for a page mixing visible and hidden matches', async () => {
         // The exact shape behind the "-2 matches" report: one visible match and two hidden ones,
@@ -156,22 +233,25 @@ describe('the count the popup displays', () => {
         expect(count.original - count.replaced).toBeGreaterThanOrEqual(0)
     })
 
-    test('KNOWN LIMITATION: Replace HTML also rewrites hidden text', async () => {
-        // Replacing in HTML assigns to the innerHTML of the outermost matching element, which
-        // rewrites its entire subtree — hidden descendants, and the contents of script and
-        // style tags, along with it. So "Hidden content" has no effect in this mode.
-        //
-        // Narrowing the replacement to only fully visible elements was tried and made things
-        // worse: on a real page nearly every container holds a script or a hidden element, so
-        // text sitting directly inside those containers stopped being replaced at all.
-        // Fixing it properly means preserving the excluded subtrees across the rewrite rather
-        // than skipping their ancestors.
-        //
-        // This test pins the current behaviour so the change is visible when it is addressed.
+    test('Replace HTML leaves hidden text alone unless Hidden content is set', async () => {
+        // This was a known limitation for as long as replacing assigned to the innerHTML of the
+        // outermost matching element: that rewrote the entire subtree, hidden descendants
+        // included, so "Hidden content" had no effect in this mode. Replacing through the node
+        // holding the match makes the option mean what it says.
         document.body.innerHTML =
             '<div><p id="shown">European</p><p id="gone" style="display: none;">European</p></div>'
 
         await run('searchReplace', { replaceHTML: true })
+
+        expect(document.getElementById('shown')?.textContent).toBe('American')
+        expect(document.getElementById('gone')?.textContent).toBe('European')
+    })
+
+    test('Replace HTML does rewrite hidden text when Hidden content is set', async () => {
+        document.body.innerHTML =
+            '<div><p id="shown">European</p><p id="gone" style="display: none;">European</p></div>'
+
+        await run('searchReplace', { replaceHTML: true, hiddenContent: true })
 
         expect(document.getElementById('shown')?.textContent).toBe('American')
         expect(document.getElementById('gone')?.textContent).toBe('American')

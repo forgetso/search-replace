@@ -9,21 +9,21 @@ import {
     SearchReplaceResult,
 } from './types/index'
 import {
-    copyElementAndRemoveSelectedElements,
-    elementIsVisible,
+    applyInstance,
+    collectInstances,
+    countInstances,
+    instanceElement,
+    orderForReplacement,
+} from './searchreplace/instances'
+import { getFlags, getSearchPattern } from './regex'
+import { getHints } from './hints'
+import {
     getInitialIframeElement,
     getInputElements,
     getRespondingIframes,
     getSearchableIframes,
     inIframe,
-    isBlobIframe,
-    isEditable,
-    isHidden,
-    isInputElement,
-    isWYSIWYGEditorIframe,
 } from './elements'
-import { getFlags, getSearchPattern } from './regex'
-import { getHints } from './hints'
 import { notEmpty } from './util'
 
 function newSearchReplaceCount() {
@@ -222,22 +222,6 @@ function replaceInInput(
     return { searchReplaceResult, elementsChecked }
 }
 
-function containsAncestor(element: Element, results: Map<Element, SearchReplaceResult>): boolean {
-    // if element is not the body, check if the body is in the results
-    if (element.tagName !== 'BODY' && results.has(document.body)) {
-        return true
-    }
-
-    let ancestor = element.parentElement
-    while (ancestor) {
-        if (results.has(ancestor)) {
-            return true
-        }
-        ancestor = ancestor.parentElement
-    }
-    return false
-}
-
 function countOccurrences(el: HTMLElement, config: SearchReplaceConfig): number {
     let target = getValue(el, config)
 
@@ -325,179 +309,6 @@ function getElementFromNode(node: Node): Element | undefined {
     return element
 }
 
-function isIgnored(ignoredElements: Set<Element>, node: Node, hiddenContent: boolean, elementFilter: RegExp): number {
-    const toCheck = getElementFromNode(node)
-    // if there is no element, reject
-    if (!toCheck) {
-        return NodeFilter.FILTER_REJECT
-    }
-
-    // if a script or an iframe that is not a blob iframe, reject
-    if (toCheck.tagName.match(elementFilter) && !isBlobIframe(toCheck)) {
-        return NodeFilter.FILTER_REJECT
-    }
-    // if an ignored element, reject
-    if (ignoredElements.has(toCheck)) {
-        return NodeFilter.FILTER_REJECT
-    }
-
-    // if the equivalent of an ignored element (e.g. ignored are clones), reject
-    if (equivalentInIgnoredElements(ignoredElements, toCheck)) {
-        return NodeFilter.FILTER_REJECT
-    }
-
-    // if we're not checking hidden content and the element is hidden, reject
-    if (!hiddenContent) {
-        if (!elementIsVisible(toCheck as HTMLElement)) {
-            return NodeFilter.FILTER_REJECT
-        }
-    }
-
-    return NodeFilter.FILTER_ACCEPT
-}
-
-function nodesUnder(
-    document: Document,
-    element: Node,
-    config: SearchReplaceConfig,
-    searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, SearchReplaceResult>,
-    ignoredElements: Set<Element>
-) {
-    const nodeType = config.searchTarget === 'innerHTML' ? NodeFilter.SHOW_ELEMENT : NodeFilter.SHOW_TEXT
-    let node: Node | null
-    const walk = document.createTreeWalker(element, nodeType, {
-        acceptNode: (node) => {
-            // This doesn't work - child elements aren't removed
-            return isIgnored(ignoredElements, node, config.hiddenContent, config.elementFilter)
-        },
-    })
-    const walked = new Set<Node>()
-
-    while ((node = walk.nextNode())) {
-        if (!config.replace) {
-            break
-        }
-
-        if (walked.has(node)) {
-            continue
-        }
-        walked.add(node)
-        const nodeElement = getElementFromNode(node)
-
-        if (!nodeElement) {
-            continue
-        }
-
-        if (nodeElement.tagName.match(/INPUT|TEXTAREA/g)) {
-            // handled by replaceInInputs
-            continue
-        }
-
-        // Editable text is handled by replaceInInputs, so skip it here to avoid replacing twice.
-        // This previously compared `contentEditable` to the boolean `true`, but that property is
-        // a string ('true' | 'false' | 'inherit' | 'plaintext-only'), so the guard never fired.
-        // Nothing broke, because editable elements are also dropped from the cloned element and
-        // so land in `ignoredElements` — but that made this guard silently redundant rather than
-        // the safety net it reads as.
-        if (isEditable(nodeElement)) {
-            continue
-        }
-
-        if (nodeElement.tagName === 'WINDOW') {
-            continue
-        }
-        const oldValue = getValue(node, config)
-        const occurrences = oldValue.match(config.globalSearchPattern)
-
-        if (!occurrences) {
-            continue
-        }
-
-        if (!config.hiddenContent && isHidden(nodeElement, false)) {
-            continue
-        }
-
-        if (config.replace) {
-            const newValue = oldValue.replace(config.searchPattern, config.replaceTerm)
-            if (node && oldValue && oldValue !== newValue) {
-                // Do the replacement
-                const replaceResult = replaceInNodeOrElement(node, newValue, occurrences, config)
-                elementsChecked = updateResults(
-                    elementsChecked,
-                    node as Element,
-                    replaceResult.replaced,
-                    occurrences.length,
-                    replaceResult.replacementCount
-                )
-                searchReplaceResult.count.replaced += replaceResult.replacementCount
-                searchReplaceResult.replaced = replaceResult.replaced
-                // replaceInNodeOrElement() has already announced the change. Announcing it again
-                // here, once on the element and once on the node, made a single replacement look
-                // like three separate edits to any listener on the way up.
-                if (config.replaceNext && searchReplaceResult.replaced) {
-                    config.replace = false
-                    break
-                }
-            }
-        }
-    }
-
-    return { searchReplaceResult, elementsChecked }
-}
-
-function replaceInner(
-    config: SearchReplaceConfig,
-    document: Document,
-    originalElement: HTMLElement,
-    element: HTMLElement,
-    ignoredElements: Set<Element>,
-    searchReplaceResult: SearchReplaceResult,
-    elementsChecked: Map<Element, SearchReplaceResult>
-): ReplaceFunctionReturnType {
-    // continue if there is no inner searchTarget
-    if (!(config.searchTarget in element)) {
-        elementsChecked = updateResults(elementsChecked, element, false, 0, 0)
-        return { searchReplaceResult, elementsChecked }
-    }
-
-    // When replacing in HTML the whole of the original element's innerHTML is rewritten, hidden
-    // and filtered descendants included. The count therefore has to be taken from that same
-    // string: counting on the filtered clone reported fewer matches than were really replaced,
-    // and the popup displayed the difference as a negative number ("-2 matches").
-    const countTarget = config.replace && config.searchTarget === 'innerHTML' ? originalElement : element
-    const occurrences = countOccurrences(countTarget, config)
-    elementsChecked = updateResults(elementsChecked, element, false, occurrences, 0)
-
-    if (config.searchTarget === 'innerHTML') {
-        searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
-    } else if (config.searchTarget === 'innerText') {
-        // Skip elements whose ancestor was already counted: the ancestor's innerText already
-        // contained this element's text, so adding it again would double count.
-        // (The hiddenContent flag used to select between two identical branches here.)
-        if (!containsAncestor(element, elementsChecked)) {
-            searchReplaceResult.count.original = searchReplaceResult.count.original + occurrences
-        }
-    }
-
-    // cycle through nodes, replacing in text or the innerHTML
-    if (config.replace) {
-        const nodesUnderResult = nodesUnder(
-            document,
-            originalElement,
-            config,
-            searchReplaceResult,
-            elementsChecked,
-            ignoredElements
-        )
-
-        searchReplaceResult = nodesUnderResult.searchReplaceResult
-        elementsChecked = nodesUnderResult.elementsChecked
-    }
-
-    return { searchReplaceResult, elementsChecked }
-}
-
 function replaceInInputs(
     config: SearchReplaceConfig,
     document: Document,
@@ -577,24 +388,6 @@ function replaceInputFields(
     return { searchReplaceResult, elementsChecked }
 }
 
-function getHiddenElements(element: HTMLElement, config: SearchReplaceConfig): Set<Element> {
-    return new Set(
-        Array.from(element.getElementsByTagName('*'))
-            .filter((el) => !el.tagName.match(config.elementFilter))
-            .filter((el) => !elementIsVisible(el as HTMLElement, false, false))
-    )
-}
-
-function equivalentInIgnoredElements(ignoredElements: Set<Element>, element: Element) {
-    for (const ignored of ignoredElements) {
-        if (ignored.isEqualNode(element)) {
-            return true
-        }
-    }
-
-    return false
-}
-
 function replaceInSrcDocIframe(
     config: SearchReplaceConfig,
     iframe: HTMLIFrameElement,
@@ -611,6 +404,14 @@ function replaceInSrcDocIframe(
     return { searchReplaceResult, elementsChecked }
 }
 
+/**
+ * Counts and replaces everywhere under the given roots that is not an input.
+ *
+ * Both actions read the same list of instances, which is what makes the count the popup shows
+ * agree with what a press of Replace Next will do. The clone-and-filter machinery this replaced
+ * existed only to keep unwanted subtrees out of an `innerHTML` rewrite; nothing is rewritten
+ * wholesale any more, so scope is simply decided per instance as the page is walked.
+ */
 function replaceInHTML(
     config: SearchReplaceConfig,
     document: Document,
@@ -618,62 +419,36 @@ function replaceInHTML(
     searchReplaceResult: SearchReplaceResult,
     elementsChecked: Map<Element, SearchReplaceResult>
 ): ReplaceFunctionReturnType {
-    for (const [originalIndex, originalElement] of originalElements.entries()) {
-        let clonedElement = originalElement.cloneNode(true) as HTMLElement
+    for (const originalElement of originalElements) {
+        const instances = collectInstances(originalElement, config)
+        searchReplaceResult.count.original += countInstances(instances)
 
-        const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
-            clonedElement,
-            // Remove elements that
-            // - match the element filter, but are not blob iframes, nor are WYSIWYG iframes.
-            //   Removes SCRIPT, STYLE, IFRAME, etc.
-            // - match the input filter, as these are handled later
-            // - are already in the elementsChecked map
-            (el: HTMLElement) =>
-                (!!el.nodeName.match(config.elementFilter) && !isBlobIframe(el) && !isWYSIWYGEditorIframe(el)) ||
-                isInputElement(el) ||
-                elementsChecked.has(el),
-            false
-        )
-        clonedElement = clonedElementRemoved as HTMLElement
-        let ignoredElements = removedSet
-        if (!config.hiddenContent) {
-            // We have to check the visibility of the original elements as the cloned ones are all invisible
-            if (!elementIsVisible(originalElements[originalIndex])) {
+        for (const instance of orderForReplacement(instances)) {
+            if (!config.replace) {
+                break
+            }
+            const replaced = applyInstance(instance, config, config.replaceAll)
+            if (replaced === 0) {
                 continue
             }
-            ignoredElements = new Set([
-                ...ignoredElements,
-                ...(getHiddenElements(originalElement, config) as Set<HTMLElement>),
-            ])
-            // the above works if an ancestor of the element is hidden, but not if the element contains descendants that
-            // are hidden. To check for this, we need to check the relatives of the element to see if they are hidden
-            // and if so, create a copy of the element with the hidden elements removed, storing a map of the hidden
-            // elements and their paths, so we can ignore them during replacement
-            const { clonedElementRemoved, removedSet } = copyElementAndRemoveSelectedElements(
-                clonedElement,
-                (el) => equivalentInIgnoredElements(ignoredElements, el),
-                false
-            )
 
-            clonedElement = clonedElementRemoved as HTMLElement
-            ignoredElements = new Set([...ignoredElements, ...removedSet])
+            const element = instanceElement(instance)
+            if (element) {
+                elementsChecked = updateResults(elementsChecked, element, true, instance.matches, replaced)
+                notifyChanged(element)
+            }
+            searchReplaceResult.count.replaced += replaced
+            searchReplaceResult.replaced = true
+
+            if (config.replaceNext) {
+                // One press, one match
+                config.replace = false
+                break
+            }
         }
 
-        // replace inner texts first, dropping out if we have done a replacement and are not working globally
-        const innerResult = replaceInner(
-            config,
-            document,
-            originalElement,
-            clonedElement,
-            ignoredElements,
-            searchReplaceResult,
-            elementsChecked
-        )
-
-        searchReplaceResult = innerResult.searchReplaceResult
-        elementsChecked = innerResult.elementsChecked
-
-        // Now replace in input fields
+        // Inputs carry their value on the element rather than in the DOM beneath it, so they are
+        // collected and replaced separately
         const inputResult = replaceInInputs(
             config,
             document,
