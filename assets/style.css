@@ -76,7 +76,7 @@ a {
     display: flex;
     flex-direction: column;
     gap: var(--sr-space-xs);
-    max-height: 380px;
+    max-height: 330px;
     overflow-y: auto;
     margin: 0;
     padding-inline-start: 0;
@@ -190,7 +190,7 @@ body.side-panel #footer > div {
    panel now sizes to its content and Chrome sizes the popup to match. */
 .background-img {
     background-color: var(--sr-bg);
-    padding: var(--sr-space-lg) var(--sr-gutter);
+    padding: var(--sr-space-md) var(--sr-gutter);
 }
 
 /* The header, body and footer panels are full-bleed, so each supplies its own gutter. Keeping
@@ -390,42 +390,62 @@ body.side-panel #footer > div {
     font-size: 22px;
 }
 
-/* The header's icon buttons, in two groups: the two that only tell you something (help, about)
-   and the four that do something (history, settings, saved rules, side panel). Six evenly
-   spaced glyphs read as an undifferentiated row; the divider gives the eye somewhere to rest
-   and says which of them change the page.
-   They are 16px rather than 18px so that all six and the untruncated title fit across 320px. */
-.header-actions {
+/* Header: the title and the two reference icons on one line, then the panels and actions as a
+   tab strip beneath.
+   The six icons used to share the title's line, which at 320px left them crowded and the title
+   truncated. Splitting them by what they do — help and about only ever open documentation,
+   the rest change what you are looking at — gives the tabs the whole width to spread across. */
+.header-bar {
+    padding-top: var(--sr-space-sm);
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sr-space-sm);
+}
+
+.header-reference {
     display: flex;
     align-items: center;
     flex: none;
-    flex-wrap: nowrap;
+    gap: var(--sr-space-sm);
 }
 
-.header-group {
+.header-tabs {
     display: flex;
-    align-items: center;
-    gap: 3px;
+    margin-top: 6px;
+    /* Full-bleed, cancelling the gutter .header-bar applies, so the strip reads as a tab bar
+       rather than a row of icons floating inside the panel */
+    margin-left: calc(var(--sr-gutter) * -1);
+    margin-right: calc(var(--sr-gutter) * -1);
+    border-top: 1px solid var(--sr-border);
 }
 
-.header-group + .header-group {
-    margin-left: 7px;
-    padding-left: 7px;
-    border-left: 1px solid var(--sr-accent-soft);
-}
-
-.header-actions svg {
-    width: 16px;
-    height: 16px;
-}
-
-/* The markup carries .mx-1, which bootstrap declares !important, so the group gap above would
-   be added to it and the icons would spread unevenly */
-.header-group > .form-group {
+/* Equal shares of the row, so the icons land on a regular rhythm however many there are */
+.header-tabs > .form-group {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    /* The markup carries .mx-1, which bootstrap declares !important */
     margin: 0 !important;
+    padding: 6px 0 4px;
+    border-bottom: 2px solid transparent;
 }
 
-.header-actions a {
+.header-tabs > .form-group:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* The underline marking the open panel spans the whole tab rather than just the glyph */
+.header-tabs > .icon-selected {
+    border-bottom-color: var(--sr-accent);
+    padding-bottom: 4px;
+}
+
+.header-title a,
+.header-tabs a {
     display: flex;
     align-items: center;
 }
