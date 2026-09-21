@@ -34,7 +34,7 @@
     },
     "host_permissions": ["http://*/*", "https://*/*"],
     "update_url": "http://clients2.google.com/service/update2/crx",
-    "version": "2.4.1",
+    "version": "3.0.0",
     "icons": {
         "16": "assets/icon-16.png",
         "32": "assets/icon-32.png",
